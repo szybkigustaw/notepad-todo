@@ -161,6 +161,7 @@ public class ToDoNote extends Note{
      */
     ToDoNote(){
         super();
+        this.setType(TODO_NOTE);
         this.setTodo(new String[]{"Sample text", "Sample text", "Sample text", "Sample text", "Sample text"});
         this.setChecked(new boolean[]{false,false,false,true,true});
     }
@@ -175,6 +176,7 @@ public class ToDoNote extends Note{
      */
     ToDoNote(String label, String text, String[] todos, boolean[] isChecked, boolean isHidden) {
         super(label, text, isHidden);
+        this.setType(TODO_NOTE);
         this.setTodo(todos);
         this.setChecked(isChecked);
     }

@@ -8,10 +8,13 @@ import java.util.Date;
  * @author Michał Mikuła
  */
 public class Note {
+    static final int NOTE = 1;
+    static final int TODO_NOTE = 2;
     private String text;
     private String label;
     private Date create_date;
     private Date mod_date;
+    private int type = 1;
     boolean isHidden;
 
     /**
@@ -79,16 +82,16 @@ public class Note {
     }
 
     /**
-     * Metoda wyświetlająca w konsoli zawartość notatki oraz jej metadane
+     * Metoda zwracająca typ notatki.
+     * @return Typ notatki. (NOTE == 1, TODO_NOTE == 2)
      */
-    public void showNote(){
-        System.out.printf("\n%s: \n\n", this.getLabel());
-        System.out.printf("Hidden: %b \n", this.getHidden());
-        System.out.printf("Creation date: %s\n", this.getCreate_date().toString());
-        System.out.printf("Modification date: %s\n\n", this.getMod_date().toString());
-        System.out.printf("Value: %s\n", this.getText());
-        System.out.print("--------------------");
-    }
+    public int getType() { return this.type; }
+
+    /**
+     * Metoda przypisująca nowy typ notatki.
+     * @param type Typ notatki. (NOTE == 1, TODO_NOTE == 2)
+     */
+    public void setType(int type) { this.type = type; }
 
     /**
      * Metoda zwracająca stan ukrycia notatki.
@@ -103,6 +106,18 @@ public class Note {
      */
     public void setHidden(Boolean isHidden){
         this.isHidden = isHidden;
+    }
+
+    /**
+     * Metoda wyświetlająca w konsoli zawartość notatki oraz jej metadane
+     */
+    public void showNote(){
+        System.out.printf("\n%s: \n\n", this.getLabel());
+        System.out.printf("Hidden: %b \n", this.getHidden());
+        System.out.printf("Creation date: %s\n", this.getCreate_date().toString());
+        System.out.printf("Modification date: %s\n\n", this.getMod_date().toString());
+        System.out.printf("Value: %s\n", this.getText());
+        System.out.print("--------------------");
     }
 
     /**
