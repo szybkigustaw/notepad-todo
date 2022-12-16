@@ -103,7 +103,7 @@ public class Main {
     static public JPanel rp = new JPanel();
     static public HomeMenu hm = new HomeMenu();
     static public NoteListGUI nl = new NoteListGUI(noteList);
-    static public ReadNote rn;
+    static public ReadNote rn = new ReadNote();
     static public EditNote en;
 
     static public void reloadApp(){
@@ -117,8 +117,10 @@ public class Main {
         rp.setVisible(true);
         rp.add(hm, 0);
         rp.add(nl, 1);
+        rp.add(rn, 2);
         lt.addLayoutComponent(hm, "HomeMenu");
         lt.addLayoutComponent(nl, "NoteList");
+        lt.addLayoutComponent(rn, "ReadNote");
         main_frame.add(rp);
         main_frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         main_frame.setVisible(true);

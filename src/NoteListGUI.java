@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 /**
  * Klasa reprezentująca panel z listą notatek. Notatki z tego poziomu można kasować oraz podawać do edycji.
@@ -113,6 +115,28 @@ public class NoteListGUI extends JPanel{
 
         //Ustalenie rozmiaru elementu
         item.setSize(1100, 50);
+
+        item.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Main.rn = new ReadNote(Main.noteList.getNote(index));
+                Main.reloadApp();
+                Main.lt.show(Main.rp,"ReadNote");
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
+
         return item;
     }
 
