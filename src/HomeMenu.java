@@ -61,6 +61,13 @@ public class HomeMenu extends JPanel{
         b1.setSize(p.getWidth(), 75);
         b1.setFont(new Font("Arial", Font.PLAIN, 32));
 
+        //Dodanie akcji do przycisku pierwszego - przejście do widoku edycji notatki (Notatka pusta = nowa)
+        b1.addActionListener(e -> {
+            Main.en = new EditNote();
+            Main.reloadApp(false, false);
+            Main.lt.show(Main.rp, "EditNote");
+        });
+
         //Tworzenie przycisku drugiego
         JButton b2 = new JButton("Podejrzeć już istniejące");
         b2.setAlignmentX(CENTER_ALIGNMENT);

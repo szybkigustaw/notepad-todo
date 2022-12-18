@@ -103,7 +103,7 @@ public class Main {
     static public HomeMenu hm = new HomeMenu();
     static public NoteListGUI nl = new NoteListGUI(noteList, false);
     static public ReadNote rn = new ReadNote();
-    static public EditNote en;
+    static public EditNote en = new EditNote();
 
     static public String password = "essa123";
 
@@ -128,9 +128,11 @@ public class Main {
         rp.add(hm, 0);
         rp.add(nl, 1);
         rp.add(rn, 2);
+        rp.add(en, 3);
         lt.addLayoutComponent(hm, "HomeMenu");
         lt.addLayoutComponent(nl, "NoteList");
         lt.addLayoutComponent(rn, "ReadNote");
+        lt.addLayoutComponent(en, "EditNote");
         main_frame.add(rp);
         main_frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         main_frame.setVisible(true);

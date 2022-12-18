@@ -1,7 +1,9 @@
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Objects;
 
 /**
  * Klasa reprezentująca panel pozwalający podglądać wybraną z listy notatkę. Z tego panelu też można ją dodać do listy ukrytych notatek.
@@ -229,12 +231,26 @@ public class ReadNote extends JPanel {
 
         //Dodanie funkcjonalności do przycisku.
         hide.addActionListener(e -> {
-            note.setHidden(!(note.getHidden()));
-            JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
-            boolean hm = this.hidden_mode;
-            Main.rn = new ReadNote(this.getNote(), this.hidden_mode);
-            Main.reloadApp(true, hm);
-            Main.lt.show(Main.rp, "ReadNote");
+            if(note.getHidden() == true){
+                String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło");
+                if(Objects.equals(Main.password, pass)){
+                    note.setHidden(!(note.getHidden()));
+                    JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
+                    boolean hm = this.hidden_mode;
+                    Main.rn = new ReadNote(this.getNote(), this.hidden_mode);
+                    Main.reloadApp(true, hm);
+                    Main.lt.show(Main.rp, "ReadNote");
+                } else if(!(Objects.equals(Main.password, pass))) {
+                    JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
+                }
+            } else {
+                note.setHidden(!(note.getHidden()));
+                JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
+                boolean hm = this.hidden_mode;
+                Main.rn = new ReadNote(this.getNote(), this.hidden_mode);
+                Main.reloadApp(true, hm);
+                Main.lt.show(Main.rp, "ReadNote");
+            }
         });
 
         //Wstawianie przycisku do paska.
@@ -306,20 +322,30 @@ public class ReadNote extends JPanel {
          */
         JPanel todos = new JPanel();
         todos.setLayout(new BoxLayout(todos, BoxLayout.Y_AXIS));
-        todos.setBorder(BorderFactory.createLineBorder(new Color(0,0,0), 1, true));
+        todos.setBorder(new CompoundBorder(
+                BorderFactory.createLineBorder(new Color(0,0,0), 1, true),
+                BorderFactory.createEmptyBorder(25, 25, 25, 25)
+        ));
 
         //Dodanie w pętli do panelu wierszy z zadaniami
         for(int i = 0; i < this.getTodo_note().getTodo().length; i++) {
             todos.add(createTodo(this.getTodo_note(), i));
         }
 
+        /*
+            Tworzenie "szyby" z paskiem przewijania - zabezpieczenie na wypadek pojawienia się listy zadań
+            zbyt długiej do wyświetlenia w pojedyńczym oknie.
+         */
+        JScrollPane todos_sp = new JScrollPane(todos, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
         //Wstawienie panelu do kontenera.
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(25, 0, 25, 0);
         gbc.gridx = 0;
         gbc.gridy = 2;
-        gbc.weighty = 0.1;
+        gbc.weighty = 0.5;
         gbc.weightx = 1.0;
-        add(todos, gbc);
+        add(todos_sp, gbc);
 
         /*
             Tworzenie kontenera dla paska opcji, jego układu oraz wartości modelowych.
@@ -355,12 +381,26 @@ public class ReadNote extends JPanel {
 
         //Dodanie funkcjonalności do przycisku
         hide.addActionListener(e -> {
-            note.setHidden(!(note.getHidden()));
-            JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
-            boolean hm = this.hidden_mode;
-            Main.rn = new ReadNote(this.getTodo_note(), this.hidden_mode);
-            Main.reloadApp(true, hm);
-            Main.lt.show(Main.rp, "ReadNote");
+            if(note.getHidden() == true){
+                String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło");
+                if(Objects.equals(Main.password, pass)){
+                    note.setHidden(!(note.getHidden()));
+                    JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
+                    boolean hm = this.hidden_mode;
+                    Main.rn = new ReadNote(this.getTodo_note(), this.hidden_mode);
+                    Main.reloadApp(true, hm);
+                    Main.lt.show(Main.rp, "ReadNote");
+                } else if(!(Objects.equals(Main.password, pass))) {
+                    JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
+                }
+            } else {
+                note.setHidden(!(note.getHidden()));
+                JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
+                boolean hm = this.hidden_mode;
+                Main.rn = new ReadNote(this.getTodo_note(), this.hidden_mode);
+                Main.reloadApp(true, hm);
+                Main.lt.show(Main.rp, "ReadNote");
+            }
         });
 
         //Wstawianie przycisku do paska.
