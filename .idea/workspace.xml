@@ -4,12 +4,10 @@
     <option name="SCOPE_TYPE" value="10" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodanie opcji podglądu ukrytych notatek.&#10;Sprawdzanie hasła przed podglądem ukrytych notatek.">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano splash-screen w przypadku skończenia się notatek.&#10;Teraz NoteListGUI jest świadoma tego, czy przechowuje notatki ukryte, czy publiczne.&#10;Teraz NoteList może wskazać pozycję notatki na liście.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomeMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NoteList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/NoteListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteListGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReadNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadNote.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +101,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671325288073</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Dodano splash-screen w przypadku skończenia się notatek.&#10;Teraz NoteListGUI jest świadoma tego, czy przechowuje notatki ukryte, czy publiczne.&#10;Teraz NoteList może wskazać pozycję notatki na liście.">
+      <created>1671329362589</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1671329362589</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -137,7 +142,8 @@
     <MESSAGE value="Dodano możliwość odhaczania zadań z poziomu podglądu notatki.&#10;Teraz notatki znają swój stan ukończenia zadań.&#10;Notatki z ukończonymi zadaniami są oznaczone.&#10;Usunięto zbędną opcję 2. w Menu Głównym." />
     <MESSAGE value="Modyfikacja wyglądu - dodanie ramek i obramowań.&#10;Dodanie paska opcji do panelu listy notatek." />
     <MESSAGE value="Dodanie opcji podglądu ukrytych notatek.&#10;Sprawdzanie hasła przed podglądem ukrytych notatek." />
-    <option name="LAST_COMMIT_MESSAGE" value="Dodanie opcji podglądu ukrytych notatek.&#10;Sprawdzanie hasła przed podglądem ukrytych notatek." />
+    <MESSAGE value="Dodano splash-screen w przypadku skończenia się notatek.&#10;Teraz NoteListGUI jest świadoma tego, czy przechowuje notatki ukryte, czy publiczne.&#10;Teraz NoteList może wskazać pozycję notatki na liście." />
+    <option name="LAST_COMMIT_MESSAGE" value="Dodano splash-screen w przypadku skończenia się notatek.&#10;Teraz NoteListGUI jest świadoma tego, czy przechowuje notatki ukryte, czy publiczne.&#10;Teraz NoteList może wskazać pozycję notatki na liście." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
