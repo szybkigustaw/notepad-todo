@@ -95,13 +95,13 @@ public class Main {
             )
     };
 
-    public static NoteList noteList = new NoteList(notes, NoteList.PUBLIC);
+    public static NoteList noteList = new NoteList(notes, NoteList.FULL);
 
     static public CardLayout lt = new CardLayout(25, 25);
     static public JFrame main_frame = new JFrame("Notepad");
     static public JPanel rp = new JPanel();
     static public HomeMenu hm = new HomeMenu();
-    static public NoteListGUI nl = new NoteListGUI(noteList);
+    static public NoteListGUI nl = new NoteListGUI(noteList, false);
     static public ReadNote rn = new ReadNote();
     static public EditNote en;
 
@@ -112,10 +112,13 @@ public class Main {
 
         hm = new HomeMenu();
         if(reloadList) {
-            if(!reloadHidden) nl = new NoteListGUI(noteList);
+            if(!reloadHidden) {
+                NoteList hold = new NoteList(noteList.getNoteList(), NoteList.PUBLIC);
+                nl = new NoteListGUI(hold, false);
+            }
             else {
-                noteList = new NoteList(notes, NoteList.HIDDEN);
-                nl = new NoteListGUI(noteList);
+                NoteList hold = new NoteList(noteList.getNoteList(), NoteList.HIDDEN);
+                nl = new NoteListGUI(hold, true);
             }
         }
 

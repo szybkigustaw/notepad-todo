@@ -13,6 +13,8 @@ import java.util.Objects;
  */
 public class NoteListGUI extends JPanel{
 
+    private boolean hidden_mode;
+
     /**
      * Metoda tworzy nowy element listy w postaci panelu z logotypem określającym rodzaj notatki, jej etykietą oraz panelem opcji
      * @param note Notatka, z której będą pobierane dane.
@@ -86,8 +88,8 @@ public class NoteListGUI extends JPanel{
                     aplikacji po usunięciu notatki, a później szybkiego przełączenia użytkownika z powrotem do
                     menu listy notatek.
                 */
-                Main.noteList.removeNote(index);
-                Main.reloadApp(true, false);
+                Main.noteList.removeNote(Main.noteList.getNoteIndex(note));
+                Main.reloadApp(true, hidden_mode);
                 Main.lt.show(Main.rp, "NoteList");
             }
         });
@@ -122,7 +124,7 @@ public class NoteListGUI extends JPanel{
             @Override
             public void mouseClicked(MouseEvent e) {
                 Main.rn = new ReadNote(Main.noteList.getNote(index)); //Stworzenie nowej reprezentacji listy notatek.
-                Main.reloadApp(false, false); //"Odświeżenie" aplikacji
+                Main.reloadApp(false, hidden_mode); //"Odświeżenie" aplikacji
                 Main.lt.show(Main.rp,"ReadNote"); /*
                                                             Szybkie przełączenie na ekran odczytu notatki. Tak, żeby
                                                             użytkownik się nie zorientował :-)
@@ -223,8 +225,8 @@ public class NoteListGUI extends JPanel{
                     aplikacji po usunięciu notatki, a później szybkiego przełączenia użytkownika z powrotem do
                     menu listy notatek.
                 */
-                Main.noteList.removeNote(index);
-                Main.reloadApp(true, false);
+                Main.noteList.removeNote(Main.noteList.getNoteIndex(note));
+                Main.reloadApp(true, hidden_mode);
                 Main.lt.show(Main.rp, "NoteList");
             }
         });
@@ -258,7 +260,7 @@ public class NoteListGUI extends JPanel{
             @Override
             public void mouseClicked(MouseEvent e) {
                 Main.rn = new ReadNote((ToDoNote) Main.noteList.getNote(index), index); //Stworzenie nowej reprezentacji listy notatek.
-                Main.reloadApp(false, false); //"Odświeżenie" aplikacji
+                Main.reloadApp(false, hidden_mode); //"Odświeżenie" aplikacji
                 Main.lt.show(Main.rp,"ReadNote");  /*
                                                             Szybkie przełączenie na ekran odczytu notatki. Tak, żeby
                                                             użytkownik się nie zorientował :-)
@@ -285,21 +287,44 @@ public class NoteListGUI extends JPanel{
     /**
      * Konstruktor domyślny. Tworzy nowy panel z menu listy notatek.
      * @param notes Lista notatek, na bazie której powstanie panel.
+     * @param hidden_mode Stan trybu ukrytego (pokazywania tylko ukrytych notatek).
      */
-    NoteListGUI(NoteList notes){
+    NoteListGUI(NoteList notes, boolean hidden_mode){
+        //Przypisanie do pola obiektu o trybie ukrytym
+        this.hidden_mode = hidden_mode;
 
         //Utworzenie panelu z listą
         JPanel list_window = new JPanel();
         list_window.setLayout(new BoxLayout(list_window, BoxLayout.Y_AXIS));
         list_window.setSize(1100, 700);
 
-        //Tworzenie i dodawanie elementów listy do panelu
-        for(int i = 0; i < notes.getListLength(); i++){
-            if(notes.getNote(i).getType() == Note.TODO_NOTE){
-                list_window.add(createListItem((ToDoNote) notes.getNote(i), i), i);
-            } else {
-                list_window.add(createListItem(notes.getNote(i), i), i);
+        //Sprawdzanie, czy lista notatek nie jest pusta
+        if(notes.getListLength() < 1){
+
+            //Ustawienie układu kratowego + kolorek :3
+            list_window.setLayout(new GridBagLayout());
+            list_window.setBackground(new Color(0, 255, 0));
+
+            //Tworzenie i dodanie do panelu głównego etykiety z tekstem alternatywnym
+            JLabel label = new JLabel("Świerszcze...");
+            label.setFont(new Font("Arial", Font.BOLD, 36));
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+            label.setVerticalAlignment(SwingConstants.CENTER);
+            label.setAlignmentY(CENTER_ALIGNMENT);
+            label.setAlignmentX(CENTER_ALIGNMENT);
+            list_window.add(label);
+
+        } else {
+
+            //Tworzenie i dodawanie elementów listy do panelu
+            for (int i = 0; i < notes.getListLength(); i++) {
+                if (notes.getNote(i).getType() == Note.TODO_NOTE) {
+                    list_window.add(createListItem((ToDoNote) notes.getNote(i), i), i);
+                } else {
+                    list_window.add(createListItem(notes.getNote(i), i), i);
+                }
             }
+
         }
 
         //Wrzucenie listy do panelu ze scrollem - dodanie opcji scrollowania listy w przypadku nadmiarowej ilości elementów
@@ -308,6 +333,7 @@ public class NoteListGUI extends JPanel{
 
         //Dodanie panelu do panelu głównego
         add(scrollPane);
+
 
         //Tworzenie układu i wartości modelowych dla paska opcji.
         GridBagConstraints gbc = new GridBagConstraints();
@@ -341,22 +367,26 @@ public class NoteListGUI extends JPanel{
         option_bar.add(go_back, gbc);
 
         //Tworzenie przycisku pokazu listy ukrytych notatek.
-        JButton show_hidden = new JButton("Pokaż ukryte");
+        JButton show_hidden = new JButton();
+        if(!this.hidden_mode) show_hidden.setText("Pokaż ukryte");
+        else show_hidden.setText("Pokaż publiczne");
         show_hidden.setSize(256, 48);
 
         //Dodanie funkcjonalności przycisku.
         show_hidden.addActionListener(e -> {
-
+        if(!this.hidden_mode){
             //Prośba o podanie hasła
             String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło dostępowe");
             if(!Objects.equals(pass, Main.password)){
                 JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
             } else {
-                Main.noteList = new NoteList(Main.notes, NoteList.HIDDEN);
-                Main.nl = new NoteListGUI(Main.noteList);
-                Main.reloadApp(true, true);
+                Main.reloadApp(true, !this.hidden_mode);
                 Main.lt.show(Main.rp, "NoteList");
             }
+        } else {
+            Main.reloadApp(true, !this.hidden_mode);
+            Main.lt.show(Main.rp, "NoteList");
+        }
         });
 
         //Dodanie przycisku do paska.

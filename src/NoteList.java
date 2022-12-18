@@ -7,6 +7,7 @@
 public class NoteList {
     static int FULL = 0;
     static int HIDDEN = 1;
+    static int PUBLIC = 2;
     private Note[] noteList;
 
     /**
@@ -63,6 +64,21 @@ public class NoteList {
         }
         this.setNoteList(newList);
     }
+
+    /**
+     * Metoda zwracająca pozycję notatki na liście. Jeśli notatka nie znajduje się na liście, metoda zwraca wartość ujemną.
+     * @param note Notatka, której pozycję na liście chcemy uzyskać.
+     * @return Pozycja notatki na liście lub wartość ujemna w przypadku braku notatki na liście.
+     */
+    public int getNoteIndex(Note note) {
+        for(int i = 0; i < this.getListLength(); i++){
+            if(this.getNote(i).equals(note)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
 
     /**
      * Metoda dodająca do listy notatek nową notatkę. Zawsze dodawana jest na koniec listy.
@@ -147,27 +163,45 @@ public class NoteList {
     /**
      * Konstruktor parametryczny. Tworzy nową listę notatek opartą o podany zbiór notatek.
      * @param noteList Zbiór notatek.
-     * @param list_mode Tryb przypisania listy. (Pełna = 0, tylko ukryte = 1)
+     * @param list_mode Tryb przypisania listy. (Pełna = 0, tylko ukryte = 1, tylko jawne = 2)
      */
-    NoteList(Note[] noteList, int list_mode){
-        if(list_mode == HIDDEN){
+    NoteList(Note[] noteList, int list_mode) {
+        if (list_mode == HIDDEN) {
             int hidden_count = 0;
-            for(int i = 0; i < noteList.length; i++){
-                if(noteList[i].getHidden()){
+            for (int i = 0; i < noteList.length; i++) {
+                if (noteList[i].getHidden()) {
                     hidden_count++;
                 }
             }
 
             Note[] hidden = new Note[hidden_count];
             int cnt = 0;
-            for(int i = 0; i < noteList.length; i++){
-                if(noteList[i].getHidden()){
+            for (int i = 0; i < noteList.length; i++) {
+                if (noteList[i].getHidden()) {
                     hidden[cnt] = noteList[i];
                     cnt++;
                 }
             }
 
             this.setNoteList(hidden);
+        } else if(list_mode == PUBLIC){
+            int public_count = 0;
+            for (int i = 0; i < noteList.length; i++) {
+                if (!noteList[i].getHidden()) {
+                    public_count++;
+                }
+            }
+
+            Note[] public_list = new Note[public_count];
+            int cnt = 0;
+            for (int i = 0; i < noteList.length; i++) {
+                if (!noteList[i].getHidden()) {
+                    public_list[cnt] = noteList[i];
+                    cnt++;
+                }
+            }
+
+            this.setNoteList(public_list);
         } else if(list_mode == FULL){
             this.setNoteList(noteList);
         }

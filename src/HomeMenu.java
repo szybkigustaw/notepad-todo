@@ -69,8 +69,6 @@ public class HomeMenu extends JPanel{
 
         //Dodawanie akcji do przycisku drugiego - przejście do widoku listy notatek
         b2.addActionListener(e -> {
-                Main.noteList = new NoteList(Main.notes, NoteList.PUBLIC); //Tworzenie reprezentacji listy notatek - pozycje publiczne
-                Main.nl = new NoteListGUI(Main.noteList); //Odświeżenie listy notatek - na wszelki wypadek.
                 Main.reloadApp(true, false); //"Odświeżenie" aplikacji.
                 Main.lt.show(Main.rp, "NoteList"); //Szybki przeskok do listy notatek.
             });
