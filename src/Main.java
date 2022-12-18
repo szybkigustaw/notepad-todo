@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.Locale;
 
 public class Main {
     public static Note[] notes = {
@@ -10,7 +9,22 @@ public class Main {
             new Note(
                     "Najs",
                     "Dzisiaj zjadłem psa. Nawet smaczny.",
+                    true
+            ),
+            new ToDoNote(
+                    "Essa",
+                    "Oto zadania na dzisiejszy dzień :)",
+                    new String[]{"Odkurz pokój", "Zjedz psa", "Zamów esse"},
+                    new boolean[]{false, true, true},
                     false
+            ),
+            new Note(),
+            new Note(),
+            new ToDoNote(),
+            new Note(
+                    "Najs",
+                    "Dzisiaj zjadłem psa. Nawet smaczny.",
+                    true
             ),
             new ToDoNote(
                     "Essa",
@@ -47,7 +61,7 @@ public class Main {
                     "Oto zadania na dzisiejszy dzień :)",
                     new String[]{"Odkurz pokój", "Zjedz psa", "Zamów esse"},
                     new boolean[]{false, true, true},
-                    false
+                    true
             ),
             new Note(),
             new Note(),
@@ -77,26 +91,11 @@ public class Main {
                     "Oto zadania na dzisiejszy dzień :)",
                     new String[]{"Odkurz pokój", "Zjedz psa", "Zamów esse"},
                     new boolean[]{false, true, true},
-                    false
-            ),
-            new Note(),
-            new Note(),
-            new ToDoNote(),
-            new Note(
-                    "Najs",
-                    "Dzisiaj zjadłem psa. Nawet smaczny.",
-                    false
-            ),
-            new ToDoNote(
-                    "Essa",
-                    "Oto zadania na dzisiejszy dzień :)",
-                    new String[]{"Odkurz pokój", "Zjedz psa", "Zamów esse"},
-                    new boolean[]{false, true, true},
-                    false
+                    true
             )
     };
 
-    public static NoteList noteList = new NoteList(notes);
+    public static NoteList noteList = new NoteList(notes, NoteList.FULL);
 
     static public CardLayout lt = new CardLayout(25, 25);
     static public JFrame main_frame = new JFrame("Notepad");
@@ -106,11 +105,11 @@ public class Main {
     static public ReadNote rn = new ReadNote();
     static public EditNote en;
 
-    static public void reloadApp(){
+    static public void reloadApp(boolean reloadList){
         rp.removeAll();
 
         hm = new HomeMenu();
-        nl = new NoteListGUI(noteList);
+        if(reloadList) nl = new NoteListGUI(noteList);
 
         rp.setLayout(lt);
         rp.setBounds(0,0,1200,800);

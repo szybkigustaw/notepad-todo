@@ -76,22 +76,19 @@ public class NoteListGUI extends JPanel{
         delete.setSize(56,28);
 
         //Dodawanie logiki do przycisku kasowania
-        delete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        delete.addActionListener(e -> {
 
-                // Wyświetlenie okna dialogowego pytającego o potwierdzenie operacji
-                int a = JOptionPane.showConfirmDialog(Main.rp, "Jesteś pewien?");
-                if(a == JOptionPane.YES_OPTION){
-                    /*
-                        Dość hakerski sposób odświeżania listy, polegający na przeładowaniu wszystkich komponentów
-                        aplikacji po usunięciu notatki, a później szybkiego przełączenia użytkownika z powrotem do
-                        menu listy notatek.
-                    */
-                    Main.noteList.removeNote(index);
-                    Main.reloadApp();
-                    Main.lt.show(Main.rp, "NoteList");
-                }
+            // Wyświetlenie okna dialogowego pytającego o potwierdzenie operacji
+            int a = JOptionPane.showConfirmDialog(Main.rp, "Jesteś pewien?");
+            if(a == JOptionPane.YES_OPTION){
+                /*
+                    Dość hakerski sposób odświeżania listy, polegający na przeładowaniu wszystkich komponentów
+                    aplikacji po usunięciu notatki, a później szybkiego przełączenia użytkownika z powrotem do
+                    menu listy notatek.
+                */
+                Main.noteList.removeNote(index);
+                Main.reloadApp(true);
+                Main.lt.show(Main.rp, "NoteList");
             }
         });
 
@@ -120,14 +117,19 @@ public class NoteListGUI extends JPanel{
         //Ustalenie rozmiaru elementu
         item.setSize(1100, 50);
 
+        //Dodanie logiki do elementu listy
         item.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Main.rn = new ReadNote(Main.noteList.getNote(index));
-                Main.reloadApp();
-                Main.lt.show(Main.rp,"ReadNote");
+                Main.rn = new ReadNote(Main.noteList.getNote(index)); //Stworzenie nowej reprezentacji listy notatek.
+                Main.reloadApp(false); //"Odświeżenie" aplikacji
+                Main.lt.show(Main.rp,"ReadNote"); /*
+                                                            Szybkie przełączenie na ekran odczytu notatki. Tak, żeby
+                                                            użytkownik się nie zorientował :-)
+                                                        */
             }
 
+            //Zbędny szajs
             @Override
             public void mousePressed(MouseEvent e) {}
 
@@ -144,11 +146,20 @@ public class NoteListGUI extends JPanel{
         return item;
     }
 
+    /**
+     * Metoda tworzy nowy element listy w postaci panelu z logotypem określającym rodzaj notatki, jej etykietą oraz panelem opcji
+     * @param note Notatka, z której będą pobierane dane.
+     * @param index Pozycja notatki na liście notatek (dodawana w konstruktorze).
+     * @return Obiekt reprezentujący element listy.
+     */
     private JPanel createListItem(ToDoNote note, int index){
 
         //Tworzenie panelu - ciała
         JPanel item = new JPanel();
-        item.setBackground(new Color(0,255,0));
+
+        //Przypisanie koloru w zależności od stopnia ukończenia zadań.
+        if(note.getCompleted()) item.setBackground(new Color(255,255,0)); //Zadania ukończone.
+        else item.setBackground(new Color(0,255,0)); //Zadania nieukończone.
 
         //Tworzenie układu oraz wartości modelowych
         GridBagLayout grid = new GridBagLayout();
@@ -174,11 +185,12 @@ public class NoteListGUI extends JPanel{
         item.add(icon, gbc);
 
         //Tworzenie etykiety z numerem porządkowym i etykietą notatki
-        JLabel l = new JLabel(
+        JLabel l;
+        l = new JLabel(
                 String.format("%d. %s",index+1,note.getLabel()),
-                SwingConstants.CENTER
-        );
+                SwingConstants.CENTER);
         l.setFont(new Font("Arial", Font.PLAIN, 20));
+
 
         //Ustawianie pozycji: pierwszy wiersz, druga kolumna, rozszerza się na trzy kolumny
         gbc.gridx = 1;
@@ -201,22 +213,19 @@ public class NoteListGUI extends JPanel{
         delete.setSize(56,28);
 
         //Dodawanie logiki do przycisku kasowania
-        delete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        delete.addActionListener(e -> {
 
-                // Wyświetlenie okna dialogowego pytającego o potwierdzenie operacji
-                int a = JOptionPane.showConfirmDialog(Main.rp, "Jesteś pewien?");
-                if(a == JOptionPane.YES_OPTION){
-                    /*
-                        Dość hakerski sposób odświeżania listy, polegający na przeładowaniu wszystkich komponentów
-                        aplikacji po usunięciu notatki, a później szybkiego przełączenia użytkownika z powrotem do
-                        menu listy notatek.
-                    */
-                    Main.noteList.removeNote(index);
-                    Main.reloadApp();
-                    Main.lt.show(Main.rp, "NoteList");
-                }
+            // Wyświetlenie okna dialogowego pytającego o potwierdzenie operacji
+            int a = JOptionPane.showConfirmDialog(Main.rp, "Jesteś pewien?");
+            if(a == JOptionPane.YES_OPTION){
+                /*
+                    Dość hakerski sposób odświeżania listy, polegający na przeładowaniu wszystkich komponentów
+                    aplikacji po usunięciu notatki, a później szybkiego przełączenia użytkownika z powrotem do
+                    menu listy notatek.
+                */
+                Main.noteList.removeNote(index);
+                Main.reloadApp(true);
+                Main.lt.show(Main.rp, "NoteList");
             }
         });
 
@@ -248,11 +257,15 @@ public class NoteListGUI extends JPanel{
         item.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Main.rn = new ReadNote((ToDoNote) Main.noteList.getNote(index));
-                Main.reloadApp();
-                Main.lt.show(Main.rp,"ReadNote");
+                Main.rn = new ReadNote((ToDoNote) Main.noteList.getNote(index), index); //Stworzenie nowej reprezentacji listy notatek.
+                Main.reloadApp(false); //"Odświeżenie" aplikacji
+                Main.lt.show(Main.rp,"ReadNote");  /*
+                                                            Szybkie przełączenie na ekran odczytu notatki. Tak, żeby
+                                                            użytkownik się nie zorientował :-)
+                                                        */
             }
 
+            //Zbędny szajs
             @Override
             public void mousePressed(MouseEvent e) {}
 

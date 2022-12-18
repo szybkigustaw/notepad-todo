@@ -4,9 +4,11 @@
     <option name="SCOPE_TYPE" value="10" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano panel podglądu notatki.">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano możliwość odhaczania zadań z poziomu podglądu notatki.&#10;Teraz notatki znają swój stan ukończenia zadań.&#10;Notatki z ukończonymi zadaniami są oznaczone.&#10;Usunięto zbędną opcję 2. w Menu Głównym.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Note.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Note.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HomeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomeMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NoteList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/NoteListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteListGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReadNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadNote.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ToDoNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ToDoNote.java" afterDir="false" />
@@ -38,13 +40,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "run.code.analysis.last.selected.profile": "pProject Default"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -75,7 +77,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671178950346</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Dodano podgląd notatek z listą zadań.&#10;Lista zadań rozróżnia poszczególny typ notatek.&#10;Notatki teraz przechowują informację o swoim typie.">
+      <created>1671185696866</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1671185696866</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -93,7 +102,9 @@
     <MESSAGE value="Pierwsza &quot;Funkcjonalna&quot; wersja - lista notatek i kasowanie notatek." />
     <MESSAGE value="+ dokumentacja w javadoc" />
     <MESSAGE value="Dodano panel podglądu notatki." />
-    <option name="LAST_COMMIT_MESSAGE" value="Dodano panel podglądu notatki." />
+    <MESSAGE value="Dodano podgląd notatek z listą zadań.&#10;Lista zadań rozróżnia poszczególny typ notatek.&#10;Notatki teraz przechowują informację o swoim typie." />
+    <MESSAGE value="Dodano możliwość odhaczania zadań z poziomu podglądu notatki.&#10;Teraz notatki znają swój stan ukończenia zadań.&#10;Notatki z ukończonymi zadaniami są oznaczone.&#10;Usunięto zbędną opcję 2. w Menu Głównym." />
+    <option name="LAST_COMMIT_MESSAGE" value="Dodano możliwość odhaczania zadań z poziomu podglądu notatki.&#10;Teraz notatki znają swój stan ukończenia zadań.&#10;Notatki z ukończonymi zadaniami są oznaczone.&#10;Usunięto zbędną opcję 2. w Menu Głównym." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

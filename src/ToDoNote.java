@@ -10,6 +10,7 @@ import java.util.Date;
 public class ToDoNote extends Note{
     private String[] todos;
     private boolean[] isChecked;
+    private boolean isCompleted;
 
     /**
      * Metoda zwracająca treść listy zadań.
@@ -67,6 +68,7 @@ public class ToDoNote extends Note{
      */
     public void setChecked(boolean[] isChecked){
         this.isChecked = isChecked;
+        this.verifyToDoCompletion();
     }
 
     /**
@@ -76,6 +78,32 @@ public class ToDoNote extends Note{
      */
     public void setChecked(boolean isChecked, int index){
         this.isChecked[index] = isChecked;
+        this.verifyToDoCompletion();
+    }
+
+    /**
+     * Metoda zwraca stan ukończenia listy zadań.
+     * @return Stan ukończenia listy zadań.
+     */
+    public boolean getCompleted(){ return this.isCompleted; }
+
+    /**
+     * Metoda przypisuje nowy stan ukończenia listy zadań.
+     * @param isCompleted Nowy stan ukończenia listy zadań.
+     */
+    public void setCompleted(boolean isCompleted) { this.isCompleted = isCompleted;}
+
+    /**
+     * Metoda weryfikująca stan ukończenia notatki. Koryguje wpis o stanie zakończenia notatki adekwatnie do jej aktualnego stanu.
+     */
+    public void verifyToDoCompletion(){
+        this.setCompleted(true);
+        for(boolean isChecked : this.getChecked()){
+            if(!isChecked){
+                this.setCompleted(false);
+                break;
+            }
+        }
     }
 
     /**
@@ -164,6 +192,7 @@ public class ToDoNote extends Note{
         this.setType(TODO_NOTE);
         this.setTodo(new String[]{"Sample text", "Sample text", "Sample text", "Sample text", "Sample text"});
         this.setChecked(new boolean[]{false,false,false,true,true});
+        this.verifyToDoCompletion();
     }
 
     /**
@@ -179,5 +208,6 @@ public class ToDoNote extends Note{
         this.setType(TODO_NOTE);
         this.setTodo(todos);
         this.setChecked(isChecked);
+        this.verifyToDoCompletion();
     }
 }

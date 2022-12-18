@@ -5,6 +5,8 @@
  * @author Michał Mikuła
  */
 public class NoteList {
+    static int FULL = 0;
+    static int HIDDEN = 1;
     private Note[] noteList;
 
     /**
@@ -98,13 +100,13 @@ public class NoteList {
                     break;
                 }
                 if(isAccepted){
-                    acceptedIndexes[cnt] = (Integer)i;
+                    acceptedIndexes[cnt] = i;
                     cnt++;
                 }
             }
         }
         for(int i = 0; i < newList.length; i++){
-            newList[i] = this.getNote((int)acceptedIndexes[i]);
+            newList[i] = this.getNote(acceptedIndexes[i]);
         }
         this.setNoteList(newList);
     }
@@ -123,12 +125,12 @@ public class NoteList {
                 isAccepted = false;
             }
             if(isAccepted){
-                acceptedIndexes[cnt] = (Integer)i;
+                acceptedIndexes[cnt] = i;
                 cnt++;
             }
         }
         for(int i = 0; i < newList.length; i++){
-            newList[i] = this.getNote((int)acceptedIndexes[i]);
+            newList[i] = this.getNote(acceptedIndexes[i]);
         }
         this.setNoteList(newList);
     }
@@ -143,10 +145,31 @@ public class NoteList {
     }
 
     /**
-     * Konstruktor parametryczny. Tworzy nową listę notatek opartą o podaną listę notatek.
-     * @param noteList
+     * Konstruktor parametryczny. Tworzy nową listę notatek opartą o podany zbiór notatek.
+     * @param noteList Zbiór notatek.
+     * @param list_mode Tryb przypisania listy. (Pełna = 0, tylko ukryte = 1)
      */
-    NoteList(Note[] noteList){
-        this.setNoteList(noteList);
+    NoteList(Note[] noteList, int list_mode){
+        if(list_mode == HIDDEN){
+            int hidden_count = 0;
+            for(int i = 0; i < noteList.length; i++){
+                if(noteList[i].getHidden()){
+                    hidden_count++;
+                }
+            }
+
+            Note[] hidden = new Note[hidden_count];
+            int cnt = 0;
+            for(int i = 0; i < noteList.length; i++){
+                if(noteList[i].getHidden()){
+                    hidden[cnt] = noteList[i];
+                    cnt++;
+                }
+            }
+
+            this.setNoteList(hidden);
+        } else if(list_mode == FULL){
+            this.setNoteList(noteList);
+        }
     }
 }
