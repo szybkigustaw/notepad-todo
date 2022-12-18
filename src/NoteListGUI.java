@@ -1,7 +1,6 @@
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -306,9 +305,56 @@ public class NoteListGUI extends JPanel{
         JScrollPane scrollPane = new JScrollPane(list_window, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setSize(1150, 750);
 
-        //Dodanie panelu do panelu głównego, ustalenie rozmiarów i pustego układu (tzw. róbta co chceta)
+        //Dodanie panelu do panelu głównego
         add(scrollPane);
+
+        //Tworzenie układu i wartości modelowych dla paska opcji.
+        GridBagConstraints gbc = new GridBagConstraints();
+        GridBagLayout layout = new GridBagLayout();
+
+        //Stworzenie paska opcji i nadanie mu rozmiarów.
+        JPanel option_bar = new JPanel(layout);
+        option_bar.setSize(1150, 64);
+
+        //Dodanie do paska ramki złożonej z dwóch pustych obramowań i czarnej ramki.
+        option_bar.setBorder(new CompoundBorder(
+                BorderFactory.createEmptyBorder(25, 25, 25, 25),
+                new CompoundBorder(
+                        BorderFactory.createLineBorder(new Color(0, 0, 0), 5, true),
+                        BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                )
+        ));
+
+        //Tworzenie przycisku powrotu do menu głównego.
+        JButton go_back = new JButton("Wróć do menu głównego");
+        go_back.setSize(256, 48);
+
+        //Dodanie funkcjonalności przycisku.
+        go_back.addActionListener(e -> Main.lt.show(Main.rp, "HomeMenu"));
+
+        //Dodanie przycisku do paska.
+        gbc.gridx = 1;
+        gbc.gridwidth = 3;
+        gbc.weightx = 0.4;
+        gbc.gridy = 0;
+        option_bar.add(go_back, gbc);
+
+        //Tworzenie przycisku pokazu listy ukrytych notatek.
+        JButton show_hidden = new JButton("Pokaż ukryte");
+        show_hidden.setSize(256, 48);
+
+        //Dodanie przycisku do paska.
+        gbc.gridx = 4;
+        gbc.gridwidth = 3;
+        gbc.weightx = 0.4;
+        gbc.gridy = 0;
+        option_bar.add(show_hidden, gbc);
+
+        //Dodanie paska do panelu głównego.
+        add(option_bar);
+
+        //Ustalenie rozmiarów panelu głównego i jego układu — liniowego pionowego.
         setSize(1150, 750);
-        setLayout(null);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
 }

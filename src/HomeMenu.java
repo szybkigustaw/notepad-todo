@@ -1,6 +1,8 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.*;
 
 import static java.awt.GridBagConstraints.RELATIVE;
 
@@ -50,7 +52,10 @@ public class HomeMenu extends JPanel{
         p.setBackground(new Color(243, 234, 234));
 
         //Dodanie czarnej ramki wokół panelu z opcjami.
-        p.setBorder(BorderFactory.createLineBorder(new Color(0,0,0),5,true));
+        p.setBorder(new CompoundBorder(
+                BorderFactory.createLineBorder(new Color(0, 0, 0), 5, true),
+                BorderFactory.createEmptyBorder(25, 25, 25 ,25)
+        ));
 
         //Tworzenie przycisku pierwszego
         JButton b1 = new JButton("Stworzyć nową notatkę / listę zadań");

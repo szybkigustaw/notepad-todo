@@ -127,30 +127,6 @@ public class Main {
 
 
     public static void main(String[] args) {
-        /*NoteList nl = new NoteList();
-        System.out.println(nl.getListLength());
-        nl.setNoteList(notes);
-        System.out.println(nl.getListLength());
-
-        for(Note note : nl.getNoteList()){
-            note.showNote();
-        }
-        nl.removeNote(3);
-        System.out.println(nl.getListLength());
-        for(Note note : nl.getNoteList()){
-            note.showNote();
-        }
-        nl.addNote(
-                new Note(
-                        "Bruh",
-                        "Plater śmierdzi",
-                        true
-                )
-        );
-        System.out.println(nl.getListLength());
-        for(Note note : nl.getNoteList()){
-            note.showNote();
-        }*/
         rp.setLayout(lt);
         rp.setBounds(0,0,1200,800);
         rp.setVisible(true);
