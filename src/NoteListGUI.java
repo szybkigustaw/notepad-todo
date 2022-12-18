@@ -23,6 +23,9 @@ public class NoteListGUI extends JPanel{
      */
     private JPanel createListItem(Note note, int index){
 
+        //Przypisanie zmiennej przechowującej informację o pozycji notatki na liście.
+        int note_index = Main.noteList.getNoteIndex(note);
+
         //Tworzenie panelu - ciała
         JPanel item = new JPanel();
         item.setBackground(new Color(0,255,0));
@@ -88,7 +91,7 @@ public class NoteListGUI extends JPanel{
                     aplikacji po usunięciu notatki, a później szybkiego przełączenia użytkownika z powrotem do
                     menu listy notatek.
                 */
-                Main.noteList.removeNote(Main.noteList.getNoteIndex(note));
+                Main.noteList.removeNote(note_index);
                 Main.reloadApp(true, hidden_mode);
                 Main.lt.show(Main.rp, "NoteList");
             }
@@ -123,7 +126,7 @@ public class NoteListGUI extends JPanel{
         item.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Main.rn = new ReadNote(Main.noteList.getNote(index)); //Stworzenie nowej reprezentacji listy notatek.
+                Main.rn = new ReadNote(Main.noteList.getNote(note_index), hidden_mode); //Stworzenie nowej reprezentacji listy notatek.
                 Main.reloadApp(false, hidden_mode); //"Odświeżenie" aplikacji
                 Main.lt.show(Main.rp,"ReadNote"); /*
                                                             Szybkie przełączenie na ekran odczytu notatki. Tak, żeby
@@ -155,6 +158,9 @@ public class NoteListGUI extends JPanel{
      * @return Obiekt reprezentujący element listy.
      */
     private JPanel createListItem(ToDoNote note, int index){
+
+        //Przypisanie zmiennej przechowującej informację o pozycji notatki na liście.
+        int note_index = Main.noteList.getNoteIndex(note);
 
         //Tworzenie panelu - ciała
         JPanel item = new JPanel();
@@ -225,7 +231,7 @@ public class NoteListGUI extends JPanel{
                     aplikacji po usunięciu notatki, a później szybkiego przełączenia użytkownika z powrotem do
                     menu listy notatek.
                 */
-                Main.noteList.removeNote(Main.noteList.getNoteIndex(note));
+                Main.noteList.removeNote(note_index);
                 Main.reloadApp(true, hidden_mode);
                 Main.lt.show(Main.rp, "NoteList");
             }
@@ -259,7 +265,7 @@ public class NoteListGUI extends JPanel{
         item.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Main.rn = new ReadNote((ToDoNote) Main.noteList.getNote(index), index); //Stworzenie nowej reprezentacji listy notatek.
+                Main.rn = new ReadNote((ToDoNote) Main.noteList.getNote(note_index), hidden_mode); //Stworzenie nowej reprezentacji graficzne notatki
                 Main.reloadApp(false, hidden_mode); //"Odświeżenie" aplikacji
                 Main.lt.show(Main.rp,"ReadNote");  /*
                                                             Szybkie przełączenie na ekran odczytu notatki. Tak, żeby

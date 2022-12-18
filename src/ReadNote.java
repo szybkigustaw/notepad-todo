@@ -10,6 +10,7 @@ public class ReadNote extends JPanel {
     private Note note;
     private ToDoNote todo_note;
     private int index;
+    private boolean hidden_mode;
 
     /**
      * Metoda zwracająca notatkę aktualnie podglądaną w panelu.
@@ -149,10 +150,12 @@ public class ReadNote extends JPanel {
     /**
      * Konstruktor parametryczny. Tworzy panel z podglądem notatki, pobierając dane z podanej notatki.
      * @param note Notatka podglądana w panelu.
+     * @param hidden_mode Stan tzw. trybu ukrytego (powrotu do listy ukrytych notatek)
      */
-    ReadNote(Note note){
+    ReadNote(Note note, boolean hidden_mode){
         //Przypisanie do pola obiektu obecnej notatki.
         this.note = note;
+        this.index = Main.noteList.getNoteIndex(this.getNote());
 
         //Tworzenie układu i wartości modelowych.
         GridBagLayout layout = new GridBagLayout();
@@ -207,7 +210,11 @@ public class ReadNote extends JPanel {
         go_back.setSize(200, 48);
 
         //Dodanie funkcjonalności do przycisku.
-        go_back.addActionListener(e -> Main.lt.show(Main.rp, "NoteList"));
+        go_back.addActionListener(e -> {
+            Main.noteList.setNote(this.getNote(), this.getIndex());
+            Main.reloadApp(true, hidden_mode);
+            Main.lt.show(Main.rp, "NoteList");
+        });
 
         //Wstawianie przycisku do paska.
         ob_gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -216,8 +223,19 @@ public class ReadNote extends JPanel {
         option_bar.add(go_back, ob_gbc);
 
         //Tworzenie przycisku ukrywającego notatkę (dodającego do listy ukrytych).
-        JButton hide = new JButton("Ukryj");
+        JButton hide = new JButton();
+        hide.setText(note.getHidden() ? "Upublicznij" : "Ukryj");
         hide.setSize(200, 48);
+
+        //Dodanie funkcjonalności do przycisku.
+        hide.addActionListener(e -> {
+            note.setHidden(!(note.getHidden()));
+            JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
+            boolean hm = this.hidden_mode;
+            Main.rn = new ReadNote(this.getNote(), this.hidden_mode);
+            Main.reloadApp(true, hm);
+            Main.lt.show(Main.rp, "ReadNote");
+        });
 
         //Wstawianie przycisku do paska.
         ob_gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -235,12 +253,12 @@ public class ReadNote extends JPanel {
     /**
      * Konstruktor parametryczny. Tworzy panel z podglądem notatki, pobierając dane z podanej notatki. Implementuje listę zadań z tej notatki.
      * @param note Notatka z listą zadań podglądana w panelu.
-     * @param index Pozycja notatki na liście.
+     * @param hidden_mode Stan tzw. trybu ukrytego (powrotu do listy ukrytych notatek)
      */
-    ReadNote(ToDoNote note, int index){
+    ReadNote(ToDoNote note, boolean hidden_mode){
         //Przypisanie do pól obiektu obecnej notatki oraz jej pozycji na liście
         this.todo_note = note;
-        this.index = index;
+        this.index = Main.noteList.getNoteIndex(this.getTodo_note());
 
         //Tworzenie układu i wartości modelowych.
         GridBagLayout layout = new GridBagLayout();
@@ -319,7 +337,7 @@ public class ReadNote extends JPanel {
         //Dodanie funkcjonalności do przycisku.
         go_back.addActionListener(e -> {
             Main.noteList.setNote(this.getTodo_note(), this.getIndex());
-            Main.reloadApp(true, false);
+            Main.reloadApp(true, hidden_mode);
             Main.lt.show(Main.rp, "NoteList");
         });
 
@@ -331,8 +349,19 @@ public class ReadNote extends JPanel {
 
 
         //Tworzenie przycisku ukrywającego notatkę (dodającego do listy ukrytych).
-        JButton hide = new JButton("Ukryj");
+        JButton hide = new JButton();
+        hide.setText(todo_note.getHidden() ? "Upublicznij" : "Ukryj");
         hide.setSize(200, 48);
+
+        //Dodanie funkcjonalności do przycisku
+        hide.addActionListener(e -> {
+            note.setHidden(!(note.getHidden()));
+            JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
+            boolean hm = this.hidden_mode;
+            Main.rn = new ReadNote(this.getTodo_note(), this.hidden_mode);
+            Main.reloadApp(true, hm);
+            Main.lt.show(Main.rp, "ReadNote");
+        });
 
         //Wstawianie przycisku do paska.
         ob_gbc.fill = GridBagConstraints.HORIZONTAL;
