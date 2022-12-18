@@ -95,7 +95,7 @@ public class Main {
             )
     };
 
-    public static NoteList noteList = new NoteList(notes, NoteList.FULL);
+    public static NoteList noteList = new NoteList(notes, NoteList.PUBLIC);
 
     static public CardLayout lt = new CardLayout(25, 25);
     static public JFrame main_frame = new JFrame("Notepad");
@@ -105,11 +105,19 @@ public class Main {
     static public ReadNote rn = new ReadNote();
     static public EditNote en;
 
-    static public void reloadApp(boolean reloadList){
+    static public String password = "essa123";
+
+    static public void reloadApp(boolean reloadList, boolean reloadHidden){
         rp.removeAll();
 
         hm = new HomeMenu();
-        if(reloadList) nl = new NoteListGUI(noteList);
+        if(reloadList) {
+            if(!reloadHidden) nl = new NoteListGUI(noteList);
+            else {
+                noteList = new NoteList(notes, NoteList.HIDDEN);
+                nl = new NoteListGUI(noteList);
+            }
+        }
 
         rp.setLayout(lt);
         rp.setBounds(0,0,1200,800);

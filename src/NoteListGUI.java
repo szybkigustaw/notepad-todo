@@ -3,6 +3,7 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Objects;
 
 /**
  * Klasa reprezentująca panel z listą notatek. Notatki z tego poziomu można kasować oraz podawać do edycji.
@@ -86,7 +87,7 @@ public class NoteListGUI extends JPanel{
                     menu listy notatek.
                 */
                 Main.noteList.removeNote(index);
-                Main.reloadApp(true);
+                Main.reloadApp(true, false);
                 Main.lt.show(Main.rp, "NoteList");
             }
         });
@@ -121,7 +122,7 @@ public class NoteListGUI extends JPanel{
             @Override
             public void mouseClicked(MouseEvent e) {
                 Main.rn = new ReadNote(Main.noteList.getNote(index)); //Stworzenie nowej reprezentacji listy notatek.
-                Main.reloadApp(false); //"Odświeżenie" aplikacji
+                Main.reloadApp(false, false); //"Odświeżenie" aplikacji
                 Main.lt.show(Main.rp,"ReadNote"); /*
                                                             Szybkie przełączenie na ekran odczytu notatki. Tak, żeby
                                                             użytkownik się nie zorientował :-)
@@ -223,7 +224,7 @@ public class NoteListGUI extends JPanel{
                     menu listy notatek.
                 */
                 Main.noteList.removeNote(index);
-                Main.reloadApp(true);
+                Main.reloadApp(true, false);
                 Main.lt.show(Main.rp, "NoteList");
             }
         });
@@ -257,7 +258,7 @@ public class NoteListGUI extends JPanel{
             @Override
             public void mouseClicked(MouseEvent e) {
                 Main.rn = new ReadNote((ToDoNote) Main.noteList.getNote(index), index); //Stworzenie nowej reprezentacji listy notatek.
-                Main.reloadApp(false); //"Odświeżenie" aplikacji
+                Main.reloadApp(false, false); //"Odświeżenie" aplikacji
                 Main.lt.show(Main.rp,"ReadNote");  /*
                                                             Szybkie przełączenie na ekran odczytu notatki. Tak, żeby
                                                             użytkownik się nie zorientował :-)
@@ -314,7 +315,7 @@ public class NoteListGUI extends JPanel{
 
         //Stworzenie paska opcji i nadanie mu rozmiarów.
         JPanel option_bar = new JPanel(layout);
-        option_bar.setSize(1150, 64);
+        option_bar.setMaximumSize(new Dimension(1150, 64));
 
         //Dodanie do paska ramki złożonej z dwóch pustych obramowań i czarnej ramki.
         option_bar.setBorder(new CompoundBorder(
@@ -342,6 +343,21 @@ public class NoteListGUI extends JPanel{
         //Tworzenie przycisku pokazu listy ukrytych notatek.
         JButton show_hidden = new JButton("Pokaż ukryte");
         show_hidden.setSize(256, 48);
+
+        //Dodanie funkcjonalności przycisku.
+        show_hidden.addActionListener(e -> {
+
+            //Prośba o podanie hasła
+            String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło dostępowe");
+            if(!Objects.equals(pass, Main.password)){
+                JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
+            } else {
+                Main.noteList = new NoteList(Main.notes, NoteList.HIDDEN);
+                Main.nl = new NoteListGUI(Main.noteList);
+                Main.reloadApp(true, true);
+                Main.lt.show(Main.rp, "NoteList");
+            }
+        });
 
         //Dodanie przycisku do paska.
         gbc.gridx = 4;

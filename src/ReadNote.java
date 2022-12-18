@@ -319,7 +319,7 @@ public class ReadNote extends JPanel {
         //Dodanie funkcjonalności do przycisku.
         go_back.addActionListener(e -> {
             Main.noteList.setNote(this.getTodo_note(), this.getIndex());
-            Main.reloadApp(true);
+            Main.reloadApp(true, false);
             Main.lt.show(Main.rp, "NoteList");
         });
 

@@ -1,7 +1,5 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 import static java.awt.GridBagConstraints.RELATIVE;
@@ -69,10 +67,11 @@ public class HomeMenu extends JPanel{
         b2.setSize(p.getWidth(), 75);
         b2.setFont(new Font("Arial", Font.PLAIN, 32));
 
-        //Dodawanie akcji do przycisku trzeciego - przejście do widoku listy notatek
+        //Dodawanie akcji do przycisku drugiego - przejście do widoku listy notatek
         b2.addActionListener(e -> {
+                Main.noteList = new NoteList(Main.notes, NoteList.PUBLIC); //Tworzenie reprezentacji listy notatek - pozycje publiczne
                 Main.nl = new NoteListGUI(Main.noteList); //Odświeżenie listy notatek - na wszelki wypadek.
-                Main.reloadApp(true); //"Odświeżenie" aplikacji.
+                Main.reloadApp(true, false); //"Odświeżenie" aplikacji.
                 Main.lt.show(Main.rp, "NoteList"); //Szybki przeskok do listy notatek.
             });
 
