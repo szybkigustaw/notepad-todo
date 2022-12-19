@@ -29,6 +29,7 @@ public class NoteListGUI extends JPanel{
         //Tworzenie panelu - ciała
         JPanel item = new JPanel();
         item.setBackground(new Color(0,255,0));
+        item.setMaximumSize(new Dimension(1100, 50));
 
         //Tworzenie układu oraz wartości modelowych
         GridBagLayout grid = new GridBagLayout();
@@ -75,6 +76,13 @@ public class NoteListGUI extends JPanel{
         //Tworzenie przycisku edycji notatki
         JButton edit = new JButton("E");
         edit.setSize(56,28);
+
+        //Dodanie logiki do przycisku edycji
+        edit.addActionListener(e -> {
+            Main.en = new EditNote(Main.noteList.getNote(note_index), note_index, hidden_mode);
+            Main.reloadApp(false, hidden_mode);
+            Main.lt.show(Main.rp, "EditNote");
+        });
 
         //Tworzenie przycisku kasowania notatki
         JButton delete = new JButton("X");
@@ -215,6 +223,13 @@ public class NoteListGUI extends JPanel{
         //Tworzenie przycisku edycji notatki
         JButton edit = new JButton("E");
         edit.setSize(56,28);
+
+        //Dodanie logiki do przycisku edycji
+        edit.addActionListener(e -> {
+            Main.en = new EditNote((ToDoNote)Main.noteList.getNote(note_index), note_index, hidden_mode);
+            Main.reloadApp(false, hidden_mode);
+            Main.lt.show(Main.rp, "EditNote");
+        });
 
         //Tworzenie przycisku kasowania notatki
         JButton delete = new JButton("X");

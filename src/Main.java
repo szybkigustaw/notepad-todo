@@ -2,99 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Main {
-    public static Note[] notes = {
-            new Note(),
-            new Note(),
-            new ToDoNote(),
-            new Note(
-                    "Najs",
-                    "Dzisiaj zjadłem psa. Nawet smaczny.",
-                    true
-            ),
-            new ToDoNote(
-                    "Essa",
-                    "Oto zadania na dzisiejszy dzień :)",
-                    new String[]{"Odkurz pokój", "Zjedz psa", "Zamów esse"},
-                    new boolean[]{false, true, true},
-                    false
-            ),
-            new Note(),
-            new Note(),
-            new ToDoNote(),
-            new Note(
-                    "Najs",
-                    "Dzisiaj zjadłem psa. Nawet smaczny.",
-                    true
-            ),
-            new ToDoNote(
-                    "Essa",
-                    "Oto zadania na dzisiejszy dzień :)",
-                    new String[]{"Odkurz pokój", "Zjedz psa", "Zamów esse"},
-                    new boolean[]{false, true, true},
-                    false
-            ),
-            new Note(),
-            new Note(),
-            new ToDoNote(),
-            new Note(
-                    "Najs",
-                    "Dzisiaj zjadłem psa. Nawet smaczny.",
-                    false
-            ),
-            new ToDoNote(
-                    "Essa",
-                    "Oto zadania na dzisiejszy dzień :)",
-                    new String[]{"Odkurz pokój", "Zjedz psa", "Zamów esse"},
-                    new boolean[]{false, true, true},
-                    false
-            ),
-            new Note(),
-            new Note(),
-            new ToDoNote(),
-            new Note(
-                    "Najs",
-                    "Dzisiaj zjadłem psa. Nawet smaczny.",
-                    false
-            ),
-            new ToDoNote(
-                    "Essa",
-                    "Oto zadania na dzisiejszy dzień :)",
-                    new String[]{"Odkurz pokój", "Zjedz psa", "Zamów esse"},
-                    new boolean[]{false, true, true},
-                    true
-            ),
-            new Note(),
-            new Note(),
-            new ToDoNote(),
-            new Note(
-                    "Najs",
-                    "Dzisiaj zjadłem psa. Nawet smaczny.",
-                    false
-            ),
-            new ToDoNote(
-                    "Essa",
-                    "Oto zadania na dzisiejszy dzień :)",
-                    new String[]{"Odkurz pokój", "Zjedz psa", "Zamów esse"},
-                    new boolean[]{false, true, true},
-                    false
-            ),
-            new Note(),
-            new Note(),
-            new ToDoNote(),
-            new Note(
-                    "Najs",
-                    "Dzisiaj zjadłem psa. Nawet smaczny.",
-                    false
-            ),
-            new ToDoNote(
-                    "Essa",
-                    "Oto zadania na dzisiejszy dzień :)",
-                    new String[]{"Odkurz pokój", "Zjedz psa", "Zamów esse"},
-                    new boolean[]{false, true, true},
-                    true
-            )
-    };
-
+    public static Note[] notes = new Note[0];
     public static NoteList noteList = new NoteList(notes, NoteList.FULL);
 
     static public CardLayout lt = new CardLayout(25, 25);
@@ -134,7 +42,7 @@ public class Main {
         lt.addLayoutComponent(rn, "ReadNote");
         lt.addLayoutComponent(en, "EditNote");
         main_frame.add(rp);
-        main_frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        main_frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         main_frame.setVisible(true);
     }
 
@@ -148,9 +56,7 @@ public class Main {
         lt.addLayoutComponent(hm, "HomeMenu");
         lt.addLayoutComponent(nl, "NoteList");
         main_frame.add(rp);
-        main_frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        main_frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         main_frame.setVisible(true);
-
-
     }
 }
