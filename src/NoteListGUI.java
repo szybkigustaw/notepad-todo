@@ -177,6 +177,9 @@ public class NoteListGUI extends JPanel{
         if(note.getCompleted()) item.setBackground(new Color(255,255,0)); //Zadania ukończone.
         else item.setBackground(new Color(0,255,0)); //Zadania nieukończone.
 
+        //Ustawianie maksymalnego rozmiaru elementu.
+        item.setMaximumSize(new Dimension(1100, 50));
+
         //Tworzenie układu oraz wartości modelowych
         GridBagLayout grid = new GridBagLayout();
         GridBagConstraints gbc = new GridBagConstraints();
