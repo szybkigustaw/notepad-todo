@@ -13,7 +13,6 @@ public class EditNote extends JPanel {
     private final String DEFAULT_LABEL = "Wprowadź etykietę notatki.";
     private final String DEFAULT_TEXT = "Lorem ipsum blablabla. \n Wprowadź coś lepszego";
     private final String DEFAULT_TODO = "Zjedz psa (Wprowadź coś lepszego)";
-    private boolean hidden_mode;
     private boolean todo_note;
 
     private JPanel createTodo(int index){
@@ -291,7 +290,7 @@ public class EditNote extends JPanel {
                 note.setType(Note.NOTE);
                 todos.add(alt_todo);
 
-                Main.reloadApp(false, false);
+                Main.reloadApp(false);
                 Main.lt.show(Main.rp, "EditNote");
             }
 
@@ -315,7 +314,7 @@ public class EditNote extends JPanel {
                 todos.add(createTodo(note.getTodo().length - 1));
                 todos.add(alt_todo);
 
-                Main.reloadApp(false, false);
+                Main.reloadApp(false);
                 Main.lt.show(Main.rp, "EditNote");
             }
 
@@ -368,7 +367,7 @@ public class EditNote extends JPanel {
 
         save.addActionListener(e -> {
                 Main.noteList.addNote(note);
-                Main.reloadApp(true, false);
+                Main.reloadApp(true);
                 Main.lt.show(Main.rp, "HomeMenu");
         });
 
@@ -384,7 +383,7 @@ public class EditNote extends JPanel {
             if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
             " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
             JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
-                Main.reloadApp(false, false);
+                Main.reloadApp(false);
                 Main.lt.show(Main.rp, "HomeMenu");
             }
         });
@@ -402,7 +401,7 @@ public class EditNote extends JPanel {
         add(option_bar, gbc);
     }
 
-    EditNote(Note loaded_note, int note_index, boolean hidden_mode){
+    EditNote(Note loaded_note, int note_index){
         this.note = (ToDoNote) loaded_note;
         note.setType(Note.NOTE);
         this.note.setTodo(new String[0]);
@@ -537,7 +536,7 @@ public class EditNote extends JPanel {
                 note.setType(Note.NOTE);
                 todos.add(alt_todo);
 
-                Main.reloadApp(false, false);
+                Main.reloadApp(false);
                 Main.lt.show(Main.rp, "EditNote");
             }
 
@@ -561,7 +560,7 @@ public class EditNote extends JPanel {
                 todos.add(createTodo(note.getTodo().length - 1));
                 todos.add(alt_todo);
 
-                Main.reloadApp(false, false);
+                Main.reloadApp(false);
                 Main.lt.show(Main.rp, "EditNote");
             }
 
@@ -615,7 +614,7 @@ public class EditNote extends JPanel {
         save.addActionListener(e -> {
             if(this.note.getType() == Note.TODO_NOTE) this.note.verifyToDoCompletion();
             Main.noteList.setNote(this.note, note_index);
-            Main.reloadApp(true, hidden_mode);
+            Main.reloadApp(true);
             Main.lt.show(Main.rp, "HomeMenu");
         });
 
@@ -631,7 +630,7 @@ public class EditNote extends JPanel {
             if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
                             " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
                     JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
-                Main.reloadApp(false, hidden_mode);
+                Main.reloadApp(false);
                 Main.lt.show(Main.rp, "HomeMenu");
             }
         });
@@ -649,7 +648,7 @@ public class EditNote extends JPanel {
         add(option_bar, gbc);
     }
 
-    EditNote(ToDoNote loaded_note, int note_index, boolean hidden_mode){
+    EditNote(ToDoNote loaded_note, int note_index){
         this.note = loaded_note;
         note.setType(Note.NOTE);
 
@@ -783,7 +782,7 @@ public class EditNote extends JPanel {
                 note.setType(Note.NOTE);
                 todos.add(alt_todo);
 
-                Main.reloadApp(false, false);
+                Main.reloadApp(false);
                 Main.lt.show(Main.rp, "EditNote");
             }
 
@@ -807,7 +806,7 @@ public class EditNote extends JPanel {
                 todos.add(createTodo(note.getTodo().length - 1));
                 todos.add(alt_todo);
 
-                Main.reloadApp(false, false);
+                Main.reloadApp(false);
                 Main.lt.show(Main.rp, "EditNote");
             }
 
@@ -865,7 +864,7 @@ public class EditNote extends JPanel {
         save.addActionListener(e -> {
             if(this.note.getType() == Note.TODO_NOTE) this.note.verifyToDoCompletion();
             Main.noteList.setNote(this.note, note_index);
-            Main.reloadApp(true, hidden_mode);
+            Main.reloadApp(true);
             Main.lt.show(Main.rp, "HomeMenu");
         });
 
@@ -881,7 +880,7 @@ public class EditNote extends JPanel {
             if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
                             " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
                     JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
-                Main.reloadApp(false, hidden_mode);
+                Main.reloadApp(false);
                 Main.lt.show(Main.rp, "HomeMenu");
             }
         });

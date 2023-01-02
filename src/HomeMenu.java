@@ -64,7 +64,7 @@ public class HomeMenu extends JPanel{
         //Dodanie akcji do przycisku pierwszego - przejście do widoku edycji notatki (Notatka pusta = nowa)
         b1.addActionListener(e -> {
             Main.en = new EditNote();
-            Main.reloadApp(false, false);
+            Main.reloadApp(false);
             Main.lt.show(Main.rp, "EditNote");
         });
 
@@ -76,7 +76,7 @@ public class HomeMenu extends JPanel{
 
         //Dodawanie akcji do przycisku drugiego - przejście do widoku listy notatek
         b2.addActionListener(e -> {
-                Main.reloadApp(true, false); //"Odświeżenie" aplikacji.
+                Main.reloadApp(true); //"Odświeżenie" aplikacji.
                 Main.lt.show(Main.rp, "NoteList"); //Szybki przeskok do listy notatek.
             });
 

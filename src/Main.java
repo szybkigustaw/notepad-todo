@@ -12,25 +12,20 @@ public class Main {
     static public JFrame main_frame = new JFrame("Notepad");
     static public JPanel rp = new JPanel();
     static public HomeMenu hm = new HomeMenu();
-    static public NoteListGUI nl = new NoteListGUI(noteList, false);
+    static public NoteListGUI nl = new NoteListGUI(noteList);
     static public ReadNote rn = new ReadNote();
     static public EditNote en = new EditNote();
+    static public boolean hidden_mode = false;
 
     static public String password = "essa123";
 
-    static public void reloadApp(boolean reloadList, boolean reloadHidden){
+    static public void reloadApp(boolean reloadList){
         rp.removeAll();
 
         hm = new HomeMenu();
         if(reloadList) {
-            if(!reloadHidden) {
-                NoteList hold = new NoteList(noteList.getNoteList(), NoteList.PUBLIC);
-                nl = new NoteListGUI(hold, false);
-            }
-            else {
-                NoteList hold = new NoteList(noteList.getNoteList(), NoteList.HIDDEN);
-                nl = new NoteListGUI(hold, true);
-            }
+                NoteList hold = new NoteList(noteList.getNoteList(), hidden_mode ? NoteList.HIDDEN : NoteList.PUBLIC);
+                nl = new NoteListGUI(hold);
         }
 
         rp.setLayout(lt);
@@ -78,7 +73,7 @@ public class Main {
                     fh.setFile_path(fc.getSelectedFile().getPath());
                     fh.parseXml();
                     noteList.setNoteList(fh.parseDocToNotes().getNoteList());
-                    Main.reloadApp(true, false);
+                    Main.reloadApp(true);
                 } catch(Exception ex) {
                     System.out.println("Bruh");
                 } finally {
@@ -105,6 +100,7 @@ public class Main {
         });
 
         file.add(open); file.add(save);
+
         mb.add(file);
         main_frame.setJMenuBar(mb);
     }

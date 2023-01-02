@@ -13,8 +13,6 @@ import java.util.Objects;
  */
 public class NoteListGUI extends JPanel{
 
-    private boolean hidden_mode;
-
     /**
      * Metoda tworzy nowy element listy w postaci panelu z logotypem określającym rodzaj notatki, jej etykietą oraz panelem opcji
      * @param note Notatka, z której będą pobierane dane.
@@ -79,8 +77,8 @@ public class NoteListGUI extends JPanel{
 
         //Dodanie logiki do przycisku edycji
         edit.addActionListener(e -> {
-            Main.en = new EditNote(Main.noteList.getNote(note_index), note_index, hidden_mode);
-            Main.reloadApp(false, hidden_mode);
+            Main.en = new EditNote(Main.noteList.getNote(note_index), note_index);
+            Main.reloadApp(false);
             Main.lt.show(Main.rp, "EditNote");
         });
 
@@ -100,7 +98,7 @@ public class NoteListGUI extends JPanel{
                     menu listy notatek.
                 */
                 Main.noteList.removeNote(note_index);
-                Main.reloadApp(true, hidden_mode);
+                Main.reloadApp(true);
                 Main.lt.show(Main.rp, "NoteList");
             }
         });
@@ -134,8 +132,8 @@ public class NoteListGUI extends JPanel{
         item.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Main.rn = new ReadNote(Main.noteList.getNote(note_index), hidden_mode); //Stworzenie nowej reprezentacji listy notatek.
-                Main.reloadApp(false, hidden_mode); //"Odświeżenie" aplikacji
+                Main.rn = new ReadNote(Main.noteList.getNote(note_index)); //Stworzenie nowej reprezentacji listy notatek.
+                Main.reloadApp(false); //"Odświeżenie" aplikacji
                 Main.lt.show(Main.rp,"ReadNote"); /*
                                                             Szybkie przełączenie na ekran odczytu notatki. Tak, żeby
                                                             użytkownik się nie zorientował :-)
@@ -229,8 +227,8 @@ public class NoteListGUI extends JPanel{
 
         //Dodanie logiki do przycisku edycji
         edit.addActionListener(e -> {
-            Main.en = new EditNote((ToDoNote)Main.noteList.getNote(note_index), note_index, hidden_mode);
-            Main.reloadApp(false, hidden_mode);
+            Main.en = new EditNote((ToDoNote)Main.noteList.getNote(note_index), note_index);
+            Main.reloadApp(false);
             Main.lt.show(Main.rp, "EditNote");
         });
 
@@ -250,7 +248,7 @@ public class NoteListGUI extends JPanel{
                     menu listy notatek.
                 */
                 Main.noteList.removeNote(note_index);
-                Main.reloadApp(true, hidden_mode);
+                Main.reloadApp(true);
                 Main.lt.show(Main.rp, "NoteList");
             }
         });
@@ -283,8 +281,8 @@ public class NoteListGUI extends JPanel{
         item.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Main.rn = new ReadNote((ToDoNote) Main.noteList.getNote(note_index), hidden_mode); //Stworzenie nowej reprezentacji graficzne notatki
-                Main.reloadApp(false, hidden_mode); //"Odświeżenie" aplikacji
+                Main.rn = new ReadNote((ToDoNote) Main.noteList.getNote(note_index)); //Stworzenie nowej reprezentacji graficzne notatki
+                Main.reloadApp(false); //"Odświeżenie" aplikacji
                 Main.lt.show(Main.rp,"ReadNote");  /*
                                                             Szybkie przełączenie na ekran odczytu notatki. Tak, żeby
                                                             użytkownik się nie zorientował :-)
@@ -311,11 +309,9 @@ public class NoteListGUI extends JPanel{
     /**
      * Konstruktor domyślny. Tworzy nowy panel z menu listy notatek.
      * @param notes Lista notatek, na bazie której powstanie panel.
-     * @param hidden_mode Stan trybu ukrytego (pokazywania tylko ukrytych notatek).
      */
-    NoteListGUI(NoteList notes, boolean hidden_mode){
+    NoteListGUI(NoteList notes){
         //Przypisanie do pola obiektu o trybie ukrytym
-        this.hidden_mode = hidden_mode;
 
         //Utworzenie panelu z listą
         JPanel list_window = new JPanel();
@@ -392,23 +388,25 @@ public class NoteListGUI extends JPanel{
 
         //Tworzenie przycisku pokazu listy ukrytych notatek.
         JButton show_hidden = new JButton();
-        if(!this.hidden_mode) show_hidden.setText("Pokaż ukryte");
+        if(!Main.hidden_mode) show_hidden.setText("Pokaż ukryte");
         else show_hidden.setText("Pokaż publiczne");
         show_hidden.setSize(256, 48);
 
         //Dodanie funkcjonalności przycisku.
         show_hidden.addActionListener(e -> {
-        if(!this.hidden_mode){
+        if(!Main.hidden_mode){
             //Prośba o podanie hasła
             String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło dostępowe");
             if(!Objects.equals(pass, Main.password)){
                 JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
             } else {
-                Main.reloadApp(true, !this.hidden_mode);
+                Main.hidden_mode = !Main.hidden_mode;
+                Main.reloadApp(true);
                 Main.lt.show(Main.rp, "NoteList");
             }
         } else {
-            Main.reloadApp(true, !this.hidden_mode);
+            Main.hidden_mode = !Main.hidden_mode;
+            Main.reloadApp(true);
             Main.lt.show(Main.rp, "NoteList");
         }
         });

@@ -4,11 +4,13 @@
     <option name="SCOPE_TYPE" value="10" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano możliwość edycji notatek.&#10;Dodano możliwość konwersji notatki ze standardowej notatki do notatki z listą zadań i vice versa.">
-      <change afterPath="$PROJECT_DIR$/src/FileHandler.java" afterDir="false" />
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Naprawa wyglądu notatek TODO-Note - brak maksymalnego zdefiniowanego rozmiaru.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EditNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EditNote.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/HomeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomeMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NoteListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteListGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReadNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadNote.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,7 +139,28 @@
       <option name="project" value="LOCAL" />
       <updated>1671450344335</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Dodanie warstwy komunikacji I/O z plikami XML. Odczyt i zapis notatek z/do pliku.&#10;Nowa klasa FileHandler obsługuje operacje wejścia/wyjścia na plikach XML, z których to pobiera dane o notatkach i listach zadań, przekazując je do listy notatek wewnątrz programu. Z niej również zczytuje te dane i zapisuje do pliku XML. Koncepcja działająca, przetestowana. Brak implementacji.">
+      <created>1672671298992</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1672671298992</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Dodanie paska menu, funkcjonalnych opcji zapisu i odczytu plików XML z notatkami.">
+      <created>1672687468230</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1672687468230</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Naprawa wyglądu notatek TODO-Note - brak maksymalnego zdefiniowanego rozmiaru.">
+      <created>1672687707641</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1672687707641</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -175,7 +198,10 @@
     <MESSAGE value="Teraz panel ReadNote jest świadomy trybu ukrytego (tzn. trybu, w którym po operacji na notatce ma wrócić do listy notatek ukrytych).&#10;Teraz z poziomu panelu ReadNote można ukrywać i upubliczniać notatki.&#10;Naprawiono błąd związany z nieprawidłowym otwieraniem się i usuwaniem notatek." />
     <MESSAGE value="Teraz można dodawać nowe notatki (zarówno zwykłe, jak i listy zadań).&#10;Upublicznienie notatki wymaga podania hasła.&#10;Listy zadań zostały umieszczone w &quot;szybach&quot; ze suwakiem z boku (do przewijania)." />
     <MESSAGE value="Dodano możliwość edycji notatek.&#10;Dodano możliwość konwersji notatki ze standardowej notatki do notatki z listą zadań i vice versa." />
-    <option name="LAST_COMMIT_MESSAGE" value="Dodano możliwość edycji notatek.&#10;Dodano możliwość konwersji notatki ze standardowej notatki do notatki z listą zadań i vice versa." />
+    <MESSAGE value="Dodanie warstwy komunikacji I/O z plikami XML. Odczyt i zapis notatek z/do pliku.&#10;Nowa klasa FileHandler obsługuje operacje wejścia/wyjścia na plikach XML, z których to pobiera dane o notatkach i listach zadań, przekazując je do listy notatek wewnątrz programu. Z niej również zczytuje te dane i zapisuje do pliku XML. Koncepcja działająca, przetestowana. Brak implementacji." />
+    <MESSAGE value="Dodanie paska menu, funkcjonalnych opcji zapisu i odczytu plików XML z notatkami." />
+    <MESSAGE value="Naprawa wyglądu notatek TODO-Note - brak maksymalnego zdefiniowanego rozmiaru." />
+    <option name="LAST_COMMIT_MESSAGE" value="Naprawa wyglądu notatek TODO-Note - brak maksymalnego zdefiniowanego rozmiaru." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
