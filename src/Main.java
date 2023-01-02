@@ -1,5 +1,8 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.File;
 
 public class Main {
     public static FileHandler fh = new FileHandler("/home/plq/Documents/notatki.xml");
@@ -59,5 +62,50 @@ public class Main {
         main_frame.add(rp);
         main_frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         main_frame.setVisible(true);
+
+        JMenuBar mb = new JMenuBar();
+        JMenu file = new JMenu("Plik");
+        JMenuItem open = new JMenuItem("Otwórz plik");
+        JMenuItem save = new JMenuItem("Zapisz do pliku");
+
+        open.addActionListener(e -> {
+            JFileChooser fc = new JFileChooser();
+            fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
+            int i = fc.showOpenDialog(main_frame);
+            if(i==JFileChooser.APPROVE_OPTION){
+                try {
+                    fh.setXml_file(fc.getSelectedFile());
+                    fh.setFile_path(fc.getSelectedFile().getPath());
+                    fh.parseXml();
+                    noteList.setNoteList(fh.parseDocToNotes().getNoteList());
+                    Main.reloadApp(true, false);
+                } catch(Exception ex) {
+                    System.out.println("Bruh");
+                } finally {
+                    JOptionPane.showMessageDialog(main_frame, "Pomyślnie wczytano notatki z pliku", "Wczytywanie pliku", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+
+        save.addActionListener(e -> {
+            JFileChooser fc = new JFileChooser();
+            fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
+            int i = fc.showSaveDialog(main_frame);
+            if(i == JFileChooser.APPROVE_OPTION){
+                try{
+                    fh.setXml_file(fc.getSelectedFile());
+                    fh.setFile_path(fc.getSelectedFile().getPath());
+                    fh.parseToFile(noteList);
+                } catch (Exception ex) {
+                    System.out.println("bruh");
+                } finally {
+                    JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+
+        file.add(open); file.add(save);
+        mb.add(file);
+        main_frame.setJMenuBar(mb);
     }
 }
