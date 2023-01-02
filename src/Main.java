@@ -101,7 +101,31 @@ public class Main {
 
         file.add(open); file.add(save);
 
-        mb.add(file);
+        JMenu notes = new JMenu("Notatki");
+        JMenu sort_menu = new JMenu("Sortuj");
+        JMenuItem sort_by_createdate = new JMenuItem("wg daty utworzenia");
+        JMenuItem sort_by_moddate = new JMenuItem("wg daty modyfikacji");
+        JMenuItem sort_by_label = new JMenuItem("wg etykiety");
+        JMenuItem sort_by_type = new JMenuItem("wg typu");
+        JMenuItem sort_by_completion = new JMenuItem("wg stopnia ukończenia");
+        JCheckBoxMenuItem sort_descending = new JCheckBoxMenuItem("Sortuj malejąco", true);
+
+        sort_by_createdate.addActionListener(e -> { noteList.sortNote(NoteList.BY_CREATE_DATE, sort_descending.getState()); reloadApp(true); });
+        sort_by_moddate.addActionListener(e -> { noteList.sortNote(NoteList.BY_MOD_DATE, sort_descending.getState()); reloadApp(true); });
+        sort_by_label.addActionListener(e -> { noteList.sortNote(NoteList.BY_LABEL, sort_descending.getState()); reloadApp(true); });
+        sort_by_type.addActionListener(e -> { noteList.sortNote(NoteList.BY_TYPE, sort_descending.getState()); reloadApp(true); });
+        sort_by_completion.addActionListener(e -> { noteList.sortNote(NoteList.BY_COMPLETION, sort_descending.getState()); reloadApp(true); });
+
+        sort_menu.add(sort_by_createdate);
+        sort_menu.add(sort_by_moddate);
+        sort_menu.add(sort_by_label);
+        sort_menu.add(sort_by_type);
+        sort_menu.add(sort_by_completion);
+        sort_menu.add(sort_descending);
+
+        notes.add(sort_menu);
+
+        mb.add(file); mb.add(notes);
         main_frame.setJMenuBar(mb);
     }
 }

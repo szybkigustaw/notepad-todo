@@ -1,3 +1,6 @@
+import java.text.Collator;
+import java.util.*;
+
 /**
  * Klasa reprezentująca listę notatek. Przyjmuje obiekty klasy Note i jej subklas.
  *
@@ -5,9 +8,16 @@
  * @author Michał Mikuła
  */
 public class NoteList {
-    static int FULL = 0;
-    static int HIDDEN = 1;
-    static int PUBLIC = 2;
+    static final int FULL = 0;
+    static final int HIDDEN = 1;
+    static final int PUBLIC = 2;
+
+    static final int BY_MOD_DATE = 0;
+    static final int BY_CREATE_DATE = 1;
+    static final int BY_LABEL = 2;
+    static final int BY_COMPLETION = 3;
+    static final int BY_TYPE = 4;
+
     private Note[] noteList;
 
     /**
@@ -150,6 +160,188 @@ public class NoteList {
         }
         this.setNoteList(newList);
     }
+
+    public void sortNote(int sort_mode, boolean descending) {
+        NoteList temp = new NoteList(this.noteList, FULL);
+        NoteList output = new NoteList();
+        output.setNoteList(new Note[temp.getListLength()]);
+
+        switch (sort_mode) {
+            case BY_MOD_DATE: {
+                for (int i = 0; i < temp.getListLength(); i++) {
+                    for (int j = 0; j < temp.getListLength(); j++) {
+                        if (descending && temp.getNote(i).getMod_date().getTime() < temp.getNote(j).getMod_date().getTime()) {
+                            Note temp_note_less, temp_note_more;
+                            temp_note_less = temp.getNote(i);
+                            temp_note_more = temp.getNote(j);
+                            temp.setNote(temp_note_less, j);
+                            temp.setNote(temp_note_more, i);
+                        } else if (!descending && temp.getNote(i).getMod_date().getTime() > temp.getNote(j).getMod_date().getTime()) {
+                            Note temp_note_less, temp_note_more;
+                            temp_note_less = temp.getNote(j);
+                            temp_note_more = temp.getNote(i);
+                            temp.setNote(temp_note_less, i);
+                            temp.setNote(temp_note_more, j);
+                        }
+                    }
+
+                    output.setNoteList(temp.getNoteList());
+                }
+            } break;
+            case BY_CREATE_DATE: {
+                for (int i = 0; i < temp.getListLength(); i++) {
+                    for (int j = 0; j < temp.getListLength(); j++) {
+                        if (descending && temp.getNote(i).getCreate_date().getTime() < temp.getNote(j).getCreate_date().getTime()) {
+                            Note temp_note_less, temp_note_more;
+                            temp_note_less = temp.getNote(i);
+                            temp_note_more = temp.getNote(j);
+                            temp.setNote(temp_note_less, j);
+                            temp.setNote(temp_note_more, i);
+                        } else if (!descending && temp.getNote(i).getCreate_date().getTime() > temp.getNote(j).getCreate_date().getTime()) {
+                            Note temp_note_less, temp_note_more;
+                            temp_note_less = temp.getNote(j);
+                            temp_note_more = temp.getNote(i);
+                            temp.setNote(temp_note_less, i);
+                            temp.setNote(temp_note_more, j);
+                        }
+                    }
+                }
+
+                    output.setNoteList(temp.getNoteList());
+                } break;
+                case BY_LABEL: {
+                    String[] labels = new String[temp.getListLength()];
+                    for (int i = 0; i < temp.getListLength(); i++) {
+                        labels[i] = temp.getNote(i).getLabel();
+                    }
+
+                    List<String> label_list = Arrays.asList(labels);
+
+                    Locale locale = Locale.of("pl");
+                    Collator collator = Collator.getInstance(locale);
+                    collator.setStrength(Collator.SECONDARY);
+
+                    Collections.sort(label_list, collator);
+
+                    for (int i = 0; i < labels.length; i++) {
+                        for (int j = 0; j < temp.getListLength(); j++) {
+                            if (temp.getNote(j).getLabel() == label_list.get(i)) {
+                                output.setNote(temp.getNote(j), i);
+                                temp.removeNote(j);
+                            }
+                        }
+                    }
+
+                    if(!descending){
+                        List<Note> output_list = Arrays.asList(output.getNoteList());
+                        Collections.reverse(output_list);
+                        output.setNoteList(output_list.toArray(new Note[0]));
+                    }
+                }
+                break;
+                case BY_COMPLETION: {
+                    output.setNoteList(new Note[0]);
+                    List<Note> notes_list = new ArrayList<>();
+                    List<ToDoNote> todo_notes_list = new ArrayList<>();
+
+                    for(int i = 0; i < temp.getListLength(); i++){
+                        if(temp.getNote(i).getType() == Note.TODO_NOTE){
+                            todo_notes_list.add((ToDoNote)temp.getNote(i));
+                        } else {
+                            notes_list.add(temp.getNote(i));
+                        }
+                    }
+
+                    float[] todo_completions = new float[todo_notes_list.size()];
+                    for(int i = 0; i < todo_notes_list.size(); i++) {
+                        int todos_count = todo_notes_list.get(i).getTodo().length;
+                        int todos_completed_count = 0;
+
+                        for (int j = 0; j < todos_count; j++) {
+                            if (todo_notes_list.get(i).getChecked(j)) {
+                                todos_completed_count += 1;
+                            }
+                        }
+
+                        todo_completions[i] = (float) todos_completed_count / todos_count;
+                    }
+
+                    for(int i = 0; i < temp.getListLength(); i++){
+                       float max_value = 0f;
+                       for(int j = 0; j < todo_completions.length; j++){
+                           if(todo_completions[j] > max_value){
+                               max_value = todo_completions[j];
+                           }
+                       }
+
+                       int max_value_index = 0;
+                       for(int k = 0; k < todo_completions.length; k++){
+                           if(todo_completions[k] == max_value){
+                               max_value_index = k;
+                           }
+                       }
+
+                       output.addNote(todo_notes_list.get(max_value_index));
+
+                       float[] temp_todos_completions = new float[todo_completions.length];
+                       int temp_cnt = 0;
+                       for(int l = 0; l < todo_completions.length; l++){
+                           if(l != max_value_index){
+                               temp_todos_completions[temp_cnt] = todo_completions[l];
+                               temp_cnt++;
+                           }
+                       }
+                       todo_completions = temp_todos_completions;
+
+                    }
+
+                    Note[] notes_array;
+                    notes_array = notes_list.toArray(new Note[0]);
+                    output.addNote(notes_array);
+
+                    if(!descending){
+                        List<Note> output_list = Arrays.asList(output.getNoteList());
+                        Collections.reverse(output_list);
+                        output.setNoteList(output_list.toArray(new Note[0]));
+                    }
+
+                    for(Note note : output.getNoteList()){
+                        note.showNote();
+                    }
+                }
+                break;
+                case BY_TYPE: {
+                    List<Note> notes_list = new ArrayList<>();
+                    List<ToDoNote> todo_notes_list = new ArrayList<>();
+
+                    for(int i = 0; i < temp.getListLength(); i++){
+                        if(temp.getNote(i).getType() == Note.TODO_NOTE){
+                            todo_notes_list.add((ToDoNote) temp.getNote(i));
+                        } else notes_list.add(temp.getNote(i));
+                    }
+
+                    Note[] notes_array;
+                    notes_array = notes_list.toArray(new Note[0]);
+
+                    ToDoNote[] todo_notes_array;
+                    todo_notes_array = todo_notes_list.toArray(new ToDoNote[0]);
+
+                    output.setNoteList(new Note[0]);
+                    output.addNote(todo_notes_array);
+                    output.addNote(notes_array);
+
+                    if(!descending){
+                        List<Note> output_list = Arrays.asList(output.getNoteList());
+                        Collections.reverse(output_list);
+                        output.setNoteList(output_list.toArray(new Note[0]));
+                    }
+
+
+                }
+                break;
+            }
+            this.setNoteList(output.getNoteList());
+        }
 
     /**
      * Konstruktor domyślny. Tworzy nową, pustą listę notatek.
