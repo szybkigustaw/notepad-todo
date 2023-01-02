@@ -2,8 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Main {
-    public static Note[] notes = new Note[0];
-    public static NoteList noteList = new NoteList(notes, NoteList.FULL);
+    public static FileHandler fh = new FileHandler("/home/plq/Documents/notatki.xml");
+    public static NoteList noteList = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
 
     static public CardLayout lt = new CardLayout(25, 25);
     static public JFrame main_frame = new JFrame("Notepad");
@@ -48,6 +48,7 @@ public class Main {
 
 
     public static void main(String[] args) {
+
         rp.setLayout(lt);
         rp.setBounds(0,0,1200,800);
         rp.setVisible(true);
