@@ -3,10 +3,14 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class Main {
     public static FileHandler fh = new FileHandler("/home/plq/Documents/notatki.xml");
-    public static NoteList noteList = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
+    public static NoteList noteList = new NoteList(new Note[0], NoteList.FULL);
 
     static public CardLayout lt = new CardLayout(25, 25);
     static public JFrame main_frame = new JFrame("Notepad");
@@ -18,7 +22,7 @@ public class Main {
     static public boolean hidden_mode = false;
     static public String current_window = "HomeMenu";
 
-    static public String password = "essa123";
+    static public String password = "";
 
     static public void reloadApp(boolean reloadList){
         rp.removeAll();
@@ -46,6 +50,20 @@ public class Main {
         lt.show(rp, current_window);
     }
 
+    public static String hash_string(String string) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hash = md.digest(string.getBytes(StandardCharsets.UTF_8));
+
+        BigInteger number = new BigInteger(1, hash);
+
+        StringBuilder hex_string = new StringBuilder(number.toString(16));
+
+        while(hex_string.length() < 64){
+            hex_string.insert(0, '0');
+        }
+
+        return hex_string.toString();
+    }
 
     public static void main(String[] args) {
 

@@ -3,6 +3,9 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 /**
@@ -233,15 +236,20 @@ public class ReadNote extends JPanel {
         //Dodanie funkcjonalności do przycisku.
         hide.addActionListener(e -> {
             if(note.getHidden()){
-                String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło");
-                if(Objects.equals(Main.password, pass)){
-                    note.setHidden(!(note.getHidden()));
-                    JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
-                    Main.rn = new ReadNote(this.getNote());
-                    Main.reloadApp(true);
-                    Main.lt.show(Main.rp, "ReadNote");
-                } else {
-                    JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
+                try {
+                    String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło");
+                    pass = Main.hash_string(pass);
+                    if (Objects.equals(Main.password, pass)) {
+                        note.setHidden(!(note.getHidden()));
+                        JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
+                        Main.rn = new ReadNote(this.getNote());
+                        Main.reloadApp(true);
+                        Main.lt.show(Main.rp, "ReadNote");
+                    } else {
+                        JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
+                    }
+                } catch (NoSuchAlgorithmException ex){
+                    System.out.println(ex.getMessage());
                 }
             } else {
                 note.setHidden(!(note.getHidden()));
@@ -400,15 +408,20 @@ public class ReadNote extends JPanel {
         //Dodanie funkcjonalności do przycisku
         hide.addActionListener(e -> {
             if(note.getHidden()){
-                String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło");
-                if(Objects.equals(Main.password, pass)){
-                    note.setHidden(!(note.getHidden()));
-                    JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
-                    Main.rn = new ReadNote(this.getTodo_note());
-                    Main.reloadApp(true);
-                    Main.lt.show(Main.rp, "ReadNote");
-                } else {
-                    JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
+                try {
+                    String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło");
+                    pass = Main.hash_string(pass);
+                    if (Objects.equals(Main.password, pass)) {
+                        note.setHidden(!(note.getHidden()));
+                        JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
+                        Main.rn = new ReadNote(this.getTodo_note());
+                        Main.reloadApp(true);
+                        Main.lt.show(Main.rp, "ReadNote");
+                    } else {
+                        JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
+                    }
+                } catch (NoSuchAlgorithmException ex){
+                    System.out.println(ex.getMessage());
                 }
             } else {
                 note.setHidden(!(note.getHidden()));

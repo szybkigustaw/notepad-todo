@@ -3,6 +3,7 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 /**
@@ -397,13 +398,20 @@ public class NoteListGUI extends JPanel{
         show_hidden.addActionListener(e -> {
         if(!Main.hidden_mode){
             //Prośba o podanie hasła
-            String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło dostępowe");
-            if(!Objects.equals(pass, Main.password)){
-                JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
-            } else {
-                Main.hidden_mode = !Main.hidden_mode;
-                Main.reloadApp(true);
-                Main.lt.show(Main.rp, "NoteList");
+            try {
+                String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło dostępowe");
+                pass = Main.hash_string(pass);
+                System.out.println(Main.password);
+                System.out.println(pass);
+                if (!Objects.equals(pass, Main.password)) {
+                    JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
+                } else {
+                    Main.hidden_mode = !Main.hidden_mode;
+                    Main.reloadApp(true);
+                    Main.lt.show(Main.rp, "NoteList");
+                }
+            } catch (NoSuchAlgorithmException ex){
+                System.out.println(ex.getMessage());
             }
         } else {
             Main.hidden_mode = !Main.hidden_mode;

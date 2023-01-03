@@ -50,6 +50,9 @@ public class FileHandler {
      public NoteList parseDocToNotes(){
         NoteList notes = new NoteList();
             Element root = getParsed_file().getDocumentElement();
+            Element password = (Element) root.getElementsByTagName("Password").item(0);
+            String password_grabbed = password.getTextContent();
+            Main.password = password_grabbed.stripTrailing().stripLeading();
             NodeList notes_got = root.getElementsByTagName("Note");
 
             for(int i = 0; i < notes_got.getLength(); i++){
@@ -103,6 +106,10 @@ public class FileHandler {
 
             Element root = xml_doc.createElement("NoteList");
             xml_doc.appendChild(root);
+
+            Element password = xml_doc.createElement("Password");
+            password.appendChild(xml_doc.createTextNode(Main.password));
+            root.appendChild(password);
 
             for(int i = 0; i < notes.getListLength(); i++){
                 Element note = xml_doc.createElement("Note");
