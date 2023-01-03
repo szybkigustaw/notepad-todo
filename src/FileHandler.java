@@ -1,5 +1,6 @@
 import org.w3c.dom.*;
 
+import javax.swing.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -51,51 +52,69 @@ public class FileHandler {
         NoteList notes = new NoteList();
             Element root = getParsed_file().getDocumentElement();
             Element password = (Element) root.getElementsByTagName("Password").item(0);
-            String password_grabbed = password.getTextContent();
-            Main.password = password_grabbed.stripTrailing().stripLeading();
+            String password_grabbed = password == null ? null : password.getTextContent();
             NodeList notes_got = root.getElementsByTagName("Note");
 
             for(int i = 0; i < notes_got.getLength(); i++){
                 Element note_props = (Element) notes_got.item(i);
                 if(Objects.equals(note_props.getElementsByTagName("Type").item(0).getTextContent(), "NOTE")) {
-                    String note_label = note_props.getElementsByTagName("Label").item(0).getTextContent();
-                    String note_text = note_props.getElementsByTagName("Text").item(0).getTextContent();
-                    Date note_create_date = new Date(Long.parseLong(note_props.getElementsByTagName("CreateDate").item(0).getTextContent()));
-                    Date note_modified_date = new Date(Long.parseLong(note_props.getElementsByTagName("ModDate").item(0).getTextContent()));
-                    boolean note_hidden = !note_props.getElementsByTagName("Hidden").item(0).getTextContent().equals("false");
+                    try {
+                        String note_label = note_props.getElementsByTagName("Label").item(0).getTextContent();
+                        String note_text = note_props.getElementsByTagName("Text").item(0).getTextContent();
+                        Date note_create_date = new Date(Long.parseLong(note_props.getElementsByTagName("CreateDate").item(0).getTextContent()));
+                        Date note_modified_date = new Date(Long.parseLong(note_props.getElementsByTagName("ModDate").item(0).getTextContent()));
+                        boolean note_hidden = !note_props.getElementsByTagName("Hidden").item(0).getTextContent().equals("false");
 
-                    Note note = new Note(note_label, note_text, note_hidden);
-                    note.setCreate_date(note_create_date);
-                    note.setMod_date(note_modified_date);
-
-                    notes.addNote(note);
-
-                } else if(Objects.equals(note_props.getElementsByTagName("Type").item(0).getTextContent(), "TODO-NOTE")){
-                    String note_label = note_props.getElementsByTagName("Label").item(0).getTextContent();
-                    String note_text = note_props.getElementsByTagName("Text").item(0).getTextContent();
-                    Date note_create_date = new Date(Long.parseLong(note_props.getElementsByTagName("CreateDate").item(0).getTextContent()));
-                    Date note_modified_date = new Date(Long.parseLong(note_props.getElementsByTagName("ModDate").item(0).getTextContent()));
-                    boolean note_hidden = !note_props.getElementsByTagName("Hidden").item(0).getTextContent().equals("false");
-
-                    ToDoNote todo_note;
-
-                    Element todo_list = (Element) note_props.getElementsByTagName("ToDoList").item(0);
-                    String[] todos_text = new String[todo_list.getElementsByTagName("ToDo").getLength()];
-                    boolean[] todos_checked = new boolean[todo_list.getElementsByTagName("ToDo").getLength()];
-                    if(note_props.getElementsByTagName("ToDoList").getLength() > 0) {
-                        for (int j = 0; j < todo_list.getElementsByTagName("ToDo").getLength(); j++) {
-                            Element todo = (Element) todo_list.getElementsByTagName("ToDo").item(j);
-                            todos_text[j] = todo.getElementsByTagName("Text").item(0).getTextContent();
-                            todos_checked[j] = Objects.equals(todo.getElementsByTagName("Checked").item(0).getTextContent(), "true");
+                        if(password == null && note_hidden == true){
+                            throw new SecurityException("Brak informacji o haśle pomimo istnienia notatek ukrytych. \n" +
+                                    "Domniemana manipulacja pliku. Odmowa odczytu.");
                         }
-                    }
-                    todo_note = new ToDoNote(note_label, note_text, todos_text, todos_checked, note_hidden);
-                    todo_note.setCreate_date(note_create_date);
-                    todo_note.setMod_date(note_modified_date);
 
-                    notes.addNote(todo_note);
+                        Note note = new Note(note_label, note_text, note_hidden);
+                        note.setCreate_date(note_create_date);
+                        note.setMod_date(note_modified_date);
+
+                        notes.addNote(note);
+                    } catch (SecurityException ex){
+                        JOptionPane.showMessageDialog(Main.main_frame, ex.getMessage(), "Błąd odczytu pliku", JOptionPane.ERROR_MESSAGE);
+                        return null;
+                    }
+                } else if(Objects.equals(note_props.getElementsByTagName("Type").item(0).getTextContent(), "TODO-NOTE")){
+                    try {
+                        String note_label = note_props.getElementsByTagName("Label").item(0).getTextContent();
+                        String note_text = note_props.getElementsByTagName("Text").item(0).getTextContent();
+                        Date note_create_date = new Date(Long.parseLong(note_props.getElementsByTagName("CreateDate").item(0).getTextContent()));
+                        Date note_modified_date = new Date(Long.parseLong(note_props.getElementsByTagName("ModDate").item(0).getTextContent()));
+                        boolean note_hidden = !note_props.getElementsByTagName("Hidden").item(0).getTextContent().equals("false");
+
+                        ToDoNote todo_note;
+
+                        Element todo_list = (Element) note_props.getElementsByTagName("ToDoList").item(0);
+                        String[] todos_text = new String[todo_list.getElementsByTagName("ToDo").getLength()];
+                        boolean[] todos_checked = new boolean[todo_list.getElementsByTagName("ToDo").getLength()];
+                        if (note_props.getElementsByTagName("ToDoList").getLength() > 0) {
+                            for (int j = 0; j < todo_list.getElementsByTagName("ToDo").getLength(); j++) {
+                                Element todo = (Element) todo_list.getElementsByTagName("ToDo").item(j);
+                                todos_text[j] = todo.getElementsByTagName("Text").item(0).getTextContent();
+                                todos_checked[j] = Objects.equals(todo.getElementsByTagName("Checked").item(0).getTextContent(), "true");
+                            }
+                        }
+                        if(password == null && note_hidden == true){
+                            throw new SecurityException("Brak informacji o haśle pomimo istnienia notatek ukrytych. \n" +
+                                    "Domniemana manipulacja pliku. Odmowa odczytu.");
+                        }
+                        todo_note = new ToDoNote(note_label, note_text, todos_text, todos_checked, note_hidden);
+                        todo_note.setCreate_date(note_create_date);
+                        todo_note.setMod_date(note_modified_date);
+
+                        notes.addNote(todo_note);
+                    } catch (SecurityException ex){
+                        JOptionPane.showMessageDialog(Main.main_frame, ex.getMessage(), "Błąd odczytu pliku", JOptionPane.ERROR_MESSAGE);
+                        return null;
+                    }
                 }
             }
+            Main.password = password == null ? Main.password : password_grabbed.stripTrailing().stripLeading();
         return notes;
      }
 

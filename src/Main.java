@@ -89,17 +89,15 @@ public class Main {
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
             int i = fc.showOpenDialog(main_frame);
             if(i==JFileChooser.APPROVE_OPTION){
-                try {
                     fh.setXml_file(fc.getSelectedFile());
                     fh.setFile_path(fc.getSelectedFile().getPath());
                     fh.parseXml();
-                    noteList.setNoteList(fh.parseDocToNotes().getNoteList());
-                    Main.reloadApp(true);
-                } catch(Exception ex) {
-                    System.out.println("Bruh");
-                } finally {
-                    JOptionPane.showMessageDialog(main_frame, "Pomyślnie wczytano notatki z pliku", "Wczytywanie pliku", JOptionPane.INFORMATION_MESSAGE);
-                }
+                    NoteList fetched_notes = fh.parseDocToNotes();
+                    if (fetched_notes != null) {
+                        noteList.setNoteList(fh.parseDocToNotes().getNoteList());
+                        Main.reloadApp(true);
+                        JOptionPane.showMessageDialog(main_frame, "Pomyślnie wczytano notatki z pliku", "Wczytywanie pliku", JOptionPane.INFORMATION_MESSAGE);
+                    }
             }
         });
 
