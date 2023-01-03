@@ -238,7 +238,7 @@ public class ReadNote extends JPanel {
             if(note.getHidden()){
                 try {
                     String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło");
-                    pass = Main.hash_string(pass);
+                    pass = Main.hashString(pass);
                     if (Objects.equals(Main.password, pass)) {
                         note.setHidden(!(note.getHidden()));
                         JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");
@@ -410,7 +410,7 @@ public class ReadNote extends JPanel {
             if(note.getHidden()){
                 try {
                     String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło");
-                    pass = Main.hash_string(pass);
+                    pass = Main.hashString(pass);
                     if (Objects.equals(Main.password, pass)) {
                         note.setHidden(!(note.getHidden()));
                         JOptionPane.showMessageDialog(Main.rp, note.getHidden() ? "Notatkę ukryto!" : "Notatkę upubliczniono!");

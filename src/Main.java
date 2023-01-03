@@ -1,8 +1,6 @@
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -51,7 +49,7 @@ public class Main {
         lt.show(rp, current_window);
     }
 
-    public static String hash_string(String string) throws NoSuchAlgorithmException {
+    public static String hashString(String string) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hash = md.digest(string.getBytes(StandardCharsets.UTF_8));
 
@@ -64,6 +62,50 @@ public class Main {
         }
 
         return hex_string.toString();
+    }
+    
+    public static void changePassword(){
+        if(password != null) {
+            try {
+                String old_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj stare hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+                old_password = hashString(old_password);
+                if (Objects.equals(password, old_password)) {
+                    String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+                    new_password = hashString(new_password);
+                    if (new_password.equals(old_password)) {
+                        JOptionPane.showMessageDialog(Main.main_frame, "Hasło nie może być takie same jak poprzednie", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+                        new_password_retype = hashString(new_password_retype);
+                        if (!Objects.equals(new_password, new_password_retype)) {
+                            JOptionPane.showMessageDialog(Main.main_frame, "Hasła są różne", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            password = new_password;
+                            JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie zmieniono hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(Main.main_frame, "Błędne hasło", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NoSuchAlgorithmException ex) {
+                System.out.println(ex.getMessage());
+            }
+        } else {
+            try{
+                String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+                new_password = hashString(new_password);
+                String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+                new_password_retype = hashString(new_password_retype);
+                if (!Objects.equals(new_password, new_password_retype)) {
+                    JOptionPane.showMessageDialog(Main.main_frame, "Hasła są różne", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                } else {
+                        password = new_password;
+                        JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie dodano hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (NoSuchAlgorithmException ex){
+                System.out.println(ex.getMessage());
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -98,6 +140,12 @@ public class Main {
                         Main.reloadApp(true);
                         JOptionPane.showMessageDialog(main_frame, "Pomyślnie wczytano notatki z pliku", "Wczytywanie pliku", JOptionPane.INFORMATION_MESSAGE);
                     }
+                    if (password == null){
+                        int password_doChange = JOptionPane.showConfirmDialog(main_frame, "Wygląda na to że hasło nie zostało ustawione. Czy chcesz je ustawić?", "Brak hasła", JOptionPane.YES_NO_OPTION);
+                        if(password_doChange == JOptionPane.YES_OPTION){
+                            changePassword();
+                        } 
+                    }
             }
         });
 
@@ -106,15 +154,10 @@ public class Main {
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
             int i = fc.showSaveDialog(main_frame);
             if(i == JFileChooser.APPROVE_OPTION){
-                try{
                     fh.setXml_file(fc.getSelectedFile());
                     fh.setFile_path(fc.getSelectedFile().getPath());
                     fh.parseToFile(noteList);
-                } catch (Exception ex) {
-                    System.out.println("bruh");
-                } finally {
                     JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
-                }
             }
         });
 
@@ -142,35 +185,31 @@ public class Main {
         sort_menu.add(sort_by_completion);
         sort_menu.add(sort_descending);
 
-        JMenuItem password_change = new JMenuItem("Zmień hasło");
-        password_change.addActionListener(e -> {
-            try {
-                String old_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj stare hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
-                old_password = hash_string(old_password);
-                if (Objects.equals(password, old_password)) {
-                    String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
-                    new_password = hash_string(new_password);
-                    if(new_password.equals(old_password)){
-                        JOptionPane.showMessageDialog(Main.main_frame, "Hasło nie może być takie same jak poprzednie", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
-                    }
-                    else {
-                        String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
-                        new_password_retype = hash_string(new_password_retype);
-                        if(!Objects.equals(new_password, new_password_retype)) {
-                            JOptionPane.showMessageDialog(Main.main_frame, "Hasła są różne", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            password = new_password;
-                            JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie zmieniono hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(Main.main_frame, "Błędne hasło", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+        JMenuItem password_change = new JMenuItem("Dodaj / Zmień hasło");
+        password_change.addActionListener(e -> changePassword());
+
+        JMenuItem password_remove = new JMenuItem("Usuń hasło");
+        password_remove.addActionListener(e -> {
+            try{
+                if(password == null){
+                    JOptionPane.showMessageDialog(main_frame, "Hasło już nie istnieje", "Nie można usunąć hasła", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            } catch (NoSuchAlgorithmException ex){
-                System.out.println(ex.getMessage());
+                NoteList temp = new NoteList(noteList.getNoteList(), NoteList.FULL);
+                for(int i = 0; i < temp.getListLength(); i++){
+                    if(temp.getNote(i).getHidden()){
+                        throw new SecurityException("Dalej istnieją ukryte notatki. Usuń je lub upublicznij przed usunięciem hasła.");
+                    }
+                }
+                password = null;
+                JOptionPane.showMessageDialog(main_frame, "Hasło zostało pomyślnie usunięte", "Kasowanie hasła", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (SecurityException ex){
+                JOptionPane.showMessageDialog(main_frame, ex.getMessage(), "Nie można usunąć hasła", JOptionPane.ERROR_MESSAGE);
             }
         });
-        notes.add(sort_menu); notes.add(password_change);
+
+        notes.add(sort_menu); notes.add(password_change); notes.add(password_remove);
 
         mb.add(file); mb.add(notes);
         main_frame.setJMenuBar(mb);

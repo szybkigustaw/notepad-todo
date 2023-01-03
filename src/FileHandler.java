@@ -65,7 +65,7 @@ public class FileHandler {
                         Date note_modified_date = new Date(Long.parseLong(note_props.getElementsByTagName("ModDate").item(0).getTextContent()));
                         boolean note_hidden = !note_props.getElementsByTagName("Hidden").item(0).getTextContent().equals("false");
 
-                        if(password == null && note_hidden == true){
+                        if(password == null && note_hidden){
                             throw new SecurityException("Brak informacji o haśle pomimo istnienia notatek ukrytych. \n" +
                                     "Domniemana manipulacja pliku. Odmowa odczytu.");
                         }
@@ -99,7 +99,7 @@ public class FileHandler {
                                 todos_checked[j] = Objects.equals(todo.getElementsByTagName("Checked").item(0).getTextContent(), "true");
                             }
                         }
-                        if(password == null && note_hidden == true){
+                        if(password == null && note_hidden){
                             throw new SecurityException("Brak informacji o haśle pomimo istnienia notatek ukrytych. \n" +
                                     "Domniemana manipulacja pliku. Odmowa odczytu.");
                         }
@@ -126,9 +126,11 @@ public class FileHandler {
             Element root = xml_doc.createElement("NoteList");
             xml_doc.appendChild(root);
 
-            Element password = xml_doc.createElement("Password");
-            password.appendChild(xml_doc.createTextNode(Main.password));
-            root.appendChild(password);
+            if(Main.password != null) {
+                Element password = xml_doc.createElement("Password");
+                password.appendChild(xml_doc.createTextNode(Main.password));
+                root.appendChild(password);
+            }
 
             for(int i = 0; i < notes.getListLength(); i++){
                 Element note = xml_doc.createElement("Note");
@@ -155,6 +157,9 @@ public class FileHandler {
                 note.appendChild(mod_date);
 
                 Element hidden = xml_doc.createElement("Hidden");
+                if(notes.getNote(i).getHidden() && Main.password == null){
+                    throw new SecurityException("Nie można zapisać pliku. Dalej istnieją notatki ukryte pomimo braku hasła. Dodaj najpierw hasło i spróbuj ponownie.");
+                }
                 hidden.appendChild(xml_doc.createTextNode(notes.getNote(i).getHidden() ? "true" : "false"));
                 note.appendChild(hidden);
 
@@ -181,6 +186,9 @@ public class FileHandler {
                 StreamResult result = new StreamResult(new File(this.file_path));
                 transformer.transform(source, result);
             }
+        }
+        catch (SecurityException ex){
+            JOptionPane.showMessageDialog(Main.main_frame, ex.getMessage(), "Błąd zapisu pliku", JOptionPane.ERROR_MESSAGE);
         }
         catch (Exception e){
             System.out.println(e.getMessage());
