@@ -255,11 +255,28 @@ public class ReadNote extends JPanel {
         ob_gbc.gridy = 0;
         option_bar.add(hide, ob_gbc);
 
+        JButton show_metadata = new JButton("Pokaż metadane");
+        show_metadata.setSize(200, 40);
+
+        show_metadata.addActionListener(e -> {
+            JOptionPane.showMessageDialog(Main.rp, String.format(
+                    "Etykieta: %s \nData utworzenia %s \nData modyfikacji %s \nStan ukrycia %s",
+                    this.getNote().getLabel(), this.getNote().getCreate_date().toString(), this.getNote().getMod_date().toString(),
+                    this.getNote().getHidden() ? "Ukryta" : "Jawna"), "Metadane notatki", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        //Wstawianie przycisku do paska.
+        ob_gbc.fill = GridBagConstraints.HORIZONTAL;
+        ob_gbc.gridx = 7;
+        ob_gbc.gridy = 0;
+        option_bar.add(show_metadata, ob_gbc);
+
         //Wstawianie paska opcji do kontenera.
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(option_bar, gbc);
+
     }
 
     /**
@@ -401,6 +418,22 @@ public class ReadNote extends JPanel {
         ob_gbc.gridx = 4;
         ob_gbc.gridy = 0;
         option_bar.add(hide, ob_gbc);
+
+        JButton show_metadata = new JButton("Pokaż metadane");
+        show_metadata.setSize(200, 40);
+
+        show_metadata.addActionListener(e -> {
+            JOptionPane.showMessageDialog(Main.rp, String.format(
+                    "Etykieta: %s \nData utworzenia %s \nData modyfikacji %s \nStan ukrycia %s",
+                    this.getTodo_note().getLabel(), this.getTodo_note().getCreate_date().toString(), this.getTodo_note().getMod_date().toString(),
+                    this.getTodo_note().getHidden() ? "Ukryta" : "Jawna"), "Metadane notatki", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        //Wstawianie przycisku do paska.
+        ob_gbc.fill = GridBagConstraints.HORIZONTAL;
+        ob_gbc.gridx = 7;
+        ob_gbc.gridy = 0;
+        option_bar.add(show_metadata, ob_gbc);
 
         //Wstawianie paska opcji do kontenera.
         gbc.fill = GridBagConstraints.HORIZONTAL;
