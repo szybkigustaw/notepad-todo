@@ -4,9 +4,10 @@
     <option name="SCOPE_TYPE" value="10" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano kontrolę manipulacji hasła w pliku.">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano opcję dodania / usunięcia hasła. Dodano możliwość dodania hasła w przypadku wgrania pliku bez hasła.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EditNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EditNote.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HomeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomeMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/NoteListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteListGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ReadNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadNote.java" afterDir="false" />
@@ -215,7 +216,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672754618475</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Dodano opcję dodania / usunięcia hasła. Dodano możliwość dodania hasła w przypadku wgrania pliku bez hasła.">
+      <created>1672784650065</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1672784650065</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -264,7 +272,8 @@
     <MESSAGE value="Dodanie szyfrowanie SHA-256 dla hasła, zapis hasła do pliku." />
     <MESSAGE value="Dodano opcję zmiany hasła." />
     <MESSAGE value="Dodano kontrolę manipulacji hasła w pliku." />
-    <option name="LAST_COMMIT_MESSAGE" value="Dodano kontrolę manipulacji hasła w pliku." />
+    <MESSAGE value="Dodano opcję dodania / usunięcia hasła. Dodano możliwość dodania hasła w przypadku wgrania pliku bez hasła." />
+    <option name="LAST_COMMIT_MESSAGE" value="Dodano opcję dodania / usunięcia hasła. Dodano możliwość dodania hasła w przypadku wgrania pliku bez hasła." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

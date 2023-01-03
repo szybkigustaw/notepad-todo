@@ -19,11 +19,11 @@ public class Main {
     static public ReadNote rn = new ReadNote();
     static public EditNote en = new EditNote();
     static public boolean hidden_mode = false;
-    static public String current_window = "HomeMenu";
-
-    static public String password = "";
+    static public String current_window = null;
+    static public String password = null;
 
     static public void reloadApp(boolean reloadList){
+        String temp_current_window = current_window;
         rp.removeAll();
 
         hm = new HomeMenu();
@@ -46,7 +46,7 @@ public class Main {
         main_frame.add(rp);
         main_frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         main_frame.setVisible(true);
-        lt.show(rp, current_window);
+        lt.show(rp, temp_current_window);
     }
 
     public static String hashString(String string) throws NoSuchAlgorithmException {
@@ -82,6 +82,7 @@ public class Main {
                         } else {
                             password = new_password;
                             JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie zmieniono hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
+                            Main.reloadApp(true);
                         }
                     }
                 } else {
@@ -101,6 +102,7 @@ public class Main {
                 } else {
                         password = new_password;
                         JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie dodano hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
+                        Main.reloadApp(true);
                 }
             } catch (NoSuchAlgorithmException ex){
                 System.out.println(ex.getMessage());
@@ -202,6 +204,7 @@ public class Main {
                     }
                 }
                 password = null;
+                Main.reloadApp(true);
                 JOptionPane.showMessageDialog(main_frame, "Hasło zostało pomyślnie usunięte", "Kasowanie hasła", JOptionPane.INFORMATION_MESSAGE);
 
             } catch (SecurityException ex){

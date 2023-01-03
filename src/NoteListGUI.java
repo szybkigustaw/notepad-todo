@@ -420,12 +420,16 @@ public class NoteListGUI extends JPanel{
         }
         });
 
-        //Dodanie przycisku do paska.
-        gbc.gridx = 4;
-        gbc.gridwidth = 3;
-        gbc.weightx = 0.4;
-        gbc.gridy = 0;
-        option_bar.add(show_hidden, gbc);
+        //Jeśli hasło jest ustawione
+        if(Main.password != null) {
+
+            //Dodaj przycisk do paska.
+            gbc.gridx = 4;
+            gbc.gridwidth = 3;
+            gbc.weightx = 0.4;
+            gbc.gridy = 0;
+            option_bar.add(show_hidden, gbc);
+        }
 
         //Dodanie paska do panelu głównego.
         add(option_bar);

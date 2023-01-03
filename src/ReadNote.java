@@ -260,11 +260,15 @@ public class ReadNote extends JPanel {
             }
         });
 
-        //Wstawianie przycisku do paska.
-        ob_gbc.fill = GridBagConstraints.HORIZONTAL;
-        ob_gbc.gridx = 4;
-        ob_gbc.gridy = 0;
-        option_bar.add(hide, ob_gbc);
+        //Jeśli hasło jest ustawione
+        if(Main.password != null) {
+
+            //Wstaw przycisk do paska.
+            ob_gbc.fill = GridBagConstraints.HORIZONTAL;
+            ob_gbc.gridx = 4;
+            ob_gbc.gridy = 0;
+            option_bar.add(hide, ob_gbc);
+        }
 
         JButton show_metadata = new JButton("Pokaż metadane");
         show_metadata.setSize(200, 40);
@@ -432,11 +436,15 @@ public class ReadNote extends JPanel {
             }
         });
 
-        //Wstawianie przycisku do paska.
-        ob_gbc.fill = GridBagConstraints.HORIZONTAL;
-        ob_gbc.gridx = 4;
-        ob_gbc.gridy = 0;
-        option_bar.add(hide, ob_gbc);
+        //Jeśli hasło jest ustawione
+        if(Main.password != null) {
+
+            //Wstaw przycisk do paska.
+            ob_gbc.fill = GridBagConstraints.HORIZONTAL;
+            ob_gbc.gridx = 4;
+            ob_gbc.gridy = 0;
+            option_bar.add(hide, ob_gbc);
+        }
 
         JButton show_metadata = new JButton("Pokaż metadane");
         show_metadata.setSize(200, 40);

@@ -156,6 +156,9 @@ public class EditNote extends JPanel {
 
     EditNote(){
 
+        //Ustaw stan obecnego okna na okno dodania notatki.
+        Main.current_window = "EditNote";
+
         note = new ToDoNote();
         note.setType(Note.NOTE);
         this.note.setTodo(new String[0]);
@@ -366,6 +369,18 @@ public class EditNote extends JPanel {
         save.setSize(200, 48);
 
         save.addActionListener(e -> {
+            if(note.getHidden() && Main.password == null){
+                int add_password_now = JOptionPane.showConfirmDialog(Main.main_frame, "Właśnie próbujesz przypisać notatce stan ukryty. " +
+                        "Jednakże obecnie hasło dostępowe nie jest ustawione.\nMoże to sprawić, iż ta notatka będzie niedostępna do czasu, aż ustawisz hasło." +
+                        " Czy chcesz ustawić je teraz?", "Brak zapisanego hasła", JOptionPane.YES_NO_OPTION);
+                    if(add_password_now == JOptionPane.YES_OPTION){
+                        Main.changePassword();
+                    }
+                    if(add_password_now != JOptionPane.YES_OPTION || Main.password == null) {
+                        JOptionPane.showMessageDialog(Main.main_frame, "Zmień stan ukrycia na brak ukrycia i spróbuj ponownie.", "Nie można zapisać notatki.", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
                 Main.noteList.addNote(note);
                 Main.reloadApp(true);
                 Main.lt.show(Main.rp, "HomeMenu");
@@ -616,6 +631,18 @@ public class EditNote extends JPanel {
 
         save.addActionListener(e -> {
             if(this.note.getType() == Note.TODO_NOTE) this.note.verifyToDoCompletion();
+            System.out.println(this);
+            if(this.note.getHidden() == true && Main.password == null){
+                int add_password_now = JOptionPane.showConfirmDialog(Main.main_frame, "Właśnie próbujesz przypisać notatce stan ukryty. " +
+                        "Jednakże obecnie hasło dostępowe nie jest ustawione. Może to sprawić, iż ta notatka będzie niedostępna do czasu, aż ustawisz hasło." +
+                        " Czy chcesz ustawić je teraz?", "Brak zapisanego hasła", JOptionPane.YES_NO_OPTION);
+                if(add_password_now == JOptionPane.YES_OPTION){
+                    Main.changePassword();
+                } else {
+                    JOptionPane.showMessageDialog(Main.main_frame, "Zmień stan ukrycia na brak ukrycia i spróbuj ponownie.", "Nie można zapisać notatki.", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
             Main.noteList.setNote(this.note, note_index);
             Main.reloadApp(true);
             Main.lt.show(Main.rp, "HomeMenu");
@@ -869,6 +896,17 @@ public class EditNote extends JPanel {
 
         save.addActionListener(e -> {
             if(this.note.getType() == Note.TODO_NOTE) this.note.verifyToDoCompletion();
+            if(this.note.getHidden() && Main.password == null){
+                int add_password_now = JOptionPane.showConfirmDialog(Main.main_frame, "Właśnie próbujesz przypisać notatce stan ukryty. " +
+                        "Jednakże obecnie hasło dostępowe nie jest ustawione. Może to sprawić, iż ta notatka będzie niedostępna do czasu, aż ustawisz hasło." +
+                        " Czy chcesz ustawić je teraz?", "Brak zapisanego hasła", JOptionPane.YES_NO_OPTION);
+                if(add_password_now == JOptionPane.YES_OPTION){
+                    Main.changePassword();
+                } else {
+                    JOptionPane.showMessageDialog(Main.main_frame, "Zmień stan ukrycia na brak ukrycia i spróbuj ponownie.", "Nie można zapisać notatki.", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
             Main.noteList.setNote(this.note, note_index);
             Main.reloadApp(true);
             Main.lt.show(Main.rp, "HomeMenu");
