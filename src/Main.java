@@ -152,6 +152,10 @@ public class Main {
         });
 
         save.addActionListener(e -> {
+            if(noteList.getListLength() < 1){
+                JOptionPane.showMessageDialog(main_frame, "Nie ma nic do zapisania", "Zapisywanie pliku", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             JFileChooser fc = new JFileChooser();
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
             int i = fc.showSaveDialog(main_frame);
