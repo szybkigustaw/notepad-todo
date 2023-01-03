@@ -252,47 +252,30 @@ public class NoteList {
                         }
                     }
 
-                    float[] todo_completions = new float[todo_notes_list.size()];
-                    for(int i = 0; i < todo_notes_list.size(); i++) {
-                        int todos_count = todo_notes_list.get(i).getTodo().length;
-                        int todos_completed_count = 0;
+                    int list_size = todo_notes_list.size();
 
-                        for (int j = 0; j < todos_count; j++) {
-                            if (todo_notes_list.get(i).getChecked(j)) {
-                                todos_completed_count += 1;
+                    for(int i = 0; i < list_size; i++){
+                        float max_value = 0f;
+                        int max_value_at = 0;
+                        for(int j = 0; j < todo_notes_list.size(); j++){
+                            int todos_count = todo_notes_list.get(j).getTodo().length;
+                            int todo_completed_count = 0;
+                            for(int k = 0; k < todo_notes_list.get(j).getChecked().length; k++){
+                                if(todo_notes_list.get(j).getChecked(k)) todo_completed_count++;
+                            }
+                            System.out.println(todos_count);
+                            System.out.println(todo_completed_count);
+
+                            float todo_completion = (float)(todo_completed_count) / (float)(todos_count);
+                            System.out.println(todo_completion);
+                            if(todo_completion > max_value){
+                                max_value = todo_completion;
+                                max_value_at = j;
                             }
                         }
-
-                        todo_completions[i] = (float) todos_completed_count / todos_count;
-                    }
-
-                    for(int i = 0; i < temp.getListLength(); i++){
-                       float max_value = 0f;
-                       for(int j = 0; j < todo_completions.length; j++){
-                           if(todo_completions[j] > max_value){
-                               max_value = todo_completions[j];
-                           }
-                       }
-
-                       int max_value_index = 0;
-                       for(int k = 0; k < todo_completions.length; k++){
-                           if(todo_completions[k] == max_value){
-                               max_value_index = k;
-                           }
-                       }
-
-                       output.addNote(todo_notes_list.get(max_value_index));
-
-                       float[] temp_todos_completions = new float[todo_completions.length];
-                       int temp_cnt = 0;
-                       for(int l = 0; l < todo_completions.length; l++){
-                           if(l != max_value_index){
-                               temp_todos_completions[temp_cnt] = todo_completions[l];
-                               temp_cnt++;
-                           }
-                       }
-                       todo_completions = temp_todos_completions;
-
+                        System.out.println(todo_notes_list.get(max_value_at));
+                        output.addNote(todo_notes_list.get(max_value_at));
+                        todo_notes_list.remove(max_value_at);
                     }
 
                     Note[] notes_array;
