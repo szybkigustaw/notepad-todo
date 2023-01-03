@@ -402,6 +402,9 @@ public class EditNote extends JPanel {
     }
 
     EditNote(Note loaded_note, int note_index){
+        //Ustawienie stanu obecnego okna na okno edycji notatki
+        Main.current_window = "EditNote";
+
         this.note = (ToDoNote) loaded_note;
         note.setType(Note.NOTE);
         this.note.setTodo(new String[0]);
@@ -649,6 +652,9 @@ public class EditNote extends JPanel {
     }
 
     EditNote(ToDoNote loaded_note, int note_index){
+        //Ustawienie stanu obecnego okna na okno edycji notatki
+        Main.current_window = "EditNote";
+
         this.note = loaded_note;
         note.setType(Note.NOTE);
 

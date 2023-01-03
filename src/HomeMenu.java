@@ -16,6 +16,9 @@ public class HomeMenu extends JPanel{
      * Konstruktor domyślny. Tworzy obiekt reprezentujący panel menu powitalnego.
      */
     HomeMenu(){
+        //Ustawienie stanu obecnego okna na okno menu głównego
+        Main.current_window = "HomeMenu";
+
         //Tworzenie obiektów reprezentujących układ oraz wartości układu
         GridBagLayout layout = new GridBagLayout();
         GridBagConstraints gbc = new GridBagConstraints();

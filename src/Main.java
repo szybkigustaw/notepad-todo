@@ -16,6 +16,7 @@ public class Main {
     static public ReadNote rn = new ReadNote();
     static public EditNote en = new EditNote();
     static public boolean hidden_mode = false;
+    static public String current_window = "HomeMenu";
 
     static public String password = "essa123";
 
@@ -42,6 +43,7 @@ public class Main {
         main_frame.add(rp);
         main_frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         main_frame.setVisible(true);
+        lt.show(rp, current_window);
     }
 
 
@@ -108,7 +110,7 @@ public class Main {
         JMenuItem sort_by_label = new JMenuItem("wg etykiety");
         JMenuItem sort_by_type = new JMenuItem("wg typu");
         JMenuItem sort_by_completion = new JMenuItem("wg stopnia ukończenia");
-        JCheckBoxMenuItem sort_descending = new JCheckBoxMenuItem("Sortuj malejąco", true);
+        JCheckBoxMenuItem sort_descending = new JCheckBoxMenuItem("Sortuj rosnąco", true);
 
         sort_by_createdate.addActionListener(e -> { noteList.sortNote(NoteList.BY_CREATE_DATE, sort_descending.getState()); reloadApp(true); });
         sort_by_moddate.addActionListener(e -> { noteList.sortNote(NoteList.BY_MOD_DATE, sort_descending.getState()); reloadApp(true); });

@@ -153,6 +153,9 @@ public class ReadNote extends JPanel {
      * @param note Notatka podglądana w panelu.
      */
     ReadNote(Note note){
+        //Ustawienie stanu obecnego okna na okno podglądu notatki
+        Main.current_window = "ReadNote";
+
         //Przypisanie do pola obiektu obecnej notatki.
         this.note = note;
         this.index = Main.noteList.getNoteIndex(this.getNote());
@@ -284,6 +287,9 @@ public class ReadNote extends JPanel {
      * @param note Notatka z listą zadań podglądana w panelu.
      */
     ReadNote(ToDoNote note){
+        //Ustawienie stanu obecnego okna na okno podglądu notatki
+        Main.current_window = "ReadNote";
+
         //Przypisanie do pól obiektu obecnej notatki oraz jej pozycji na liście
         this.todo_note = note;
         this.index = Main.noteList.getNoteIndex(this.getTodo_note());

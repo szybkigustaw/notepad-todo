@@ -311,7 +311,8 @@ public class NoteListGUI extends JPanel{
      * @param notes Lista notatek, na bazie której powstanie panel.
      */
     NoteListGUI(NoteList notes){
-        //Przypisanie do pola obiektu o trybie ukrytym
+        //Ustawienie stanu obecnego okna na okno listy notatek
+        Main.current_window = "NoteList";
 
         //Utworzenie panelu z listą
         JPanel list_window = new JPanel();

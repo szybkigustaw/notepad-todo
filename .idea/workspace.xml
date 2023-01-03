@@ -4,7 +4,7 @@
     <option name="SCOPE_TYPE" value="10" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Naprawa wyglądu notatek TODO-Note - brak maksymalnego zdefiniowanego rozmiaru.">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano opcję podglądu metadanych notatki.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EditNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EditNote.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/HomeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomeMenu.java" afterDir="false" />
@@ -160,7 +160,35 @@
       <option name="project" value="LOCAL" />
       <updated>1672687707641</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Zmiana w działaniu stanu ukrytego - podniesiono go do rangi globalnego stanu.">
+      <created>1672690107766</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1672690107766</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Dodano opcję sortowania notatek na pasku opcji.">
+      <created>1672698739456</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1672698739456</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Naprawiono sortowanie według poziomu ukończenia notatek.">
+      <created>1672704068666</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1672704068666</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Dodano opcję podglądu metadanych notatki.">
+      <created>1672704740956</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1672704740956</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -201,7 +229,11 @@
     <MESSAGE value="Dodanie warstwy komunikacji I/O z plikami XML. Odczyt i zapis notatek z/do pliku.&#10;Nowa klasa FileHandler obsługuje operacje wejścia/wyjścia na plikach XML, z których to pobiera dane o notatkach i listach zadań, przekazując je do listy notatek wewnątrz programu. Z niej również zczytuje te dane i zapisuje do pliku XML. Koncepcja działająca, przetestowana. Brak implementacji." />
     <MESSAGE value="Dodanie paska menu, funkcjonalnych opcji zapisu i odczytu plików XML z notatkami." />
     <MESSAGE value="Naprawa wyglądu notatek TODO-Note - brak maksymalnego zdefiniowanego rozmiaru." />
-    <option name="LAST_COMMIT_MESSAGE" value="Naprawa wyglądu notatek TODO-Note - brak maksymalnego zdefiniowanego rozmiaru." />
+    <MESSAGE value="Zmiana w działaniu stanu ukrytego - podniesiono go do rangi globalnego stanu." />
+    <MESSAGE value="Dodano opcję sortowania notatek na pasku opcji." />
+    <MESSAGE value="Naprawiono sortowanie według poziomu ukończenia notatek." />
+    <MESSAGE value="Dodano opcję podglądu metadanych notatki." />
+    <option name="LAST_COMMIT_MESSAGE" value="Dodano opcję podglądu metadanych notatki." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
