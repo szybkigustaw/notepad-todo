@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 public class Main {
     public static FileHandler fh = new FileHandler("/home/plq/Documents/notatki.xml");
@@ -143,7 +144,35 @@ public class Main {
         sort_menu.add(sort_by_completion);
         sort_menu.add(sort_descending);
 
-        notes.add(sort_menu);
+        JMenuItem password_change = new JMenuItem("Zmień hasło");
+        password_change.addActionListener(e -> {
+            try {
+                String old_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj stare hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+                old_password = hash_string(old_password);
+                if (Objects.equals(password, old_password)) {
+                    String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+                    new_password = hash_string(new_password);
+                    if(new_password.equals(old_password)){
+                        JOptionPane.showMessageDialog(Main.main_frame, "Hasło nie może być takie same jak poprzednie", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else {
+                        String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+                        new_password_retype = hash_string(new_password_retype);
+                        if(!Objects.equals(new_password, new_password_retype)) {
+                            JOptionPane.showMessageDialog(Main.main_frame, "Hasła są różne", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            password = new_password;
+                            JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie zmieniono hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(Main.main_frame, "Błędne hasło", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NoSuchAlgorithmException ex){
+                System.out.println(ex.getMessage());
+            }
+        });
+        notes.add(sort_menu); notes.add(password_change);
 
         mb.add(file); mb.add(notes);
         main_frame.setJMenuBar(mb);
