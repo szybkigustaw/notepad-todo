@@ -49,11 +49,11 @@ public class FileHandler {
         try{
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
-            if(!isFileReadable()){
-                throw new AccessDeniedException("Nie można odczytać pliku. Sprawdź uprawnienia dostępu.");
-            }
             if(!doesFileExist()){
                 throw new FileNotFoundException("Nie ma takiego pliku.");
+            }
+            if(!isFileReadable()){
+                throw new AccessDeniedException("Nie można odczytać pliku. Sprawdź uprawnienia dostępu.");
             }
             this.parsed_file = db.parse(getXml_file());
         } catch(AccessDeniedException ex){
@@ -95,11 +95,20 @@ public class FileHandler {
     }
 
      public NoteList parseDocToNotes(){
+        if(getParsed_file() == null){
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    "Błąd parsowania pliku",
+                    "Wewnętrzny błąd aplikacji",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return null;
+        }
         NoteList notes = new NoteList();
-            Element root = getParsed_file().getDocumentElement();
-            Element password = (Element) root.getElementsByTagName("Password").item(0);
-            String password_grabbed = password == null ? null : password.getTextContent();
-            NodeList notes_got = root.getElementsByTagName("Note");
+        Element root = getParsed_file().getDocumentElement();
+        Element password = (Element) root.getElementsByTagName("Password").item(0);
+        String password_grabbed = password == null ? null : password.getTextContent();
+        NodeList notes_got = root.getElementsByTagName("Note");
 
             for(int i = 0; i < notes_got.getLength(); i++){
                 Element note_props = (Element) notes_got.item(i);
@@ -268,9 +277,17 @@ public class FileHandler {
         this.file_can_read = this.xml_file.canRead();
         this.file_can_write = this.xml_file.canWrite();
 
-        if(getXml_file().exists() && getXml_file().canRead()){
-            this.parseXml();
-        }
+        this.parseXml();
+     }
+
+     FileHandler(File file){
+         this.setXml_file(file);
+         this.setFile_path(file.getPath());
+         this.file_exists = this.xml_file.exists();
+         this.file_can_read = this.xml_file.canRead();
+         this.file_can_write = this.xml_file.canWrite();
+
+         this.parseXml();
      }
 
 }
