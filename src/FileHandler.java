@@ -242,7 +242,7 @@ public class FileHandler {
                     getXml_file().createNewFile();
                 }
                 if(!isFileWritable()){
-                    throw new AccessDeniedException("Nie można edytować pliku. Sprawdź ustawienia dostępu");
+                    throw new AccessDeniedException("Odmowa dostępu do pliku. Plik albo nie istnieje albo ma wadliwe ustawienia dostępu.");
                 }
                 StreamResult result = new StreamResult(getXml_file());
                 transformer.transform(source, result);
