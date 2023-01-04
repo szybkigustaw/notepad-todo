@@ -326,6 +326,34 @@ public class NoteList {
             this.setNoteList(output.getNoteList());
         }
 
+        public static boolean areNoteListsEqual(NoteList first_list, NoteList second_list){
+            if(first_list.getListLength() != second_list.getListLength()) return false;
+            for(int i = 0; i < first_list.getListLength(); i++){
+                if(!Objects.equals(first_list.getNote(i).getLabel(), second_list.getNote(i).getLabel())) return false;
+                if(!Objects.equals(first_list.getNote(i).getText(), second_list.getNote(i).getText())) return false;
+                if(!Objects.equals(first_list.getNote(i).getHidden(), second_list.getNote(i).getHidden())) return false;
+                if(!Objects.equals(first_list.getNote(i).getCreate_date(), second_list.getNote(i).getCreate_date())) return false;
+                if(!Objects.equals(first_list.getNote(i).getMod_date(), second_list.getNote(i).getMod_date())) return false;
+                if(first_list.getNote(i).getType() != second_list.getNote(i).getType()) return false;
+                if(Objects.equals(first_list.getNote(i).getType(), Note.TODO_NOTE)) {
+                    if (
+                            ((ToDoNote) first_list.getNote(i)).getTodo().length != ((ToDoNote) second_list.getNote(i)).getTodo().length ||
+                                    ((ToDoNote) first_list.getNote(i)).getChecked().length != ((ToDoNote) second_list.getNote(i)).getChecked().length
+                    ) {
+                            return false;
+                    } else {
+                        for (int j = 0; j < ((ToDoNote) first_list.getNote(i)).getTodo().length; j++) {
+                            if (
+                                    !Objects.equals(((ToDoNote) first_list.getNote(i)).getTodo(j), ((ToDoNote) second_list.getNote(i)).getTodo(j)) ||
+                                            ((ToDoNote) first_list.getNote(i)).getChecked(j) != ((ToDoNote) second_list.getNote(i)).getChecked(j)
+                            ) return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
     /**
      * Konstruktor domyślny. Tworzy nową, pustą listę notatek.
      */
