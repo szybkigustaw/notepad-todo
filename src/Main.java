@@ -113,8 +113,6 @@ public class Main {
         hm = new HomeMenu();
         noteList = new NoteList(new Note[0], NoteList.FULL);
 
-        JOptionPane.showMessageDialog(Main.main_frame, System.getProperty("user.home"), "Sample text", JOptionPane.PLAIN_MESSAGE);
-
         JMenuBar mb = new JMenuBar();
         JMenu file = new JMenu("Plik");
         JMenuItem open = new JMenuItem("Otwórz plik");

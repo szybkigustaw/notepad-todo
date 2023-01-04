@@ -11,6 +11,7 @@ import static java.awt.GridBagConstraints.RELATIVE;
  * @version 1.0
  */
 public class HomeMenu extends JPanel{
+    private String username = System.getProperty("user.name");
 
     /**
      * Konstruktor domyślny. Tworzy obiekt reprezentujący panel menu powitalnego.
@@ -25,7 +26,7 @@ public class HomeMenu extends JPanel{
         setLayout(layout);
 
         //Tworzenie etykiety - nagłówek pierwszy
-        JLabel l1 = new JLabel("Witaj użytkowniku!");
+        JLabel l1 = new JLabel(String.format("Witaj, %s!",username));
         l1.setFont(new Font("Arial", Font.PLAIN, 48));
 
         /*

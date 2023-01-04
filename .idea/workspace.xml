@@ -4,10 +4,9 @@
     <option name="SCOPE_TYPE" value="10" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser).&#10;Wykorzystanie tego konstruktora w klasie Main.">
-      <change afterPath="$PROJECT_DIR$/src/FailedToWriteToFileException.java" afterDir="false" />
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie nowej klasy FailedToWriteToFileException - dodającej nowy typ błędu, zwracany przez metodę FileHandler.parseToFile.&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser) oraz zmienną typu boolean określającą, czy wykonujemy operację zapisu.&#10;Wykorzystanie tego konstruktora w klasie Main.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HomeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomeMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -263,7 +262,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672830108710</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie nowej klasy FailedToWriteToFileException - dodającej nowy typ błędu, zwracany przez metodę FileHandler.parseToFile.&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser) oraz zmienną typu boolean określającą, czy wykonujemy operację zapisu.&#10;Wykorzystanie tego konstruktora w klasie Main.">
+      <created>1672831323196</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1672831323196</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -290,7 +296,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Dodano możliwość odhaczania zadań z poziomu podglądu notatki.&#10;Teraz notatki znają swój stan ukończenia zadań.&#10;Notatki z ukończonymi zadaniami są oznaczone.&#10;Usunięto zbędną opcję 2. w Menu Głównym." />
     <MESSAGE value="Modyfikacja wyglądu - dodanie ramek i obramowań.&#10;Dodanie paska opcji do panelu listy notatek." />
     <MESSAGE value="Dodanie opcji podglądu ukrytych notatek.&#10;Sprawdzanie hasła przed podglądem ukrytych notatek." />
     <MESSAGE value="Dodano splash-screen w przypadku skończenia się notatek.&#10;Teraz NoteListGUI jest świadoma tego, czy przechowuje notatki ukryte, czy publiczne.&#10;Teraz NoteList może wskazać pozycję notatki na liście." />
@@ -315,7 +320,8 @@
     <MESSAGE value="Przebudowa klasy FileHandler&#10;Klasa teraz przechowuje również informacje o dostępności pliku i wyświetla komunikaty w zależności od błędów odczytu czy zapisu pliku." />
     <MESSAGE value="Wykorzystanie statycznego pola fh" />
     <MESSAGE value="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser).&#10;Wykorzystanie tego konstruktora w klasie Main." />
-    <option name="LAST_COMMIT_MESSAGE" value="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser).&#10;Wykorzystanie tego konstruktora w klasie Main." />
+    <MESSAGE value="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie nowej klasy FailedToWriteToFileException - dodającej nowy typ błędu, zwracany przez metodę FileHandler.parseToFile.&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser) oraz zmienną typu boolean określającą, czy wykonujemy operację zapisu.&#10;Wykorzystanie tego konstruktora w klasie Main." />
+    <option name="LAST_COMMIT_MESSAGE" value="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie nowej klasy FailedToWriteToFileException - dodającej nowy typ błędu, zwracany przez metodę FileHandler.parseToFile.&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser) oraz zmienną typu boolean określającą, czy wykonujemy operację zapisu.&#10;Wykorzystanie tego konstruktora w klasie Main." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
