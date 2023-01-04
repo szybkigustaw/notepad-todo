@@ -125,7 +125,7 @@ public class Main {
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
             int i = fc.showOpenDialog(main_frame);
             if(i==JFileChooser.APPROVE_OPTION){
-                FileHandler fh = new FileHandler(fc.getSelectedFile().getPath());
+                fh = new FileHandler(fc.getSelectedFile().getPath());
                 NoteList fetched_notes = fh.parseDocToNotes();
                 if (fetched_notes != null) {
                     noteList.setNoteList(fh.parseDocToNotes().getNoteList());
@@ -150,7 +150,7 @@ public class Main {
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
             int i = fc.showSaveDialog(main_frame);
             if(i == JFileChooser.APPROVE_OPTION){
-                FileHandler fh = new FileHandler(fc.getSelectedFile().getPath());
+                fh = new FileHandler(fc.getSelectedFile().getPath());
                 fh.setXml_file(fc.getSelectedFile());
                 fh.setFile_path(fc.getSelectedFile().getPath());
                 fh.parseToFile(noteList);
