@@ -173,7 +173,7 @@ public class FileHandler {
         return notes;
      }
 
-     public void parseToFile(NoteList notes){
+     public void parseToFile(NoteList notes) throws FailedToWriteToFileException{
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document xml_doc = db.newDocument();
@@ -239,24 +239,17 @@ public class FileHandler {
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
                 DOMSource source = new DOMSource(xml_doc);
                 if(!doesFileExist()){
-                    throw new FileNotFoundException("Plik nie istnieje");
+                    getXml_file().createNewFile();
                 }
                 if(!isFileWritable()){
                     throw new AccessDeniedException("Nie można edytować pliku. Sprawdź ustawienia dostępu");
                 }
-                StreamResult result = new StreamResult();
+                StreamResult result = new StreamResult(getXml_file());
                 transformer.transform(source, result);
             }
         }
         catch (SecurityException ex){
             JOptionPane.showMessageDialog(Main.main_frame, ex.getMessage(), "Błąd zapisu pliku", JOptionPane.ERROR_MESSAGE);
-        } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(
-                    Main.main_frame,
-                    ex.getMessage(),
-                    "Błąd zapisu pliku",
-                    JOptionPane.ERROR_MESSAGE
-            );
         } catch(AccessDeniedException ex) {
             JOptionPane.showMessageDialog(
                     Main.main_frame,
@@ -264,9 +257,16 @@ public class FileHandler {
                     "Błąd zapisu pliku",
                     JOptionPane.ERROR_MESSAGE
             );
+            throw new FailedToWriteToFileException("Nie udało się zapisać do pliku");
         }
         catch (Exception ex){
-            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    ex.getMessage(),
+                    "Wewnętrzny błąd aplikacji",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            throw new FailedToWriteToFileException("Nie udało się zapisać do pliku");
         }
      }
 
@@ -289,5 +289,17 @@ public class FileHandler {
 
          this.parseXml();
      }
+
+    FileHandler(File file, boolean write){
+        this.setXml_file(file);
+        this.setFile_path(file.getPath());
+        this.file_exists = this.xml_file.exists();
+        this.file_can_read = this.xml_file.canRead();
+        this.file_can_write = this.xml_file.canWrite();
+
+        if(!write){
+            this.parseXml();
+        }
+    }
 
 }

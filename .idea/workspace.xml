@@ -4,7 +4,8 @@
     <option name="SCOPE_TYPE" value="10" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Wykorzystanie statycznego pola fh">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser).&#10;Wykorzystanie tego konstruktora w klasie Main.">
+      <change afterPath="$PROJECT_DIR$/src/FailedToWriteToFileException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
@@ -255,7 +256,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672829347445</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser).&#10;Wykorzystanie tego konstruktora w klasie Main.">
+      <created>1672830108710</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1672830108710</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -282,7 +290,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Dodano podgląd notatek z listą zadań.&#10;Lista zadań rozróżnia poszczególny typ notatek.&#10;Notatki teraz przechowują informację o swoim typie." />
     <MESSAGE value="Dodano możliwość odhaczania zadań z poziomu podglądu notatki.&#10;Teraz notatki znają swój stan ukończenia zadań.&#10;Notatki z ukończonymi zadaniami są oznaczone.&#10;Usunięto zbędną opcję 2. w Menu Głównym." />
     <MESSAGE value="Modyfikacja wyglądu - dodanie ramek i obramowań.&#10;Dodanie paska opcji do panelu listy notatek." />
     <MESSAGE value="Dodanie opcji podglądu ukrytych notatek.&#10;Sprawdzanie hasła przed podglądem ukrytych notatek." />
@@ -307,7 +314,8 @@
     <MESSAGE value="Usunięto wartości domyślne szyb aplikacji oraz listy notatek.&#10;Teraz klasy same deklarują globalnie obecny stan otwartego panelu.&#10;Usunięto predefiniowane pozycje na liście szyb. Każda szyba otrzymuje miejsce w zależności od ilości obecnych szyb." />
     <MESSAGE value="Przebudowa klasy FileHandler&#10;Klasa teraz przechowuje również informacje o dostępności pliku i wyświetla komunikaty w zależności od błędów odczytu czy zapisu pliku." />
     <MESSAGE value="Wykorzystanie statycznego pola fh" />
-    <option name="LAST_COMMIT_MESSAGE" value="Wykorzystanie statycznego pola fh" />
+    <MESSAGE value="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser).&#10;Wykorzystanie tego konstruktora w klasie Main." />
+    <option name="LAST_COMMIT_MESSAGE" value="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser).&#10;Wykorzystanie tego konstruktora w klasie Main." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
