@@ -195,6 +195,84 @@ public class Main {
         }
     }
 
+    public static void handleClose(){
+        if(!NoteList.areNoteListsEqual(noteList, readNoteList )){
+            int to_save = JOptionPane.showConfirmDialog(
+                    Main.main_frame,
+                    "Masz niezapisane dane, które przy wyjściu zostaną utracone. Czy chcesz je zapisać?",
+                    "Wyjdź z aplikacji",
+                    JOptionPane.YES_NO_CANCEL_OPTION
+            );
+            if(to_save == JOptionPane.YES_OPTION){
+                if(noteList.getListLength() < 1){
+                    JOptionPane.showMessageDialog(main_frame, "Nie ma nic do zapisania", "Zapisywanie pliku", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                JFileChooser fc = new JFileChooser();
+                fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
+                int i = fc.showSaveDialog(main_frame);
+                if(i == JFileChooser.APPROVE_OPTION){
+                    try {
+                        fh = new FileHandler(fc.getSelectedFile(), true);
+                        fh.parseToFile(noteList);
+                        FileWriter settings_writer = new FileWriter(settings_file);
+                        settings_writer.write(default_path);
+                        settings_writer.close();
+                    } catch(FailedToWriteToFileException ex){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Zapisywanie pliku",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                        return;
+                    } catch(IOException ex) {
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Zapisywanie pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
+                                        "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
+                                        "pliku z notatkami.",
+                                "Zapisywanie pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                    JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
+                }
+                System.exit(0);
+            } else if(to_save == JOptionPane.NO_OPTION){
+                System.exit(0);
+            }
+        } else {
+            try{
+                FileWriter settings_writer = new FileWriter(settings_file);
+                settings_writer.write(default_path);
+                settings_writer.close();
+            } catch(IOException ex) {
+                JOptionPane.showMessageDialog(
+                        main_frame,
+                        ex.getMessage(),
+                        "Zapisywanie pliku domyślnego",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                JOptionPane.showMessageDialog(
+                        main_frame,
+                        "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
+                                "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
+                                "pliku z notatkami.",
+                        "Zapisywanie pliku domyślnego",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+            System.exit(0);
+        }
+    }
+
     public static void main(String[] args) {
         loadDefault();
         hm = new HomeMenu();
@@ -283,7 +361,26 @@ public class Main {
             }
         });
 
-        file.add(open); file.add(save);
+        JMenuItem select_default = new JMenuItem("Wybierz domyślny plik");
+        select_default.addActionListener(e -> {
+            JFileChooser fc = new JFileChooser();
+            fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
+
+            File new_default = fc.getSelectedFile();
+            default_path = new_default.getPath();
+            JOptionPane.showMessageDialog(main_frame,
+                    "Zapisano nowy domyślny plik",
+                    "Zapisywanie domyślnego pliku",
+                    JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        JMenuItem exit = new JMenuItem("Wyjdź");
+        exit.addActionListener(e -> {
+            handleClose();
+        });
+
+        file.add(open); file.add(save); file.add(new JSeparator(JSeparator.HORIZONTAL)); file.add(select_default);
+        file.add(new JSeparator(JSeparator.HORIZONTAL)); file.add(exit);
 
         JMenu notes = new JMenu("Notatki");
         JMenu sort_menu = new JMenu("Sortuj");
@@ -306,6 +403,16 @@ public class Main {
         sort_menu.add(sort_by_type);
         sort_menu.add(sort_by_completion);
         sort_menu.add(sort_descending);
+
+        JMenuItem add_note = new JMenuItem("Dodaj notatkę");
+        add_note.addActionListener(e -> {
+            en = new EditNote();
+            reloadApp(true);
+        });
+
+        notes.add(add_note); notes.add(sort_menu);
+
+        JMenu security = new JMenu("Zabezpieczenia");
 
         JMenuItem password_change = new JMenuItem("Dodaj / Zmień hasło");
         password_change.addActionListener(e -> changePassword());
@@ -339,9 +446,9 @@ public class Main {
             }
         });
 
-        notes.add(sort_menu); notes.add(password_change); notes.add(password_remove);
+        security.add(password_change); security.add(password_remove);
 
-        mb.add(file); mb.add(notes);
+        mb.add(file); mb.add(notes); mb.add(security);
         main_frame.setJMenuBar(mb);
 
         rp.setLayout(lt);
@@ -357,82 +464,7 @@ public class Main {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
-                System.out.println(NoteList.areNoteListsEqual(noteList, readNoteList));
-                if(!NoteList.areNoteListsEqual(noteList, readNoteList )){
-                    int to_save = JOptionPane.showConfirmDialog(
-                            Main.main_frame,
-                            "Masz niezapisane dane, które przy wyjściu zostaną utracone. Czy chcesz je zapisać?",
-                            "Wyjdź z aplikacji",
-                            JOptionPane.YES_NO_CANCEL_OPTION
-                    );
-                    if(to_save == JOptionPane.YES_OPTION){
-                        if(noteList.getListLength() < 1){
-                            JOptionPane.showMessageDialog(main_frame, "Nie ma nic do zapisania", "Zapisywanie pliku", JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-                        JFileChooser fc = new JFileChooser();
-                        fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
-                        int i = fc.showSaveDialog(main_frame);
-                        if(i == JFileChooser.APPROVE_OPTION){
-                            try {
-                                fh = new FileHandler(fc.getSelectedFile(), true);
-                                fh.parseToFile(noteList);
-                                FileWriter settings_writer = new FileWriter(settings_file);
-                                settings_writer.write(default_path);
-                                settings_writer.close();
-                            } catch(FailedToWriteToFileException ex){
-                                JOptionPane.showMessageDialog(
-                                        main_frame,
-                                        ex.getMessage(),
-                                        "Zapisywanie pliku",
-                                        JOptionPane.ERROR_MESSAGE
-                                );
-                                return;
-                            } catch(IOException ex) {
-                                JOptionPane.showMessageDialog(
-                                        main_frame,
-                                        ex.getMessage(),
-                                        "Zapisywanie pliku domyślnego",
-                                        JOptionPane.ERROR_MESSAGE
-                                );
-                                JOptionPane.showMessageDialog(
-                                        main_frame,
-                                        "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
-                                                "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
-                                                "pliku z notatkami.",
-                                        "Zapisywanie pliku domyślnego",
-                                        JOptionPane.ERROR_MESSAGE
-                                );
-                            }
-                            JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                        System.exit(0);
-                    } else if(to_save == JOptionPane.NO_OPTION){
-                        System.exit(0);
-                    }
-                } else {
-                    try{
-                        FileWriter settings_writer = new FileWriter(settings_file);
-                        settings_writer.write(default_path);
-                        settings_writer.close();
-                    } catch(IOException ex) {
-                        JOptionPane.showMessageDialog(
-                                main_frame,
-                                ex.getMessage(),
-                                "Zapisywanie pliku domyślnego",
-                                JOptionPane.ERROR_MESSAGE
-                        );
-                        JOptionPane.showMessageDialog(
-                                main_frame,
-                                "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
-                                        "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
-                                        "pliku z notatkami.",
-                                "Zapisywanie pliku domyślnego",
-                                JOptionPane.ERROR_MESSAGE
-                        );
-                    }
-                    System.exit(0);
-                }
+                handleClose();
             }
         });
 
