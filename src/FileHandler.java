@@ -1,5 +1,5 @@
 import org.w3c.dom.*;
-
+import org.xml.sax.SAXException;
 import javax.swing.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.Transformer;
@@ -7,6 +7,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.Objects;
 
@@ -17,6 +18,9 @@ import java.util.Objects;
  * @version 1.0
  */
 public class FileHandler {
+    private final boolean file_exists;
+    private final boolean file_can_read;
+    private final boolean file_can_write;
     private String file_path;
     private File xml_file;
     private Document parsed_file;
@@ -37,14 +41,56 @@ public class FileHandler {
     public void setXml_file(File xml_file){ this.xml_file = xml_file; }
 
     public Document getParsed_file(){ return this.parsed_file; }
+
+    public boolean isFileReadable(){ return this.file_can_read; }
+    public boolean isFileWritable(){ return this.file_can_write; }
+    public boolean doesFileExist(){ return this.file_exists; }
     public void parseXml(){
         try{
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
+            if(!isFileReadable()){
+                throw new AccessDeniedException("Nie można odczytać pliku. Sprawdź uprawnienia dostępu.");
+            }
+            if(!doesFileExist()){
+                throw new FileNotFoundException("Nie ma takiego pliku.");
+            }
             this.parsed_file = db.parse(getXml_file());
-        } catch (Exception e){
-            System.out.println("Essa");
-            System.out.println(e.getMessage());
+        } catch(AccessDeniedException ex){
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    ex.getMessage(),
+                    "Błąd odczytu pliku",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } catch(FileNotFoundException ex){
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    ex.getMessage(),
+                    "Błąd odczytu pliku",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } catch(ParserConfigurationException ex){
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    ex.getMessage(),
+                    "Wewnętrzny błąd aplikacji",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } catch(SAXException ex){
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    ex.getMessage(),
+                    "Wewnętrzny błąd aplikacji",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } catch(IOException ex){
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    ex.getMessage(),
+                    "Wewnętrzny błąd aplikacji",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 
@@ -183,28 +229,47 @@ public class FileHandler {
 
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
                 DOMSource source = new DOMSource(xml_doc);
-                StreamResult result = new StreamResult(new File(this.file_path));
+                if(!doesFileExist()){
+                    throw new FileNotFoundException("Plik nie istnieje");
+                }
+                if(!isFileWritable()){
+                    throw new AccessDeniedException("Nie można edytować pliku. Sprawdź ustawienia dostępu");
+                }
+                StreamResult result = new StreamResult();
                 transformer.transform(source, result);
             }
         }
         catch (SecurityException ex){
             JOptionPane.showMessageDialog(Main.main_frame, ex.getMessage(), "Błąd zapisu pliku", JOptionPane.ERROR_MESSAGE);
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    ex.getMessage(),
+                    "Błąd zapisu pliku",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } catch(AccessDeniedException ex) {
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    ex.getMessage(),
+                    "Błąd zapisu pliku",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
-        catch (Exception e){
-            System.out.println(e.getMessage());
+        catch (Exception ex){
+            System.out.println(ex.getMessage());
         }
      }
 
      FileHandler(String file_path){
         this.setFile_path(file_path);
         this.setXml_file(new File(this.getFile_path()));
+        this.file_exists = this.xml_file.exists();
+        this.file_can_read = this.xml_file.canRead();
+        this.file_can_write = this.xml_file.canWrite();
 
         if(getXml_file().exists() && getXml_file().canRead()){
             this.parseXml();
-        } else if (!getXml_file().exists()){
-            System.out.println("Brak pliku");
-        } else if (!getXml_file().canRead()){
-            System.out.println("Nie można otworzyć pliku!");
         }
      }
 
