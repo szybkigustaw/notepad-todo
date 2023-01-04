@@ -5,6 +5,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -448,7 +450,46 @@ public class Main {
 
         security.add(password_change); security.add(password_remove);
 
-        mb.add(file); mb.add(notes); mb.add(security);
+
+        JMenu info = new JMenu("Informacje");
+
+        JMenuItem author = new JMenuItem("O autorze");
+        author.addActionListener(e -> {
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    "Stworzone przez: \n\n Michał Mikuła",
+                    "O autorze",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        });
+
+        JMenuItem version = new JMenuItem("O tej wersji");
+        version.addActionListener(e -> {
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    "Notepad-Todo \n\n Wersja 1.0.0 \n Copyright Michał Mikuła 2023",
+                    "O aplikacji",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        });
+
+        JMenuItem github_repo = new JMenuItem("Open Source - Repozytorium");
+        github_repo.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().browse(new URI("https://github.com/Polaczeq22/notepad-todo"));
+            } catch(IOException | URISyntaxException ex){
+                JOptionPane.showMessageDialog(
+                        Main.main_frame,
+                        ex.getMessage(),
+                        "Wewnętrzny błąd aplikacji",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
+
+        info.add(author); info.add(version); info.add(github_repo);
+
+        mb.add(file); mb.add(notes); mb.add(security); mb.add(info);
         main_frame.setJMenuBar(mb);
 
         rp.setLayout(lt);
