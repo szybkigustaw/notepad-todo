@@ -123,6 +123,8 @@ public class Main {
         if(!settings_file.exists()){
             JOptionPane.showMessageDialog(main_frame, "Poczekaj. Przygotowuję aplikację po raz pierwszy...", "Pierwsze uruchomienie", JOptionPane.PLAIN_MESSAGE);
             noteList = new NoteList(new Note[0], NoteList.FULL);
+            readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
+
             try{
                 if(settings_file.createNewFile()){
                     JOptionPane.showMessageDialog(
@@ -136,7 +138,7 @@ public class Main {
                 JOptionPane.showMessageDialog(
                         main_frame,
                         ex.getMessage(),
-                        "Wewnętrzny błąd aplikacji 1",
+                        "Wewnętrzny błąd aplikacji",
                         JOptionPane.ERROR_MESSAGE
                 );
             }
@@ -145,7 +147,7 @@ public class Main {
                 JOptionPane.showMessageDialog(
                         main_frame,
                         "Nie można odczytać pliku konfiguracyjnego. Przywracam ustawienia domyślne.",
-                        "Wewnętrzny błąd aplikacji 2",
+                        "Wewnętrzny błąd aplikacji",
                         JOptionPane.ERROR_MESSAGE
                 );
                 try {
@@ -161,7 +163,7 @@ public class Main {
                     JOptionPane.showMessageDialog(
                             main_frame,
                             ex.getMessage(),
-                            "Wewnętrzny błąd aplikacji 3",
+                            "Wewnętrzny błąd aplikacji",
                             JOptionPane.ERROR_MESSAGE
                     );
                 }
@@ -175,16 +177,26 @@ public class Main {
                     if(default_path.equals("")){
                         JOptionPane.showMessageDialog(
                                 main_frame,
-                                "Ścieżka dostępu do pliku jest pusta. Musisz sam załadować swoje notatki.",
+                                "Ścieżka dostępu do pliku jest pusta. Konieczne ręczne wczytanie notatek.",
                                 "Wczytywanie domyślnego pliku notatek",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
                         return;
                     }
+                    if(!new File(default_path).exists()){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Wczytywanie pliku domyślnego zakończyło się powodzeniem. Konieczne jest ręczne wczytanie żądanego pliku.",
+                                "Błąd odczytu pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                        return;
+                    }
 
                     fh = new FileHandler(new File(default_path));
-                    noteList = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
-                    readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
+                    NoteList parsed_notes = new NoteList(fh.parseDocToNotes() != null ? fh.parseDocToNotes().getNoteList() : new Note[0], NoteList.FULL);
+                    noteList = parsed_notes.getListLength() > 0 ? parsed_notes : noteList;
+                    readNoteList = parsed_notes.getListLength() > 0 ? new NoteList(noteList.getNoteList(), NoteList.FULL) : readNoteList;
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(
                             main_frame,
@@ -198,7 +210,7 @@ public class Main {
     }
 
     public static void handleClose(){
-        if(!NoteList.areNoteListsEqual(noteList, readNoteList )){
+        if(!NoteList.areNoteListsEqual(noteList, readNoteList)){
             int to_save = JOptionPane.showConfirmDialog(
                     Main.main_frame,
                     "Masz niezapisane dane, które przy wyjściu zostaną utracone. Czy chcesz je zapisać?",
@@ -292,7 +304,7 @@ public class Main {
                 fh = new FileHandler(fc.getSelectedFile());
                 NoteList fetched_notes = fh.parseDocToNotes();
                 if (fetched_notes != null) {
-                    noteList.setNoteList(fh.parseDocToNotes().getNoteList());
+                    if(noteList != null) noteList.setNoteList(fh.parseDocToNotes().getNoteList()); else noteList = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
                     Main.reloadApp(true);
                     JOptionPane.showMessageDialog(main_frame, "Pomyślnie wczytano notatki z pliku", "Wczytywanie pliku", JOptionPane.INFORMATION_MESSAGE);
                     int save_path_to_default = JOptionPane.showConfirmDialog(
@@ -332,6 +344,7 @@ public class Main {
                 try {
                     fh = new FileHandler(fc.getSelectedFile(), true);
                     fh.parseToFile(noteList);
+                    if(readNoteList != null) readNoteList.setNoteList(noteList.getNoteList()); else readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
                     FileWriter settings_writer = new FileWriter(settings_file);
                     settings_writer.write(default_path);
                     settings_writer.close();

@@ -240,6 +240,7 @@ public class FileHandler {
                 DOMSource source = new DOMSource(xml_doc);
                 if(!doesFileExist()){
                     getXml_file().createNewFile();
+                    setXml_file(getXml_file());
                 }
                 if(!isFileWritable()){
                     throw new AccessDeniedException("Odmowa dostępu do pliku. Plik albo nie istnieje albo ma wadliwe ustawienia dostępu.");

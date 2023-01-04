@@ -401,8 +401,6 @@ public class NoteListGUI extends JPanel{
             try {
                 String pass = JOptionPane.showInputDialog(Main.rp, "Podaj hasło dostępowe");
                 pass = Main.hashString(pass);
-                System.out.println(Main.password);
-                System.out.println(pass);
                 if (!Objects.equals(pass, Main.password)) {
                     JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
                 } else {

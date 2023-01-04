@@ -327,6 +327,9 @@ public class NoteList {
         }
 
         public static boolean areNoteListsEqual(NoteList first_list, NoteList second_list){
+            if(first_list == null && second_list == null) return true;
+            if(first_list != second_list &&
+               (first_list == null || second_list == null)) return false;
             if(first_list.getListLength() != second_list.getListLength()) return false;
             for(int i = 0; i < first_list.getListLength(); i++){
                 if(!Objects.equals(first_list.getNote(i).getLabel(), second_list.getNote(i).getLabel())) return false;

@@ -4,10 +4,12 @@
     <option name="SCOPE_TYPE" value="10" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie nowej klasy FailedToWriteToFileException - dodającej nowy typ błędu, zwracany przez metodę FileHandler.parseToFile.&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser) oraz zmienną typu boolean określającą, czy wykonujemy operację zapisu.&#10;Wykorzystanie tego konstruktora w klasie Main.">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano zakładkę z informacjami o aplikacji na pasku menu">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomeMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NoteList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NoteListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteListGUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -269,7 +271,49 @@
       <option name="project" value="LOCAL" />
       <updated>1672831323196</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Usunięcie testowego komunikatu w Main. JLabel l1 wyświetla teraz wartość nazwy użytkownika systemowego.">
+      <created>1672831798811</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1672831798811</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Zapis lokalizacji domyślnego pliku z notatkami do pliku dotfile">
+      <created>1672852803015</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1672852803015</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Edycja jednej wiadomości błędu w FileHandler">
+      <created>1672858405117</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1672858405117</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Dodano menu kontekstowe przy wychodzeniu z aplikacji z niezapisanymi danymi. Dodano metodę porównującą listy notatek do NoteList">
+      <created>1672858523947</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1672858523947</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Re aranżacja przycisków na pasku menu. Wyprowadzenie zamykania aplikacji do osobnej metody.">
+      <created>1672859495619</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1672859495619</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Dodano zakładkę z informacjami o aplikacji na pasku menu">
+      <created>1672861264076</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1672861264076</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -296,13 +340,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Modyfikacja wyglądu - dodanie ramek i obramowań.&#10;Dodanie paska opcji do panelu listy notatek." />
-    <MESSAGE value="Dodanie opcji podglądu ukrytych notatek.&#10;Sprawdzanie hasła przed podglądem ukrytych notatek." />
-    <MESSAGE value="Dodano splash-screen w przypadku skończenia się notatek.&#10;Teraz NoteListGUI jest świadoma tego, czy przechowuje notatki ukryte, czy publiczne.&#10;Teraz NoteList może wskazać pozycję notatki na liście." />
-    <MESSAGE value="Teraz panel ReadNote jest świadomy trybu ukrytego (tzn. trybu, w którym po operacji na notatce ma wrócić do listy notatek ukrytych).&#10;Teraz z poziomu panelu ReadNote można ukrywać i upubliczniać notatki.&#10;Naprawiono błąd związany z nieprawidłowym otwieraniem się i usuwaniem notatek." />
-    <MESSAGE value="Teraz można dodawać nowe notatki (zarówno zwykłe, jak i listy zadań).&#10;Upublicznienie notatki wymaga podania hasła.&#10;Listy zadań zostały umieszczone w &quot;szybach&quot; ze suwakiem z boku (do przewijania)." />
-    <MESSAGE value="Dodano możliwość edycji notatek.&#10;Dodano możliwość konwersji notatki ze standardowej notatki do notatki z listą zadań i vice versa." />
-    <MESSAGE value="Dodanie warstwy komunikacji I/O z plikami XML. Odczyt i zapis notatek z/do pliku.&#10;Nowa klasa FileHandler obsługuje operacje wejścia/wyjścia na plikach XML, z których to pobiera dane o notatkach i listach zadań, przekazując je do listy notatek wewnątrz programu. Z niej również zczytuje te dane i zapisuje do pliku XML. Koncepcja działająca, przetestowana. Brak implementacji." />
     <MESSAGE value="Dodanie paska menu, funkcjonalnych opcji zapisu i odczytu plików XML z notatkami." />
     <MESSAGE value="Naprawa wyglądu notatek TODO-Note - brak maksymalnego zdefiniowanego rozmiaru." />
     <MESSAGE value="Zmiana w działaniu stanu ukrytego - podniesiono go do rangi globalnego stanu." />
@@ -321,7 +358,14 @@
     <MESSAGE value="Wykorzystanie statycznego pola fh" />
     <MESSAGE value="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser).&#10;Wykorzystanie tego konstruktora w klasie Main." />
     <MESSAGE value="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie nowej klasy FailedToWriteToFileException - dodającej nowy typ błędu, zwracany przez metodę FileHandler.parseToFile.&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser) oraz zmienną typu boolean określającą, czy wykonujemy operację zapisu.&#10;Wykorzystanie tego konstruktora w klasie Main." />
-    <option name="LAST_COMMIT_MESSAGE" value="Modyfikacje systemu wejścia/wyjścia&#10;Dodanie nowej klasy FailedToWriteToFileException - dodającej nowy typ błędu, zwracany przez metodę FileHandler.parseToFile.&#10;Dodanie konstruktora do klasy FileHandler przyjmującego jako parametr plik (zwracany przez JFileChooser) oraz zmienną typu boolean określającą, czy wykonujemy operację zapisu.&#10;Wykorzystanie tego konstruktora w klasie Main." />
+    <MESSAGE value="Usunięcie testowego komunikatu w Main. JLabel l1 wyświetla teraz wartość nazwy użytkownika systemowego." />
+    <MESSAGE value="Zapis lokalizacji domyślnego pliku z notatkami do pliku dotfile" />
+    <MESSAGE value="Edycja jednej wiadomości błędu w FileHandler" />
+    <MESSAGE value="Dodano menu kontekstowe przy wychodzeniu z aplikacji z niezapisanymi danymi. Dodano metodę porównującą listy notatek do NoteList" />
+    <MESSAGE value="Rearanżacja przycisków na pasku menu. Wyprowadzenie zamykania aplikacji do osobnej metody." />
+    <MESSAGE value="Re aranżacja przycisków na pasku menu. Wyprowadzenie zamykania aplikacji do osobnej metody." />
+    <MESSAGE value="Dodano zakładkę z informacjami o aplikacji na pasku menu" />
+    <option name="LAST_COMMIT_MESSAGE" value="Dodano zakładkę z informacjami o aplikacji na pasku menu" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
