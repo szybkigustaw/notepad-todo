@@ -1,14 +1,18 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Scanner;
 
 public class Main {
     public static FileHandler fh;
+    public static File settings_file;
     public static NoteList noteList;
 
     static public CardLayout lt = new CardLayout(25, 25);
@@ -21,6 +25,7 @@ public class Main {
     static public boolean hidden_mode = false;
     static public String current_window = null;
     static public String password = null;
+    public static String default_path = "";
 
     static public void reloadApp(boolean reloadList){
         String temp_current_window = current_window;
@@ -109,9 +114,80 @@ public class Main {
         }
     }
 
+    public static void loadDefault(){
+        settings_file = new File(String.format("%s%s.settings.txt", System.getProperty("user.home"), System.getProperty("file.separator")));
+        if(!settings_file.exists()){
+            JOptionPane.showMessageDialog(main_frame, "Poczekaj. Przygotowuję aplikację po raz pierwszy...", "Pierwsze uruchomienie", JOptionPane.PLAIN_MESSAGE);
+            noteList = new NoteList(new Note[0], NoteList.FULL);
+            try{
+                if(settings_file.createNewFile()){
+                    JOptionPane.showMessageDialog(
+                            main_frame,
+                            "Utworzono nowy plik konfiguracyjny. Możesz zacząć korzystać z aplikacji.\nHave fun!",
+                            "Pierwsze uruchomienie",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
+            } catch(IOException ex){
+                JOptionPane.showMessageDialog(
+                        main_frame,
+                        ex.getMessage(),
+                        "Wewnętrzny błąd aplikacji 1",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        } else {
+            if (!settings_file.canRead()) {
+                JOptionPane.showMessageDialog(
+                        main_frame,
+                        "Nie można odczytać pliku konfiguracyjnego. Przywracam ustawienia domyślne.",
+                        "Wewnętrzny błąd aplikacji 2",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                try {
+                    settings_file.createNewFile();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(
+                            main_frame,
+                            ex.getMessage(),
+                            "Wewnętrzny błąd aplikacji 3",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            } else {
+                try {
+                    FileReader fr = new FileReader(settings_file);
+                    Scanner fs = new Scanner(fr);
+                    if (fs.hasNextLine()) {
+                        default_path = fs.nextLine();
+                    }
+                    if(default_path.equals("")){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Ścieżka dostępu do pliku jest pusta. Musisz sam załadować swoje notatki.",
+                                "Wczytywanie domyślnego pliku notatek",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                        return;
+                    }
+
+                    fh = new FileHandler(new File(default_path));
+                    noteList = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(
+                            main_frame,
+                            ex.getMessage(),
+                            "Wewnętrzny błąd aplikacji 4",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
+        loadDefault();
         hm = new HomeMenu();
-        noteList = new NoteList(new Note[0], NoteList.FULL);
 
         JMenuBar mb = new JMenuBar();
         JMenu file = new JMenu("Plik");
@@ -129,6 +205,21 @@ public class Main {
                     noteList.setNoteList(fh.parseDocToNotes().getNoteList());
                     Main.reloadApp(true);
                     JOptionPane.showMessageDialog(main_frame, "Pomyślnie wczytano notatki z pliku", "Wczytywanie pliku", JOptionPane.INFORMATION_MESSAGE);
+                    int save_path_to_default = JOptionPane.showConfirmDialog(
+                        main_frame,
+                        "Czy chcesz zapisać ten plik z notatkami jako plik domyślny?",
+                        "Domyślny plik z notatkami",
+                        JOptionPane.YES_NO_OPTION
+                    );
+                    if(save_path_to_default == JOptionPane.YES_OPTION){
+                        default_path = fh.getFile_path();
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Zapisano",
+                                "Zapisywanie domyślnego pliku",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    }
                 }
                 if (fetched_notes != null && password == null){
                     int password_doChange = JOptionPane.showConfirmDialog(main_frame, "Wygląda na to że hasło nie zostało ustawione. Czy chcesz je ustawić?", "Brak hasła", JOptionPane.YES_NO_OPTION);
@@ -151,6 +242,9 @@ public class Main {
                 try {
                     fh = new FileHandler(fc.getSelectedFile(), true);
                     fh.parseToFile(noteList);
+                    FileWriter settings_writer = new FileWriter(settings_file);
+                    settings_writer.write(default_path);
+                    settings_writer.close();
                 } catch(FailedToWriteToFileException ex){
                     JOptionPane.showMessageDialog(
                             main_frame,
@@ -159,6 +253,21 @@ public class Main {
                             JOptionPane.ERROR_MESSAGE
                     );
                     return;
+                } catch(IOException ex) {
+                    JOptionPane.showMessageDialog(
+                            main_frame,
+                            ex.getMessage(),
+                            "Zapisywanie pliku domyślnego",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                    JOptionPane.showMessageDialog(
+                            main_frame,
+                            "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
+                                    "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
+                                    "pliku z notatkami.",
+                            "Zapisywanie pliku domyślnego",
+                            JOptionPane.ERROR_MESSAGE
+                    );
                 }
                 JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -229,13 +338,10 @@ public class Main {
         rp.setBounds(0,0,1200,800);
         rp.setVisible(true);
 
-        hm = new HomeMenu();
-
         rp.add(hm, 0);
         lt.addLayoutComponent(hm, "HomeMenu");
         main_frame.add(rp);
         main_frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         main_frame.setVisible(true);
-
     }
 }
