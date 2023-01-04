@@ -4,13 +4,11 @@
     <option name="SCOPE_TYPE" value="10" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano opcję dodania / usunięcia hasła. Dodano możliwość dodania hasła w przypadku wgrania pliku bez hasła.">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano blokadę zapisu do pliku jeśli lista notatek jest krótsza od 1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EditNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EditNote.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomeMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NoteListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteListGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReadNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadNote.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -223,7 +221,21 @@
       <option name="project" value="LOCAL" />
       <updated>1672784650065</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Opcje ukrycia notatek, lista notatek niefunkcjonalne do momentu dodania hasła.">
+      <created>1672787438285</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1672787438285</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Dodano blokadę zapisu do pliku jeśli lista notatek jest krótsza od 1">
+      <created>1672787605270</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1672787605270</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -273,7 +285,9 @@
     <MESSAGE value="Dodano opcję zmiany hasła." />
     <MESSAGE value="Dodano kontrolę manipulacji hasła w pliku." />
     <MESSAGE value="Dodano opcję dodania / usunięcia hasła. Dodano możliwość dodania hasła w przypadku wgrania pliku bez hasła." />
-    <option name="LAST_COMMIT_MESSAGE" value="Dodano opcję dodania / usunięcia hasła. Dodano możliwość dodania hasła w przypadku wgrania pliku bez hasła." />
+    <MESSAGE value="Opcje ukrycia notatek, lista notatek niefunkcjonalne do momentu dodania hasła." />
+    <MESSAGE value="Dodano blokadę zapisu do pliku jeśli lista notatek jest krótsza od 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="Dodano blokadę zapisu do pliku jeśli lista notatek jest krótsza od 1" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -14,6 +14,7 @@ public class EditNote extends JPanel {
     private final String DEFAULT_TEXT = "Lorem ipsum blablabla. \n Wprowadź coś lepszego";
     private final String DEFAULT_TODO = "Zjedz psa (Wprowadź coś lepszego)";
     private boolean todo_note;
+    private String prev_window;
 
     private JPanel createTodo(int index){
         this.note.setType(Note.TODO_NOTE);
@@ -155,6 +156,7 @@ public class EditNote extends JPanel {
     }
 
     EditNote(){
+        prev_window = Main.current_window;
 
         //Ustaw stan obecnego okna na okno dodania notatki.
         Main.current_window = "EditNote";
@@ -382,8 +384,8 @@ public class EditNote extends JPanel {
                     }
                 }
                 Main.noteList.addNote(note);
+                Main.current_window = prev_window;
                 Main.reloadApp(true);
-                Main.lt.show(Main.rp, "HomeMenu");
         });
 
         ob_gbc.insets = new Insets(0, 128, 0, 128);
@@ -398,8 +400,8 @@ public class EditNote extends JPanel {
             if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
             " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
             JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
+                Main.current_window = prev_window;
                 Main.reloadApp(false);
-                Main.lt.show(Main.rp, "HomeMenu");
             }
         });
 
@@ -417,6 +419,8 @@ public class EditNote extends JPanel {
     }
 
     EditNote(Note loaded_note, int note_index){
+        prev_window = Main.current_window;
+
         //Ustawienie stanu obecnego okna na okno edycji notatki
         Main.current_window = "EditNote";
 
@@ -644,8 +648,8 @@ public class EditNote extends JPanel {
                 }
             }
             Main.noteList.setNote(this.note, note_index);
+            Main.current_window = prev_window;
             Main.reloadApp(true);
-            Main.lt.show(Main.rp, "HomeMenu");
         });
 
         ob_gbc.insets = new Insets(0, 128, 0, 128);
@@ -660,8 +664,8 @@ public class EditNote extends JPanel {
             if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
                             " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
                     JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
+                Main.current_window = prev_window;
                 Main.reloadApp(false);
-                Main.lt.show(Main.rp, "HomeMenu");
             }
         });
 
@@ -679,6 +683,8 @@ public class EditNote extends JPanel {
     }
 
     EditNote(ToDoNote loaded_note, int note_index){
+        prev_window = Main.current_window;
+
         //Ustawienie stanu obecnego okna na okno edycji notatki
         Main.current_window = "EditNote";
 
@@ -908,8 +914,8 @@ public class EditNote extends JPanel {
                 }
             }
             Main.noteList.setNote(this.note, note_index);
+            Main.current_window = prev_window;
             Main.reloadApp(true);
-            Main.lt.show(Main.rp, "HomeMenu");
         });
 
         ob_gbc.insets = new Insets(0, 128, 0, 128);
@@ -924,8 +930,8 @@ public class EditNote extends JPanel {
             if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
                             " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
                     JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
+                Main.current_window = prev_window;
                 Main.reloadApp(false);
-                Main.lt.show(Main.rp, "HomeMenu");
             }
         });
 

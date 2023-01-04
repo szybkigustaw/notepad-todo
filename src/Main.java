@@ -8,16 +8,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 public class Main {
-    public static FileHandler fh = new FileHandler("/home/plq/Documents/notatki.xml");
-    public static NoteList noteList = new NoteList(new Note[0], NoteList.FULL);
+    public static FileHandler fh;
+    public static NoteList noteList;
 
     static public CardLayout lt = new CardLayout(25, 25);
     static public JFrame main_frame = new JFrame("Notepad");
     static public JPanel rp = new JPanel();
-    static public HomeMenu hm = new HomeMenu();
-    static public NoteListGUI nl = new NoteListGUI(noteList);
-    static public ReadNote rn = new ReadNote();
-    static public EditNote en = new EditNote();
+    static public HomeMenu hm;
+    static public NoteListGUI nl;
+    static public ReadNote rn;
+    static public EditNote en;
     static public boolean hidden_mode = false;
     static public String current_window = null;
     static public String password = null;
@@ -26,7 +26,6 @@ public class Main {
         String temp_current_window = current_window;
         rp.removeAll();
 
-        hm = new HomeMenu();
         if(reloadList) {
                 NoteList hold = new NoteList(noteList.getNoteList(), hidden_mode ? NoteList.HIDDEN : NoteList.PUBLIC);
                 nl = new NoteListGUI(hold);
@@ -36,13 +35,13 @@ public class Main {
         rp.setBounds(0,0,1200,800);
         rp.setVisible(true);
         rp.add(hm, 0);
-        rp.add(nl, 1);
-        rp.add(rn, 2);
-        rp.add(en, 3);
+        if(nl != null) rp.add(nl, 1);
+        if(rn != null) rp.add(rn, rp.getComponentCount());
+        if(en != null) rp.add(en, rp.getComponentCount());
         lt.addLayoutComponent(hm, "HomeMenu");
-        lt.addLayoutComponent(nl, "NoteList");
-        lt.addLayoutComponent(rn, "ReadNote");
-        lt.addLayoutComponent(en, "EditNote");
+        if(nl != null) lt.addLayoutComponent(nl, "NoteList");
+        if(rn != null) lt.addLayoutComponent(rn, "ReadNote");
+        if(en != null) lt.addLayoutComponent(en, "EditNote");
         main_frame.add(rp);
         main_frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         main_frame.setVisible(true);
@@ -111,17 +110,10 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        hm = new HomeMenu();
+        noteList = new NoteList(new Note[0], NoteList.FULL);
 
-        rp.setLayout(lt);
-        rp.setBounds(0,0,1200,800);
-        rp.setVisible(true);
-        rp.add(hm, 0);
-        rp.add(nl, 1);
-        lt.addLayoutComponent(hm, "HomeMenu");
-        lt.addLayoutComponent(nl, "NoteList");
-        main_frame.add(rp);
-        main_frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        main_frame.setVisible(true);
+        JOptionPane.showMessageDialog(Main.main_frame, System.getProperty("user.home"), "Sample text", JOptionPane.PLAIN_MESSAGE);
 
         JMenuBar mb = new JMenuBar();
         JMenu file = new JMenu("Plik");
@@ -133,21 +125,19 @@ public class Main {
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
             int i = fc.showOpenDialog(main_frame);
             if(i==JFileChooser.APPROVE_OPTION){
-                    fh.setXml_file(fc.getSelectedFile());
-                    fh.setFile_path(fc.getSelectedFile().getPath());
-                    fh.parseXml();
-                    NoteList fetched_notes = fh.parseDocToNotes();
-                    if (fetched_notes != null) {
-                        noteList.setNoteList(fh.parseDocToNotes().getNoteList());
-                        Main.reloadApp(true);
-                        JOptionPane.showMessageDialog(main_frame, "Pomyślnie wczytano notatki z pliku", "Wczytywanie pliku", JOptionPane.INFORMATION_MESSAGE);
+                FileHandler fh = new FileHandler(fc.getSelectedFile().getPath());
+                NoteList fetched_notes = fh.parseDocToNotes();
+                if (fetched_notes != null) {
+                    noteList.setNoteList(fh.parseDocToNotes().getNoteList());
+                    Main.reloadApp(true);
+                    JOptionPane.showMessageDialog(main_frame, "Pomyślnie wczytano notatki z pliku", "Wczytywanie pliku", JOptionPane.INFORMATION_MESSAGE);
+                }
+                if (fetched_notes != null && password == null){
+                    int password_doChange = JOptionPane.showConfirmDialog(main_frame, "Wygląda na to że hasło nie zostało ustawione. Czy chcesz je ustawić?", "Brak hasła", JOptionPane.YES_NO_OPTION);
+                    if(password_doChange == JOptionPane.YES_OPTION){
+                        changePassword();
                     }
-                    if (password == null){
-                        int password_doChange = JOptionPane.showConfirmDialog(main_frame, "Wygląda na to że hasło nie zostało ustawione. Czy chcesz je ustawić?", "Brak hasła", JOptionPane.YES_NO_OPTION);
-                        if(password_doChange == JOptionPane.YES_OPTION){
-                            changePassword();
-                        } 
-                    }
+                }
             }
         });
 
@@ -160,10 +150,11 @@ public class Main {
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
             int i = fc.showSaveDialog(main_frame);
             if(i == JFileChooser.APPROVE_OPTION){
-                    fh.setXml_file(fc.getSelectedFile());
-                    fh.setFile_path(fc.getSelectedFile().getPath());
-                    fh.parseToFile(noteList);
-                    JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
+                FileHandler fh = new FileHandler(fc.getSelectedFile().getPath());
+                fh.setXml_file(fc.getSelectedFile());
+                fh.setFile_path(fc.getSelectedFile().getPath());
+                fh.parseToFile(noteList);
+                JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -196,18 +187,25 @@ public class Main {
 
         JMenuItem password_remove = new JMenuItem("Usuń hasło");
         password_remove.addActionListener(e -> {
+            String temp_current_window = Main.current_window;
             try{
                 if(password == null){
                     JOptionPane.showMessageDialog(main_frame, "Hasło już nie istnieje", "Nie można usunąć hasła", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+
+
                 NoteList temp = new NoteList(noteList.getNoteList(), NoteList.FULL);
+
                 for(int i = 0; i < temp.getListLength(); i++){
                     if(temp.getNote(i).getHidden()){
                         throw new SecurityException("Dalej istnieją ukryte notatki. Usuń je lub upublicznij przed usunięciem hasła.");
                     }
                 }
                 password = null;
+                hidden_mode = false;
+
+                Main.current_window = temp_current_window;
                 Main.reloadApp(true);
                 JOptionPane.showMessageDialog(main_frame, "Hasło zostało pomyślnie usunięte", "Kasowanie hasła", JOptionPane.INFORMATION_MESSAGE);
 
@@ -220,5 +218,18 @@ public class Main {
 
         mb.add(file); mb.add(notes);
         main_frame.setJMenuBar(mb);
+
+        rp.setLayout(lt);
+        rp.setBounds(0,0,1200,800);
+        rp.setVisible(true);
+
+        hm = new HomeMenu();
+
+        rp.add(hm, 0);
+        lt.addLayoutComponent(hm, "HomeMenu");
+        main_frame.add(rp);
+        main_frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        main_frame.setVisible(true);
+
     }
 }
