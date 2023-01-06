@@ -322,6 +322,8 @@ public class Main {
     public static void loadDefault(){
 
         //Zapisz reprezentację pliku z ustawieniami, uzyskanego z domyślnej ścieżki domowej użytkownika systemowego
+        //Windows: C://Users/uzytkownik/.settings.txt
+        //Linux: /home/uzytkownik/.settings.txt
         settings_file = new File(String.format("%s%s.settings.txt", System.getProperty("user.home"), System.getProperty("file.separator")));
 
         //Jeśli plik nie istnieje
