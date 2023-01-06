@@ -4,12 +4,18 @@
     <option name="SCOPE_TYPE" value="10" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano zakładkę z informacjami o aplikacji na pasku menu">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Naprawa błędów w zapisie i odczycie plików.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EditNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EditNote.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FailedToWriteToFileException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FailedToWriteToFileException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HomeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomeMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Note.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Note.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/NoteList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/NoteListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteListGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReadNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadNote.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ToDoNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ToDoNote.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +48,8 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.maddyhome.idea.vim.ui.VimEmulationConfigurable&quot;
   }
 }</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -313,7 +320,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672861264076</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Naprawa błędów w zapisie i odczycie plików.">
+      <created>1672865720061</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1672865720061</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -340,7 +354,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Dodanie paska menu, funkcjonalnych opcji zapisu i odczytu plików XML z notatkami." />
     <MESSAGE value="Naprawa wyglądu notatek TODO-Note - brak maksymalnego zdefiniowanego rozmiaru." />
     <MESSAGE value="Zmiana w działaniu stanu ukrytego - podniesiono go do rangi globalnego stanu." />
     <MESSAGE value="Dodano opcję sortowania notatek na pasku opcji." />
@@ -365,7 +378,8 @@
     <MESSAGE value="Rearanżacja przycisków na pasku menu. Wyprowadzenie zamykania aplikacji do osobnej metody." />
     <MESSAGE value="Re aranżacja przycisków na pasku menu. Wyprowadzenie zamykania aplikacji do osobnej metody." />
     <MESSAGE value="Dodano zakładkę z informacjami o aplikacji na pasku menu" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dodano zakładkę z informacjami o aplikacji na pasku menu" />
+    <MESSAGE value="Naprawa błędów w zapisie i odczycie plików." />
+    <option name="LAST_COMMIT_MESSAGE" value="Naprawa błędów w zapisie i odczycie plików." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -378,6 +392,11 @@
           <properties class="java.lang.IllegalArgumentException" package="java.lang" />
           <option name="timeStamp" value="2" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/NoteListGUI.java</url>
+          <line>32</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

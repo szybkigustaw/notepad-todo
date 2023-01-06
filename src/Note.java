@@ -1,7 +1,7 @@
 import java.util.Date;
 
 /**
- * Klasa reprezentująca pojedyńczą notatkę.
+ * Reprezentuje pojedynczą notatkę.
  * Notatka może być notatką ukrytą, zawiera tekst oraz daty utworzenia/ostatniej modyfikacji;
  *
  * @version 1.0
@@ -18,16 +18,16 @@ public class Note {
     boolean isHidden;
 
     /**
-     * Metoda zwracająca tekst notatki.
+     * Zwraca tekst notatki.
      *
      * @return Tekst notatki.
      */
     public String getText(){
         return this.text;
-    };
+    }
 
     /**
-     * Metoda przypisująca nowy tekst notatki.
+     * Przypisuje nowy tekst do notatki.
      * @param text Nowy tekst notatki.
      */
     public void setText(String text){
@@ -35,16 +35,16 @@ public class Note {
     }
 
     /**
-     * Metoda zwracająca etykietę notatki.
+     * Zwraca etykietę notatki.
      *
      * @return Etykieta notatki.
      */
     public String getLabel(){
         return this.label;
-    };
+    }
 
     /**
-     * Metoda przypisująca nową etykietę notatki.
+     * Przypisuje nową etykietę do notatki.
      * @param label Nowa etykieta notatki.
      */
     public void setLabel(String label){
@@ -52,56 +52,56 @@ public class Note {
     }
 
     /**
-     * Metoda zwracająca datę utworzenia notatki.
+     * Zwraca datę utworzenia notatki.
      * @return Data utworzenia notatki.
      */
     public Date getCreate_date(){
         return this.create_date;
     }
     /**
-     * Metoda przypisująca nową datę utworzenia notatki.
-     * @param create_date Nowy tekst notatki.
+     * Przypisuje nową datę utworzenia do notatki.
+     * @param create_date Nowa data utworzenia notatki.
      */
     public void setCreate_date(Date create_date){
         this.create_date = create_date;
     }
 
     /**
-     * Metoda zwracająca datę ostatniej modyfikacji notatki.
+     * Zwraca datę ostatniej modyfikacji notatki.
      * @return Data ostatniej modyfikacji notatki.
      */
     public Date getMod_date(){
         return this.mod_date;
     }
     /**
-     * Metoda przypisująca nową datę ostatniej modyfikacji notatki.
-     * @param mod_date Nowy tekst notatki.
+     * Przypisuje nową datę ostatniej modyfikacji notatki.
+     * @param mod_date Nowa data modyfikacji notatki.
      */
     public void setMod_date(Date mod_date){
         this.mod_date = mod_date;
     }
 
     /**
-     * Metoda zwracająca typ notatki.
+     * Zwraca typ notatki.
      * @return Typ notatki. (NOTE == 1, TODO_NOTE == 2)
      */
     public int getType() { return this.type; }
 
     /**
-     * Metoda przypisująca nowy typ notatki.
+     * Przypisuje nowy typ notatki.
      * @param type Typ notatki. (NOTE == 1, TODO_NOTE == 2)
      */
     public void setType(int type) { this.type = type; }
 
     /**
-     * Metoda zwracająca stan ukrycia notatki.
+     * Zwraca stan ukrycia notatki.
      * @return Stan ukrycia notatki.
      */
     public boolean getHidden(){
         return this.isHidden;
     }
     /**
-     * Metoda zmieniająca stan ukrycia notatki.
+     * Przypisuje stan ukrycia notatki.
      * @param isHidden Nowy stan ukrycia notatki.
      */
     public void setHidden(Boolean isHidden){
@@ -109,7 +109,7 @@ public class Note {
     }
 
     /**
-     * Metoda wyświetlająca w konsoli zawartość notatki oraz jej metadane
+     * Wyświetla w konsoli zawartość notatki oraz jej metadane
      */
     public void showNote(){
         System.out.printf("\n%s: \n\n", this.getLabel());

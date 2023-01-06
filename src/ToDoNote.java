@@ -1,19 +1,29 @@
 import java.util.Date;
 /**
- * Klasa reprezentująca pojedyńczą notatkę zawierającą listę zadań.
+ * Reprezentująca pojedynczą notatkę zawierającą listę zadań.
  * Notatka może być notatką ukrytą, zawiera tekst oraz daty utworzenia/ostatniej modyfikacji.
  * Lista zadań zawiera treści zadań oraz ich stany odhaczenia. Klasa pochodna klasy Note.
  *
  * @version 1.0
  * @author Michał Mikuła
+ * @see Note
  */
 public class ToDoNote extends Note{
+    /**
+     * Tablica przechowująca treści notatek
+     */
     private String[] todos;
+    /**
+     * Tablica przechowująca stany odhaczenia zadań
+     */
     private boolean[] isChecked;
+    /**
+     * Zmienna przechowująca stan ukończenia listy zadań (wartość <i>true</i> dla ukończonych wszystkich zadań)
+     */
     private boolean isCompleted;
 
     /**
-     * Metoda zwracająca treść listy zadań.
+     * Zwraca treść listy zadań.
      * @return Treść listy zadań.
      */
     public String[] getTodo(){
@@ -21,24 +31,24 @@ public class ToDoNote extends Note{
     }
 
     /**
-     * Metoda zwracająca pojedyńczy element z listy zadań.
+     * Zwraca treść pojedynczego zadań.
      * @param index Pozycja na liście zadań.
-     * @return Treść pojedyńczego zadania.
+     * @return Treść pojedynczego zadania.
      */
     public String getTodo(int index){
         return this.todos[index];
     }
 
     /**
-     * Metoda przypisująca do notatki nową treść listy zadań.
-     * @param text Nowa treść listy zadań.
+     * Przypisuje do notatki nową tablicę reprezentującą treści zadań.
+     * @param text Tablica przechowująca treści zadań
      */
     public void setTodo(String[] text){
         this.todos = text;
     }
 
     /**
-     * Metoda przypisująca do listy zadań notatki nową wartość pojedyńczego zadania.
+     * Przypisuje nową treść do zadania znajdującego się na liście pod wskazanym indeksem.
      * @param text Nowa treść zadania.
      * @param index Pozycja zadania na liście.
      */
@@ -47,15 +57,15 @@ public class ToDoNote extends Note{
     }
 
     /**
-     * Metoda zwracająca stany całej listy zadań.
-     * @return Stany odhaczenia listy zadań.
+     * Zwraca tablicę stanów odhaczenia zadań dla listy zadań przechowywanej w notatce.
+     * @return Tablica stanów odhaczenia listy zadań.
      */
     public boolean[] getChecked(){
         return this.isChecked;
     }
 
     /**
-     * Metoda zwracająca stan pojedyńczego zadania z listy.
+     * Zwraca stan odhaczenia zadania znajdującego się na liście pod wskazanym indeksem
      * @param index Pozycja zadania na liście.
      * @return Stan odhaczenia zadania.
      */
@@ -63,8 +73,8 @@ public class ToDoNote extends Note{
         return this.isChecked[index];
     }
     /**
-     * Metoda przypisująca nowe stany całej listy zadań.
-     * @param isChecked Lista nowych stanów zadań.
+     * Przypisuje tablicę ze stanami odhaczenia do listy zadań w notatce wewnątrz obiektu
+     * @param isChecked Tablica zawierająca stany odhaczenia zadań.
      */
     public void setChecked(boolean[] isChecked){
         this.isChecked = isChecked;
@@ -72,8 +82,8 @@ public class ToDoNote extends Note{
     }
 
     /**
-     * Metoda przypisująca nowy stan do pojedyńczego zadania.
-     * @param isChecked Nowy stan odhaczenia zadaia.
+     * Przypisuje stan odhaczenia do zadania z listy znajdującego się pod wskazanym indeksem
+     * @param isChecked Nowy stan odhaczenia zadania.
      * @param index Pozycja zadania na liście.
      */
     public void setChecked(boolean isChecked, int index){
@@ -82,19 +92,19 @@ public class ToDoNote extends Note{
     }
 
     /**
-     * Metoda zwraca stan ukończenia listy zadań.
-     * @return Stan ukończenia listy zadań.
+     * Zwraca stan ukończenia listy zadań.
+     * @return Stan ukończenia listy zadań. (<i>true</i> jeśli wszystkie zadania zostały ukończone)
      */
     public boolean getCompleted(){ return this.isCompleted; }
 
     /**
-     * Metoda przypisuje nowy stan ukończenia listy zadań.
+     * Przypisuje nowy stan ukończenia listy zadań.
      * @param isCompleted Nowy stan ukończenia listy zadań.
      */
     public void setCompleted(boolean isCompleted) { this.isCompleted = isCompleted;}
 
     /**
-     * Metoda weryfikująca stan ukończenia notatki. Koryguje wpis o stanie zakończenia notatki adekwatnie do jej aktualnego stanu.
+     * Weryfikuje stan ukończenia notatki. Koryguje wpis o stanie zakończenia notatki adekwatnie do jej aktualnego stanu.
      */
     public void verifyToDoCompletion(){
         this.setCompleted(true);
@@ -107,69 +117,116 @@ public class ToDoNote extends Note{
     }
 
     /**
-     * Metoda pobierająca tablicę ciągów znaków i poszerzającą ją o podaną ilość pozycji.
+     * Pobiera tablicę treści zadań i poszerza ją o podaną ilość pozycji.
      * @param arr Tablica bazowa.
      * @param slots Ilość miejsc do dodania.
      * @return Nowa tablica, zawierająca informacje z tablicy starej, poszerzona o podaną ilość miejsc.
      */
     private String[] expandTextArray(String[] arr, int slots){
+
+        //Stwórz nową tablicę o ilości miejsc (długość tablicy z parametrów metody
+        // + dodatkowa ilość miejsc podana w parametrach metody)
         String[] newTexts = new String[arr.length + slots];
+
+        //Dla każdego elementu w nowej tablicy
         for(int i = 0; i < newTexts.length; i++){
+
+            //Jeśli iterator jest mniejszy od długości tablicy z parametrów funkcji
             if(i < arr.length) {
+
+                //Wstaw do nowej tablicy treść zadania ze starej tablicy pod indeksem iteratora
                 newTexts[i] = arr[i];
-            } else newTexts[i] = "";
+            } else newTexts[i] = ""; //Jeśli jest większy, wstaw pusty ciąg znaków w to miejsce
         }
+
+        //Przypisz do tablicy podanej w parametrze wartość nowej tablicy i zwróć ją
         arr = newTexts;
         return arr;
     }
     /**
-     * Metoda pobierająca tablicę wartości prawda/fałsz i poszerzającą ją o podaną ilość pozycji.
+     * Pobiera tablicę stanów odhaczenia zadań i poszerza ją o podaną ilość pozycji.
      * @param arr Tablica bazowa.
      * @param slots Ilość miejsc do dodania.
      * @return Nowa tablica, zawierająca informacje z tablicy starej, poszerzona o podaną ilość miejsc.
      */
     private boolean[] expandCheckedArray(boolean[] arr, int slots){
-        boolean[] newBools = new boolean[arr.length + slots];
-        for(int i = 0; i < newBools.length; i++){
-            if(i < arr.length) newBools[i] = arr[i];
-            else newBools[i] = false;
+
+        //Stwórz nową tablicę o ilości miejsc (długość tablicy z parametrów metody
+        // + dodatkowa ilość miejsc podana w parametrach metody)
+
+        boolean[] newBooleans = new boolean[arr.length + slots];
+
+        //Dla każdego elementu w nowej tablicy
+        for(int i = 0; i < newBooleans.length; i++){
+
+            //Wstaw do nowej tablicy stan odhaczenia zadania ze starej tablicy pod indeksem iteratora
+            if(i < arr.length) newBooleans[i] = arr[i];
+            else newBooleans[i] = false; //Jeśli jest większy, wstaw wartość false w to miejsce
         }
-        arr = newBools;
+
+        //Przypisz do tablicy podanej w parametrze wartość nowej tablicy i zwróć ją
+        arr = newBooleans;
         return arr;
     }
 
     /**
-     * Metoda dodająca do listy zadań w notatce nowe zadania. Automatycznie aktualizuje datę modyfikacji notatki;
-     * @param texts Lista treści zadań
-     * @param checkedStates Lista stanów odhaczenia zadań
+     * Dodaje do listy zadań w notatce nowe zadania. Automatycznie aktualizuje datę modyfikacji notatki;
+     * @param texts Tablica treści zadań
+     * @param checkedStates Tablica stanów odhaczenia zadań
      */
     public void addToDo(String[] texts, boolean[] checkedStates){
+
+        //Jeśli długość tablicy treści zadań nie równa się długości tablicy stanów zadań
         if(texts.length != checkedStates.length){
+
+            //Jeśli ta pierwsza jest krótsza od drugiej
             if(texts.length < checkedStates.length){
+
+                //Przechowaj informację o długości tablicy treści zadań
                 int curTextsLength = texts.length;
+
+                //Rozszerz tablicę o (długość tablicy stanów - długość tablicy treści zadań) pozycji
                 texts = this.expandTextArray(texts, (checkedStates.length - texts.length));
+
+                //Do każdej nowo dodanej treści zadań przypisz wartość "Sample text"
                 for(int i = curTextsLength; i < texts.length; i++){
                     texts[i] = "Sample text";
                 }
-            } else if (checkedStates.length < texts.length){
+            }
+            //Jeśli jest na odwrót
+            else {
+
+                //Przechowaj informację o długości tablicy stanów odhaczenia zadań
                 int curStatesLength = checkedStates.length;
+
+                //Rozszerz tablicę o (długość tablicy treści zadań - długość tablicy stanów odhaczenia zadań) pozycji
                 checkedStates = this.expandCheckedArray(checkedStates, (texts.length - checkedStates.length));
+
+                //Dla każdego nowo dodanego stanu przypisz wartość false
                 for(int i = curStatesLength; i < checkedStates.length; i++){
                     checkedStates[i] = false;
                 }
             }
         }
+
+        //Przechowaj informację o obecnej długości tablic danych zadań
         int curTodosLength = this.todos.length;
-        int curBoolsLength = this.isChecked.length;
+        int curBooleansLength = this.isChecked.length;
+
+        //Poszerz tablice o długości tablic podanych w parametrach
         this.todos = this.expandTextArray(this.todos, texts.length);
         this.isChecked = this.expandCheckedArray(this.isChecked, checkedStates.length);
+
+        //Skopiuj zawartość tablic podanych w parametrach na końcu tablic danych notatek
         System.arraycopy(texts,0, this.todos, curTodosLength, texts.length);
-        System.arraycopy(checkedStates, 0, this.isChecked, curBoolsLength, checkedStates.length);
+        System.arraycopy(checkedStates, 0, this.isChecked, curBooleansLength, checkedStates.length);
+
+        //Zaktualizuj datę modyfikacji
         this.setMod_date(new Date());
     }
 
     /**
-     * Metoda wyświetlająca w konsoli zawartość notatki, listę zadań w niej zawartą oraz jej metadane.
+     * Wyświetla w konsoli zawartość notatki, listę zadań w niej zawartą oraz jej metadane.
      */
     public void showNote(){
         System.out.printf("\n%s: \n\n", this.getLabel());
@@ -199,8 +256,8 @@ public class ToDoNote extends Note{
      * Konstruktor parametryczny. Tworzy nową notatkę ze zdefiniowaną etykietą, zawartością oraz stanem ukrycia.
      * @param label Etykieta nowej notatki.
      * @param text Treść nowej notatki.
-     * @param todos Lista zadań.
-     * @param isChecked Lista stanów zadań.
+     * @param todos Tablica treści zadań
+     * @param isChecked Tablica stanów odhaczenia zadań.
      * @param isHidden Stan ukrycia nowej notatki.
      */
     ToDoNote(String label, String text, String[] todos, boolean[] isChecked, boolean isHidden) {
