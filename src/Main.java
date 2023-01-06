@@ -89,7 +89,7 @@ public class Main {
 
     /**
      * Przeładowuje aplikację. Na żądanie użytkownika odświeża również listę notatek, implementując w niej tryb ukryty lub publiczny.
-     * <p>Odświeżenie odbywa się poprzez:
+     * <p>Odświeżenie odbywa się poprzez:</p>
      * <ul>
      *     <li>Usunięcie wszystkich elementów z {@link #rp panelu głównego}</li>
      *     <li>Odbudowanie tego panelu</li>
@@ -97,7 +97,8 @@ public class Main {
      *     <li>Dodanie informacji o oknach i ich pozycjach do {@link #lt układu} (tu również przypisywane im są mnemoniczne ciągi znaków)</li>
      *     <li>Umieszczenie panelu głównego w {@link #main_frame ramce aplikacji} oraz przypisanie jej atrybutów</li>
      *     <li>Przełączenie okna w układzie na obecnie wyświetlane</li>
-     * </ul></p>
+     * </ul>
+     *
      * @param reloadList zmienna definiująća, czy lista notatek również ma zostać przeładowana przed przeładowaniem interfejsu (<i>true</i> jeśli tak)
      */
     static public void reloadApp(boolean reloadList){
@@ -186,12 +187,13 @@ public class Main {
     /**
      * Dokonuje zmiany hasła w aplikacji.
      *
-     * <p>Wyświetla okno kontekstowe, w którym prosi użytkownika o podanie nowego hasłą. Dokonuje przy tym kilku sprawdzeń. <ul>
+     * <p>Wyświetla okno kontekstowe, w którym prosi użytkownika o podanie nowego hasłą. Dokonuje przy tym kilku sprawdzeń.</p>
+     * <ul>
      *     <li>Czy hasło w ogóle jest ustawione (jeśli nie, tworzy zupełnie nowe hasło)</li>
      *     <li>Czy użytkownik zna wcześniejsze hasło</li>
      *     <li>Czy hasło już nie było wcześniej ustawione</li>
      *     <li>Czy nie doszło do pomyłki przy weryfikacji wpisanego nowego hasła</li>
-     * </ul></p>
+     * </ul>
      */
     public static void changePassword(){
 

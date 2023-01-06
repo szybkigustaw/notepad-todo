@@ -201,13 +201,14 @@ public class NoteList {
      * Sortuje listę notatek przechowywaną w tym obiekcie oraz przypisuje do niego nową wartość listy.
      *
      * <p>Sortowanie może być przeprowadzone w kilku trybach, w zależności od przekazanej wartości trybu.
-     * Możliwe tryby sortowania (sortowanie według): <ol>
+     * Możliwe tryby sortowania (sortowanie według): </p>
+     * <ol>
      *     <li><b>Daty modyfikacji</b></li>
      *     <li><b>Daty utworzenia</b></li>
      *     <li><b>Etykiety</b> - kolejność alfabetyczna</li>
      *     <li><b>Typu notatki</b> - notatki typu <i>TODO-NOTE</i> wyświetlane są jako pierwsze</li>
      *     <li><b>Stanu ukończenia zadań</b> - procentu ukończenia wszystkich zadań na liście (nie dotyczy notatek typu <i>NOTE</i> - zawsze trafiają na koniec listy)</li>
-     * </ol></p>
+     * </ol>
      *
      * @param sort_mode tryb sortowania (wyrażany poprzez liczbę całkowitą, do wykorzystania jedna ze stałych klasy)
      * @param descending wartość określająca kierunek sortowania (wartość true dla sortowania malejąco)
