@@ -1,37 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodanie dokumentacji, komentarzy oraz drobne poprawki składniowe.">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="+dokumentacja w javadoc, wersja druga">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/EditNote.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/EditNote.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/HomeMenu.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/HomeMenu.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Main.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Main.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Note.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Note.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/NoteList.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/NoteList.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/NoteListGUI.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/NoteListGUI.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/ReadNote.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/ReadNote.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/ToDoNote.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/ToDoNote.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/allclasses-index.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/allclasses-index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/allpackages-index.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/allpackages-index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/help-doc.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/help-doc.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index-files/index-1.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index-files/index-1.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index-files/index-10.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index-files/index-10.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index-files/index-2.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index-files/index-2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index-files/index-3.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index-files/index-3.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index-files/index-4.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index-files/index-4.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index-files/index-5.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index-files/index-5.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index-files/index-6.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index-files/index-6.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index-files/index-7.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index-files/index-7.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index-files/index-8.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index-files/index-8.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index-files/index-9.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index-files/index-9.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/member-search-index.js" beforeDir="false" afterPath="$PROJECT_DIR$/doc/member-search-index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/overview-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/overview-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/serialized-form.html" beforeDir="false" afterPath="$PROJECT_DIR$/doc/serialized-form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/type-search-index.js" beforeDir="false" afterPath="$PROJECT_DIR$/doc/type-search-index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/NoteList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteList.java" afterDir="false" />
     </list>
@@ -352,7 +323,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673031759624</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="+dokumentacja w javadoc, wersja druga">
+      <created>1673034009706</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1673034009706</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -379,7 +357,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Zmiana w działaniu stanu ukrytego - podniesiono go do rangi globalnego stanu." />
     <MESSAGE value="Dodano opcję sortowania notatek na pasku opcji." />
     <MESSAGE value="Naprawiono sortowanie według poziomu ukończenia notatek." />
     <MESSAGE value="Dodano opcję podglądu metadanych notatki." />
@@ -404,7 +381,8 @@
     <MESSAGE value="Dodano zakładkę z informacjami o aplikacji na pasku menu" />
     <MESSAGE value="Naprawa błędów w zapisie i odczycie plików." />
     <MESSAGE value="Dodanie dokumentacji, komentarzy oraz drobne poprawki składniowe." />
-    <option name="LAST_COMMIT_MESSAGE" value="Dodanie dokumentacji, komentarzy oraz drobne poprawki składniowe." />
+    <MESSAGE value="+dokumentacja w javadoc, wersja druga" />
+    <option name="LAST_COMMIT_MESSAGE" value="+dokumentacja w javadoc, wersja druga" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -421,6 +399,11 @@
           <url>file://$PROJECT_DIR$/src/NoteListGUI.java</url>
           <line>32</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/NoteListGUI.java</url>
+          <line>313</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

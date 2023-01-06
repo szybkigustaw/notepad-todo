@@ -77,9 +77,7 @@ public class NoteList {
      * Zwraca długość listy notatek.
      * @return Długość listy notatek.
      */
-    public int getListLength(){
-        return this.getNoteList().length;
-    }
+    public int getListLength(){ return this.getNoteList().length; }
 
     /**
      * Nadpisuje obecnie przechowywaną tablicę notatek nową wartością.

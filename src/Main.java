@@ -364,6 +364,10 @@ public class Main {
             //Jeśli plik istnieje
         } else {
 
+            //Zinicjalizuj puste listy notatek
+            noteList = new NoteList(new Note[0], NoteList.FULL);
+            readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
+
             //Jeśli plik jest nie do odczytu
             if (!settings_file.canRead()) {
 
@@ -451,10 +455,10 @@ public class Main {
                     fh = new FileHandler(new File(default_path));
 
                     //Jeśli notatki na tej liście są obecne, przypisz je do buforowej zmiennej. Jeśli nie, utwórz pustą listę
-                    NoteList parsed_notes = new NoteList(fh.parseDocToNotes() != null ? fh.parseDocToNotes().getNoteList() : new Note[0], NoteList.FULL);
+                    NoteList parsed_notes = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
 
                     //Jeśli buforowa lista ma długość większą niż jeden, uzupełnij obydwie listy aplikacji jej danymi
-                    noteList = parsed_notes.getListLength() > 0 ? parsed_notes : noteList;
+                    noteList = parsed_notes.getListLength() > 0 ? parsed_notes : new NoteList(new Note[0], NoteList.FULL);
                     readNoteList = parsed_notes.getListLength() > 0 ? new NoteList(noteList.getNoteList(), NoteList.FULL) : readNoteList;
 
                 }
