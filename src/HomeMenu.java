@@ -68,7 +68,7 @@ public class HomeMenu extends JPanel{
         //Dodaj akcję do przycisku pierwszego — przejście do widoku edycji notatki (Notatka pusta = nowa)
         b1.addActionListener(e -> {
             Main.en = new EditNote();
-            Main.reloadApp(true);
+            Main.reloadApp(false);
         });
 
         //Stwórz przycisk drugi i nadaj mu odpowiednie wartości rozmiaru i stylu tekstu.

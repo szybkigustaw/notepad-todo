@@ -37,7 +37,7 @@ public class EditNote extends JPanel {
      * Tworzy graficzną reprezentację pojedynczego zadania na liście w postaci panelu z treścią zadania i checkbox-em definiującym stan odhaczenia zadania.
      * <p>W panelu tym możliwa jest edycja treści zadania. Jeśli nic nie zostało wprowadzone, stosowana zostaje wartość {@link #DEFAULT_TODO}</p>
      * <p>Powstałe wartości stanu odhaczenia oraz treści zadania są wartościami domyślnymi.</p>
-     * @param index Indeks notatki na liście
+     * @param index Indeks zadania na liście
      * @return Gotowy panel
      */
     private JPanel createTodo(int index){
@@ -120,7 +120,7 @@ public class EditNote extends JPanel {
      * Tworzy graficzną reprezentację pojedynczego zadania na liście w postaci panelu z treścią zadania i checkbox-em definiującym stan odhaczenia zadania.
      * <p>W panelu tym możliwa jest edycja treści zadania. Jeśli nic nie zostało wprowadzone, stosowana zostaje wartość {@link #DEFAULT_TODO}</p>
      * <p>Do zbudowania panelu wykorzystuje dane podane w parametrach.</p>
-     * @param index Indeks notatki na liście
+     * @param index Indeks zadania na liście
      * @param todo Treść zadania
      * @param checked_state Stan odhaczenia zadania
      * @return Gotowy panel
@@ -380,11 +380,12 @@ public class EditNote extends JPanel {
 
         //Dodaj logikę do etykiety-notatki — dodawanie nowych zadań
         alt_todo.addMouseListener(new MouseListener() {
+
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                //Jeśli zadań w notatce jest mniej niż jedna, dodaj do panelu etykietę-przycisk kasowania zadań
-                if(note.getTodo().length < 1) todos.add(remove_todos);
+                //Jeśli zadań w notatce jest więcej lub równo jedna, dodaj do panelu etykietę-przycisk kasowania zadań
+                if(note.getTodo().length >= 1) todos.add(remove_todos);
 
                 //Usuń etykieto-przycisk dodawania notatek
                 todos.remove(alt_todo);
@@ -537,7 +538,12 @@ public class EditNote extends JPanel {
         Main.current_window = "EditNote";
 
         //Stwórz nową notatkę, przypisz jej typ NOTE oraz przypisz tablicom określającym stan zadań zerową długość
-        this.note = (ToDoNote) loaded_note;
+        this.note = new ToDoNote();
+        this.note.setLabel(loaded_note.getLabel());
+        this.note.setText(loaded_note.getText());
+        this.note.setHidden(loaded_note.getHidden());
+        this.note.setMod_date(loaded_note.getMod_date());
+        this.note.setCreate_date(loaded_note.getCreate_date());
         this.note.setType(Note.NOTE);
         this.note.setTodo(new String[0]);
         this.note.setChecked(new boolean[0]);
@@ -710,8 +716,8 @@ public class EditNote extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                //Jeśli zadań w notatce jest mniej niż jedna, dodaj do panelu etykietę-przycisk kasowania zadań
-                if(note.getTodo().length < 1) todos.add(remove_todos);
+                //Jeśli zadań w notatce jest więcej lub równo jedna, dodaj do panelu etykietę-przycisk kasowania zadań
+                if(note.getTodo().length >= 1) todos.add(remove_todos);
 
                 //Usuń etykieto-przycisk dodawania notatek
                 todos.remove(alt_todo);

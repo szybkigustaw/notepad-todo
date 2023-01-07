@@ -84,7 +84,6 @@ public class NoteListGUI extends JPanel{
         edit.addActionListener(e -> {
             Main.en = new EditNote(Main.noteList.getNote(note_index), note_index);
             Main.reloadApp(false);
-            Main.lt.show(Main.rp, "EditNote");
         });
 
         //Stwórz przycisk kasowania notatki
