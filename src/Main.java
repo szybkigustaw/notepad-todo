@@ -33,6 +33,10 @@ public class Main {
      */
     public static File settings_file;
     /**
+     * Definiuje stan auto zapisu notatek odczytany z pliku. Wykorzystywany do kontroli zmian w pliku konfiguracyjnym.
+     */
+    public static boolean previous_auto_save_note;
+    /**
      * Definiuje, czy notatki edytowane/ tworzone powinny być automatycznie zamykane przy opuszczaniu okna edycji.
      */
     public static boolean auto_save_note = false;
@@ -86,6 +90,10 @@ public class Main {
      * Ciąg znaków przechowujący hasło (w formie zahaszowanej)
      */
     static public String password = null;
+    /**
+     * Ciąg znaków reprezentujący ścieżkę dostępu do domyślnego pliku z notatkami pobrana podczas uruchomienia aplikacji z pliku konfiguracyjnego. Używana do kontroli zmian w pliku konfiguracyjnym.
+     */
+    static public String previous_default_path;
     /**
      * Ciąg znaków reprezentujący ścieżkę dostępu do domyślnego pliku z notatkami
      */
@@ -427,6 +435,7 @@ public class Main {
 
                         //Zwróć odczytaną ścieżkę
                         default_path = fs.nextLine();
+                        previous_default_path = default_path;
                     }
 
                     //Jeśli odczytana ścieżka jest pusta
@@ -579,11 +588,63 @@ public class Main {
                     JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
                 }
 
+                //Jeśli zmianie uległa domyślna ścieżka pliku z notatkami
+                if(!Objects.equals(previous_default_path, default_path)){
+
+                    //Początek kodu z ewentualnymi wyjątkami
+                    try {
+                        //Stwórz instancję klasy zapisującej do pliku z ustawieniami
+                        FileWriter settings_writer = new FileWriter(settings_file);
+
+                        //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
+                        settings_writer.write(default_path);
+                        settings_writer.close();
+                    }
+
+                    //Jeśli złapany zostanie wyjątek związany z operacjami I/O
+                    catch(IOException ex){
+
+                        //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Błąd zapisu pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                }
+
                 //Zakończ działanie aplikacji
                 System.exit(0);
 
                 //Jeśli zamknięto okno zapisu danych do pliku
             } else if(to_save == JOptionPane.NO_OPTION){
+
+                //Jeśli zmianie uległa domyślna ścieżka pliku z notatkami
+                if(!Objects.equals(previous_default_path, default_path)){
+
+                    //Początek kodu z ewentualnymi wyjątkami
+                    try {
+                        //Stwórz instancję klasy zapisującej do pliku z ustawieniami
+                        FileWriter settings_writer = new FileWriter(settings_file);
+
+                        //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
+                        settings_writer.write(default_path);
+                        settings_writer.close();
+                    }
+
+                    //Jeśli złapany zostanie wyjątek związany z operacjami I/O
+                    catch(IOException ex){
+
+                        //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Błąd zapisu pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                }
 
                 //Zakończ działanie aplikacji
                 System.exit(0);
