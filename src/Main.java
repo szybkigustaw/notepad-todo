@@ -636,14 +636,18 @@ public class Main {
      * @return Wartość <i>true</i> jeśli operacja ma być kontynuowana.
      */
     public static boolean checkSaved(){
+
+        //Jeśli notatki są równe, zwróć wartość true. Jeśli nie:
         if(!NoteList.areNoteListsEqual(noteList, readNoteList)){
+
+            //Wyświetl komunikat z zapytaniem o chęć kontynuowania operacji mimo utraty danych
             int i = JOptionPane.showConfirmDialog(
                     main_frame,
                     "Ta operacja spowoduje utracenie niezapisanych danych. Czy na pewno chcesz kontynuować?",
                     "Możliwa utrata danych",
                     JOptionPane.YES_NO_OPTION
             );
-            return i == JOptionPane.YES_OPTION;
+            return i == JOptionPane.YES_OPTION; //Zwróć wartość true, jeśli wybrano opcję "Tak"
         } else return true;
     }
 
@@ -672,27 +676,57 @@ public class Main {
 
         //Dodaj logikę do przycisku otwierania plików
         open.addActionListener(e -> {
-            if(!checkSaved()) return;
-            if(auto_save_note && en != null) en.forceSave();
+            if(!checkSaved()) return; //Jeśli nie zgadza się użytkownik na utratę danych, przerwij proces
+            if(auto_save_note && en != null) en.forceSave(); //Jeśli auto zapisywanie jest włączone i okno edycji istnieje, zapisz notatkę edytowaną
+
+            //Stwórz nową instancję klasy reprezentującej okno wyboru pliku
             JFileChooser fc = new JFileChooser();
+
+            //Załóż filtr rozszerzeń plików na tę instancję. Ma pokazywać wyłącznie pliki XML
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
+
+            //Wyświetl to okno
             int i = fc.showOpenDialog(main_frame);
+
+            //Jeśli wybrano plik do odczytu
             if(i==JFileChooser.APPROVE_OPTION){
+
+                //Stwórz nową instancję klasy obsługującej operacje na plikach i przypisz jej wybrany w oknie plik
                 fh = new FileHandler(fc.getSelectedFile());
+
+                //Dokonaj konwersji dokumentu XML na listę notatek
                 NoteList fetched_notes = fh.parseDocToNotes();
+
+                //Jeśli lista notatek odczytana z pliku jest pusta
                 if (fetched_notes != null) {
+
+                    //Jeśli lista notatek nie jest pusta, przypisz do niej wartość listy odczytanej z pliku. Jeśli jest, stwórz nową instancję klasy listy notatek i przypisz jej tę samą wartość
                     if(noteList != null) noteList.setNoteList(fh.parseDocToNotes().getNoteList()); else noteList = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
-                    readNoteList.setNoteList(noteList.getNoteList());
+
+                    //Jeśli lista notatek w historii nie jest pusta, przypisz do niej wartość obecnej listy notatek. Jeśli jest, stwórz nową instancję klasy listy notatek i przypisz jej tę samą wartość
+                    if(readNoteList != null) readNoteList.setNoteList(noteList.getNoteList()); else readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
+
+                    //Przeładuj aplikację
                     Main.reloadApp(true);
+
+                    //Wyświetl komunikat o powodzeniu operacji
                     JOptionPane.showMessageDialog(main_frame, "Pomyślnie wczytano notatki z pliku", "Wczytywanie pliku", JOptionPane.INFORMATION_MESSAGE);
+
+                    //Wyświetl komunikat z zapytaniem o wolę zapisu ścieżki do pliku jako ścieżki domyślnej
                     int save_path_to_default = JOptionPane.showConfirmDialog(
                         main_frame,
                         "Czy chcesz zapisać ten plik z notatkami jako plik domyślny?",
                         "Domyślny plik z notatkami",
                         JOptionPane.YES_NO_OPTION
                     );
+
+                    //Jeśli wyrażono taką wolę
                     if(save_path_to_default == JOptionPane.YES_OPTION){
+
+                        //Zapisz tę ścieżkę
                         default_path = fh.getFile_path();
+
+                        //Wyświetl komunikat z informacją o powodzeniu operacji
                         JOptionPane.showMessageDialog(
                                 main_frame,
                                 "Zapisano",
@@ -701,8 +735,14 @@ public class Main {
                         );
                     }
                 }
+
+                //Jeśli odczytana lista nie jest pusta oraz hasło jest puste
                 if (fetched_notes != null && password == null){
+
+                    //Wyświetl komunikat z zapytaniem o wolę ustawienia w danej chwili hasła
                     int password_doChange = JOptionPane.showConfirmDialog(main_frame, "Wygląda na to że hasło nie zostało ustawione. Czy chcesz je ustawić?", "Brak hasła", JOptionPane.YES_NO_OPTION);
+
+                    //Jeśli użytkownik wyraża taką wolę, wywołaj metodę zmieniającą hasło
                     if(password_doChange == JOptionPane.YES_OPTION){
                         changePassword();
                     }
@@ -712,23 +752,53 @@ public class Main {
 
         //Dodaj logikę do przycisku zapisywania plików
         save.addActionListener(e -> {
+
+            //Jeśli lista notatek jest krótsza od 1
             if(noteList.getListLength() < 1){
+
+                //Wyświetl komunikat o braku informacji do zapisywania i przerwij działanie funkcji
                 JOptionPane.showMessageDialog(main_frame, "Nie ma nic do zapisania", "Zapisywanie pliku", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if(auto_save_note && en != null) en.forceSave();
+            if(auto_save_note && en != null) en.forceSave(); //Jeśli auto zapisywanie jest włączone i okno edycji istnieje, zapisz notatkę edytowaną
+
+            //Stwórz obiekt reprezentujący okno wyboru pliku
             JFileChooser fc = new JFileChooser();
+
+            //Załóż na ten obiekt filtr rozszerzeń plików na pliki XML
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
+
+            //Wyświetl to okno
             int i = fc.showSaveDialog(main_frame);
+
+            //Jeśli zatwierdzono plik do zapisu
             if(i == JFileChooser.APPROVE_OPTION){
+
+                //Początek kodu z prawdopodobnymi wyjątkami
                 try {
+
+                    //Stwórz nową instancję klasy obsługującej operacje na plikach (w trybie zapisu)
                     fh = new FileHandler(fc.getSelectedFile(), true);
+
+                    //Skonwertuj listę notatek do formy dokumentu XML i zapisz go do pliku
                     fh.parseToFile(noteList);
+
+                    //Jeśli lista notatek w historii nie jest pusta, ustaw jej wartość na wartość listy notatek obecnej.
+                    // Jeśli jest, stwórz nową instancję klasy listy notatek i przypisz jej wartość obecnej listy notatek
                     if(readNoteList != null) readNoteList.setNoteList(noteList.getNoteList()); else readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
+
+                    //Stwórz instancję klasy zapisującej do pliku z ustawieniami
                     FileWriter settings_writer = new FileWriter(settings_file);
+
+                    //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
                     settings_writer.write(default_path);
                     settings_writer.close();
-                } catch(FailedToWriteToFileException ex){
+                }
+
+                //Jeśli wystąpi wyjątek nieudanego zapisu do pliku
+                catch(FailedToWriteToFileException ex){
+
+                    //Wyświetl komunikat z wiadomością błędu i przerwij działanie funkcji
                     JOptionPane.showMessageDialog(
                             main_frame,
                             ex.getMessage(),
@@ -736,7 +806,12 @@ public class Main {
                             JOptionPane.ERROR_MESSAGE
                     );
                     return;
-                } catch(IOException ex) {
+                }
+
+                //Jeśli wystąpi wyjątek związany z operacjami I/O
+                catch(IOException ex) {
+
+                    //Wyświetl komunikat z wiadomością błędu oraz informacją o braku możliwości odczytu domyślnego pliku przy ponownym uruchomieniu aplikacji
                     JOptionPane.showMessageDialog(
                             main_frame,
                             ex.getMessage(),
@@ -752,18 +827,31 @@ public class Main {
                             JOptionPane.ERROR_MESSAGE
                     );
                 }
+
+                //Wyświetl komunikat o prawidłowym wykonaniu operacji
                 JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
         //Stwórz pozycję w menu wyboru domyślnego pliku z notatkami
         JMenuItem select_default = new JMenuItem("Wybierz domyślny plik");
+
+        //Dodaj logikę do tej pozycji
         select_default.addActionListener(e -> {
+
+            //Stwórz instancję klasy reprezentującej okno wyboru pliku
             JFileChooser fc = new JFileChooser();
+
+            //Załóż filtr rozszerzeń na tę instancję. Filtr ma pokazywać tylko pliki XML
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
 
+            //Stwórz nową instancję klasy reprezentującej otwarty plik w oknie
             File new_default = fc.getSelectedFile();
+
+            //Odczytaj ścieżkę dostępu do tego pliku i zapisz ją
             default_path = new_default.getPath();
+
+            //Wyświetl komunikat o powodzeniu operacji
             JOptionPane.showMessageDialog(main_frame,
                     "Zapisano nowy domyślny plik",
                     "Zapisywanie domyślnego pliku",

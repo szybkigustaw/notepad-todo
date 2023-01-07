@@ -34,13 +34,33 @@ public class EditNote extends JPanel {
      */
     private final String prev_window;
 
+    /**
+     * Zapisuje notatkę mimo nieukończonego procesu edytowania jej przez użytkownika.
+     */
     public void forceSave(){
+
+        //Jeśli notatka ma swój indeks na liście
         if(this.note_index != -1){
+
+            //Nadpisz notatkę pod tym indeksem na liście
             Main.noteList.setNote(this.note, this.note_index);
         }
+
+        //Jeśli nie
         else {
+
+            //Dodaj nową notatkę
             Main.noteList.addNote(this.note);
         }
+
+        //Przełącz okno na poprzednie okno
+        Main.current_window = prev_window;
+
+        //Przeładuj aplikację
+        Main.reloadApp(true);
+
+        //Wyzeruj wartość okna edycji notatek
+        Main.en = null;
     }
 
     /**
