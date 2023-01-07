@@ -215,6 +215,11 @@ public class EditNote extends JPanel {
         this.note.setTodo(new String[0]);
         this.note.setChecked(new boolean[0]);
 
+
+        //Zdefiniuj wartości domyślne pól tekstowych
+        String DEFAULT_LABEL = "Wprowadź etykietę notatki.";
+        String DEFAULT_TEXT = "Lorem ipsum blablabla. \n Wprowadź coś lepszego";
+
         //Stwórz układ oraz wartości modelowe
         GridBagConstraints gbc = new GridBagConstraints();
         GridBagLayout layout = new GridBagLayout();
@@ -225,7 +230,6 @@ public class EditNote extends JPanel {
 
         //Stwórz etykietę
         JTextField label = new JTextField();
-        String DEFAULT_LABEL = "Wprowadź etykietę notatki.";
         label.setText(DEFAULT_LABEL); //Przypisz do jej wartości domyślną etykietę
         label.setHorizontalAlignment(JTextField.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 48));
@@ -236,9 +240,9 @@ public class EditNote extends JPanel {
         //Dodaj logikę do etykiety — reakcję na klawisz myszy
         label.addMouseListener(new MouseListener() {
             @Override
-            //Ustaw treść etykiety na ciąg pusty
+            //Ustaw treść etykiety na ciąg pusty, jeśli wartość jest równa wartości domyślnej
             public void mouseClicked(MouseEvent e) {
-                label.setText("");
+                if(Objects.equals(label.getText(), DEFAULT_LABEL)) label.setText("");
             }
 
             //zbędny syf
@@ -268,7 +272,6 @@ public class EditNote extends JPanel {
 
         //Stwórz pole tekstowe
         JTextArea text = new JTextArea( 60, 50);
-        String DEFAULT_TEXT = "Lorem ipsum blablabla. \n Wprowadź coś lepszego";
         text.setText(DEFAULT_TEXT); //Przypisz do niego domyślną treść
         text.setFont(new Font("Arial", Font.PLAIN, 12));
         if(!todo_note) text.setSize(1100, 512); //Jeśli jest notatka typu NOTE, jej pole tekstowe ma być większe
@@ -278,9 +281,9 @@ public class EditNote extends JPanel {
         //Dodaj logikę do pola tekstowego — reakcję na klawisz myszy
         text.addMouseListener(new MouseListener() {
             @Override
-            //Ustaw treść pola tekstowego na ciąg pusty
+            //Ustaw treść pola tekstowego na ciąg pusty, jeśli wartość pola tekstowego równa się tekstowi domyślnemu
             public void mouseClicked(MouseEvent e) {
-                text.setText("");
+                if(Objects.equals(text.getText(), DEFAULT_TEXT)) text.setText("");
             }
 
             //zbędny syf
@@ -539,6 +542,11 @@ public class EditNote extends JPanel {
         this.note.setTodo(new String[0]);
         this.note.setChecked(new boolean[0]);
 
+
+        //Zdefiniuj wartości domyślne pól tekstowych
+        String DEFAULT_LABEL = "Wprowadź etykietę notatki.";
+        String DEFAULT_TEXT = "Lorem ipsum blablabla. \n Wprowadź coś lepszego";
+
         //Stwórz układ oraz wartości modelowe
         GridBagConstraints gbc = new GridBagConstraints();
         GridBagLayout layout = new GridBagLayout();
@@ -559,9 +567,9 @@ public class EditNote extends JPanel {
         //Dodaj logikę do etykiety — reakcję na klawisz myszy
         label.addMouseListener(new MouseListener() {
             @Override
-            //Ustaw treść etykiety na ciąg pusty
+            //Ustaw treść etykiety na ciąg pusty, jeśli wartość jest równa wartości domyślnej
             public void mouseClicked(MouseEvent e) {
-                label.setText("");
+                if(Objects.equals(label.getText(), DEFAULT_LABEL)) label.setText("");
             }
 
             //zbędny syf
@@ -600,9 +608,9 @@ public class EditNote extends JPanel {
         //Dodaj logikę do pola tekstowego — reakcję na klawisz myszy
         text.addMouseListener(new MouseListener() {
             @Override
-            //Ustaw treść pola tekstowego na ciąg pusty
+            //Ustaw treść pola tekstowego na ciąg pusty, jeśli wartość pola tekstowego równa się tekstowi domyślnemu
             public void mouseClicked(MouseEvent e) {
-                text.setText("");
+                if(Objects.equals(text.getText(), DEFAULT_TEXT)) text.setText("");
             }
 
             //zbędny syf
@@ -862,6 +870,10 @@ public class EditNote extends JPanel {
         this.note = loaded_note;
         this.note.setType(Note.TODO_NOTE);
 
+        //Zdefiniuj wartości domyślne pól tekstowych
+        String DEFAULT_LABEL = "Wprowadź etykietę notatki.";
+        String DEFAULT_TEXT = "Lorem ipsum blablabla. \n Wprowadź coś lepszego";
+
         //Stwórz układ oraz wartości modelowe
         GridBagConstraints gbc = new GridBagConstraints();
         GridBagLayout layout = new GridBagLayout();
@@ -882,9 +894,9 @@ public class EditNote extends JPanel {
         //Dodaj logikę do etykiety — reakcję na klawisz myszy
         label.addMouseListener(new MouseListener() {
             @Override
-            //Ustaw treść etykiety na ciąg pusty
+            //Ustaw treść etykiety na ciąg pusty, jeśli wartość jest równa wartości domyślnej
             public void mouseClicked(MouseEvent e) {
-                label.setText("");
+                if(Objects.equals(label.getText(), DEFAULT_LABEL)) label.setText("");
             }
 
             //zbędny syf
@@ -923,9 +935,9 @@ public class EditNote extends JPanel {
         //Dodaj logikę do pola tekstowego — reakcję na klawisz myszy
         text.addMouseListener(new MouseListener() {
             @Override
-            //Ustaw treść pola tekstowego na ciąg pusty
+            //Ustaw treść pola tekstowego na ciąg pusty, jeśli wartość pola tekstowego równa się tekstowi domyślnemu
             public void mouseClicked(MouseEvent e) {
-                text.setText("");
+                if(Objects.equals(text.getText(), DEFAULT_TEXT)) text.setText("");
             }
 
             //zbędny syf

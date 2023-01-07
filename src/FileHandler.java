@@ -21,15 +21,15 @@ public class FileHandler {
     /**
      * Określa, czy plik istnieje
      */
-    private final boolean file_exists;
+    private boolean file_exists;
     /**
      * Określa, czy plik jest możliwy do odczytu
      */
-    private final boolean file_can_read;
+    private boolean file_can_read;
     /**
      * Określa, czy plik jest możliwy do zapisu
      */
-    private final boolean file_can_write;
+    private boolean file_can_write;
     /**
      * Ścieżka dostępu do pliku
      */
@@ -62,10 +62,15 @@ public class FileHandler {
     public File getXml_file(){ return this.xml_file; }
 
     /**
-     * Nadpisuje przechowywany w obiekcie plik nowym.
+     * Nadpisuje przechowywany w obiekcie plik nowym. Dodatkowo przeprowadza od nowa kontrolę możliwości odczytu/zapisu.
      * @param xml_file Plik — dokument XML przechowujący dane o notatkach.
      */
-    public void setXml_file(File xml_file){ this.xml_file = xml_file; }
+    public void setXml_file(File xml_file){
+        this.xml_file = xml_file;
+        this.file_exists = getXml_file().exists();
+        this.file_can_write = getXml_file().canWrite();
+        this.file_can_read = getXml_file().canRead();
+    }
 
     /**
      * Zwraca dokument przechowywany w tym obiekcie, zawierający odczytane z pliku dane o notatkach.
@@ -379,7 +384,7 @@ public class FileHandler {
 
 
             //Dla każdej notatki na liście
-            for(int i = 0; i < notes.getListLength(); i++){
+            for(int i = 0; i < notes.getListLength(); i++) {
 
                 //Stwórz element reprezentujący ciało notatki
                 Element note = xml_doc.createElement("Note");
@@ -438,7 +443,7 @@ public class FileHandler {
                 Element hidden = xml_doc.createElement("Hidden");
 
                 //Jeśli hasło jest zdefiniowane oraz na liście występują ukryte notatki
-                if(notes.getNote(i).getHidden() && Main.password == null){
+                if (notes.getNote(i).getHidden() && Main.password == null) {
 
                     //Zwróć wyjątek bezpieczeństwa. Nie można przechować notatek ukrytych bez zabezpieczającego je hasła
                     throw new SecurityException("Nie można zapisać pliku. Dalej istnieją notatki ukryte pomimo braku hasła. Dodaj najpierw hasło i spróbuj ponownie.");
@@ -451,7 +456,7 @@ public class FileHandler {
                 note.appendChild(hidden);
 
                 //Jeśli typem notatki jest TODO_NOTE
-                if(notes.getNote(i).getType() == Note.TODO_NOTE){
+                if (notes.getNote(i).getType() == Note.TODO_NOTE) {
 
                     //Stwórz element będący ciałem listy zadań
                     Element todo_list = xml_doc.createElement("ToDoList");
@@ -461,7 +466,7 @@ public class FileHandler {
 
 
                     //Dla każdego zadania z listy zadań w notatce
-                    for(int j = 0; j < ((ToDoNote)notes.getNote(i)).getTodo().length; j++){
+                    for (int j = 0; j < ((ToDoNote) notes.getNote(i)).getTodo().length; j++) {
 
                         //Stwórz element będący ciałem zadania
                         Element todo = xml_doc.createElement("ToDo");
@@ -472,7 +477,7 @@ public class FileHandler {
 
                         //Stwórz element zawierający dane o treści zadania i umieść w nim te dane
                         Element todo_text = xml_doc.createElement("Text");
-                        todo_text.appendChild(xml_doc.createTextNode(((ToDoNote)notes.getNote(i)).getTodo(j)));
+                        todo_text.appendChild(xml_doc.createTextNode(((ToDoNote) notes.getNote(i)).getTodo(j)));
 
                         //Umieść element w drzewie
                         todo.appendChild(todo_text);
@@ -496,28 +501,42 @@ public class FileHandler {
                 DOMSource source = new DOMSource(xml_doc);
 
                 //Jeśli plik nie istnieje
-                if(!doesFileExist()){
+                if (!doesFileExist()) {
 
-                    //Jeśli udało się utworzyć plik w podanej lokalizacji
-                    if(getXml_file().createNewFile()){
+                    //Utwórz tymczasową kopię pliku
+                    File temp = getXml_file();
+
+                    //Jeśli udało się utworzyć plik w lokalizacji pliku tymczasowego
+                    if (temp.createNewFile()) {
 
                         //Wyświetl o tym informację na standardowym wyjściu
                         System.out.println("Utworzono plik w podanej lokalizacji");
+
+                        //Ustaw wartość pliku przechowywanego w obiekcie na wartość pliku tymczasowego
+                        setXml_file(temp);
                     }
+
+                    //Jeśli to się nie powiedzie
+                    else {
+
+                        //Wyrzuć wyjątek operacji I/O
+                        throw new IOException("Nie można utworzyć pliku.");
+                    }
+
+
+                    //Jeśli plik jest nie do zapisu
+                    if (!isFileWritable()) {
+
+                        //Zwróć odpowiedni wątek
+                        throw new AccessDeniedException("Odmowa dostępu do pliku. Plik albo nie istnieje albo ma wadliwe ustawienia dostępu.");
+                    }
+
+                    //Stwórz nowy kontener wyjściowy i umieść w nim plik docelowy
+                    StreamResult result = new StreamResult(getXml_file());
+
+                    //Dokonaj przekształcenia drzewa DOM ze źródła na dokument XML umieszczony w pliku docelowym
+                    transformer.transform(source, result);
                 }
-
-                //Jeśli plik jest nie do zapisu
-                if(!isFileWritable()){
-
-                    //Zwróć odpowiedni wątek
-                    throw new AccessDeniedException("Odmowa dostępu do pliku. Plik albo nie istnieje albo ma wadliwe ustawienia dostępu.");
-                }
-
-                //Stwórz nowy kontener wyjściowy i umieść w nim plik docelowy
-                StreamResult result = new StreamResult(getXml_file());
-
-                //Dokonaj przekształcenia drzewa DOM ze źródła na dokument XML umieszczony w pliku docelowym
-                transformer.transform(source, result);
             }
         }
 
@@ -540,6 +559,18 @@ public class FileHandler {
 
             //Zwróć wyjątek niepowodzenia zapisu pliku
             throw new FailedToWriteToFileException("Nie udało się zapisać do pliku");
+        }
+
+        //Jeśli wystąpi wyjątek związany z operacjami I/O
+        catch (IOException ex){
+
+            //Wyświetl komunikat z wiadomością błędu
+            JOptionPane.showMessageDialog(
+                    Main.main_frame,
+                    ex.getMessage(),
+                    "Błąd zapisu pliku",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
 
         //Jeśli wyłapano każdy inny wyjątek

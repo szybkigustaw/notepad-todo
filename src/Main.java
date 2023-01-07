@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 /**
- * Tworzy ramkę dla całej aplikacji oraz umieszcza w niej cztery okna. Kontroluje rozmiar okna alikacji, przechowuje listę notatek globalną dla całej aplikacji oraz informacje o ustawionym haśle.
+ * Tworzy ramkę dla całej aplikacji oraz umieszcza w niej cztery okna. Kontroluje rozmiar okna aplikacji, przechowuje listę notatek globalną dla całej aplikacji oraz informacje o ustawionym haśle.
  *
  * <p>Przechowuje dwie wersje listy notatek: obecną oraz ostatnią odczytaną z pliku (używanej przy determinowaniu, czy doszło do zmian w liście względem wczytanego pliku)</p>
  * <p>Wykorzystuje układ kartowy, który umożliwia wyświetlanie każdego okna aplikacji na całej powierzchni ramki.</p>
@@ -99,7 +99,7 @@ public class Main {
      *     <li>Przełączenie okna w układzie na obecnie wyświetlane</li>
      * </ul>
      *
-     * @param reloadList zmienna definiująća, czy lista notatek również ma zostać przeładowana przed przeładowaniem interfejsu (<i>true</i> jeśli tak)
+     * @param reloadList zmienna definiująca, czy lista notatek również ma zostać przeładowana przed przeładowaniem interfejsu (<i>true</i> jeśli tak)
      */
     static public void reloadApp(boolean reloadList){
 
@@ -187,7 +187,7 @@ public class Main {
     /**
      * Dokonuje zmiany hasła w aplikacji.
      *
-     * <p>Wyświetla okno kontekstowe, w którym prosi użytkownika o podanie nowego hasłą. Dokonuje przy tym kilku sprawdzeń.</p>
+     * <p>Wyświetla okno kontekstowe, w którym prosi użytkownika o podanie nowego hasła. Dokonuje przy tym kilku sprawdzeń.</p>
      * <ul>
      *     <li>Czy hasło w ogóle jest ustawione (jeśli nie, tworzy zupełnie nowe hasło)</li>
      *     <li>Czy użytkownik zna wcześniejsze hasło</li>
@@ -262,7 +262,7 @@ public class Main {
                     JOptionPane.showMessageDialog(Main.main_frame, "Błędne hasło", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
                 }
 
-                //Jeśli wystąpi wyjątek o błędynm algorytmie
+                //Jeśli wystąpi wyjątek o błędnym algorytmie
             } catch (NoSuchAlgorithmException ex) {
 
                 //Wyrzuć wiadomość wyjątku do konsoli
@@ -308,7 +308,7 @@ public class Main {
                 //Jeśli wystąpi wyjątek o błędnym algorytmie
             } catch (NoSuchAlgorithmException ex){
 
-                    //Przekaź wiadomość z błędu do konsoli
+                    //Przekaż wiadomość z błędu do konsoli
                     System.out.println(ex.getMessage());
             }
         }
@@ -317,13 +317,13 @@ public class Main {
     /**
      * Ładuje wartości domyślne ustawień aplikacji. Wywołuje również odczyt pliku z domyślnej ścieżki.
      *
-     * <p>Jeśli pliku z ustawieniami nie ma, sam tworzy nowy plik ustawień i uzupełnia go wartośiami domyślnymi</p>
+     * <p>Jeśli pliku z ustawieniami nie ma, sam tworzy nowy plik ustawień i uzupełnia go wartościami domyślnymi</p>
      */
     public static void loadDefault(){
 
         //Zapisz reprezentację pliku z ustawieniami, uzyskanego z domyślnej ścieżki domowej użytkownika systemowego
-        //Windows: C://Users/uzytkownik/.settings.txt
-        //Linux: /home/uzytkownik/.settings.txt
+        //Windows: C://Users/użytkownik/.settings.txt
+        //Linux: /home/użytkownik/.settings.txt
         settings_file = new File(String.format("%s%s.settings.txt", System.getProperty("user.home"), System.getProperty("file.separator")));
 
         //Jeśli plik nie istnieje
@@ -611,7 +611,7 @@ public class Main {
                         JOptionPane.ERROR_MESSAGE
                 );
 
-                //Wyświetl komunikat o nieudanym zapisie domyślnej ścieżki do pliku konfiguracyjnegi
+                //Wyświetl komunikat o nieudanym zapisie domyślnej ścieżki do pliku konfiguracyjnego
                 JOptionPane.showMessageDialog(
                         main_frame,
                         "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
@@ -628,7 +628,23 @@ public class Main {
     }
 
     /**
-     * Metoda główna aplikacji. Inicjalizuje wartości domyślne ustawień oraz listy notatek oraz buduje interfejs.
+     * Sprawdza, czy doszło do zmian w liście plików, które mogłyby zostać utracone. Następnie pyta użytkownika, czy na pewno chce kontynuować operację.
+     * @return Wartość <i>true</i> jeśli operacja ma być kontynuowana.
+     */
+    public static boolean checkSaved(){
+        if(!NoteList.areNoteListsEqual(noteList, readNoteList)){
+            int i = JOptionPane.showConfirmDialog(
+                    main_frame,
+                    "Ta operacja spowoduje utracenie niezapisanych danych. Czy na pewno chcesz kontynuować?",
+                    "Możliwa utrata danych",
+                    JOptionPane.YES_NO_OPTION
+            );
+            return i == JOptionPane.YES_OPTION;
+        } else return true;
+    }
+
+    /**
+     * Metoda główna aplikacji. Inicjalizuje wartości domyślne ustawień oraz listy notatek, oraz buduje interfejs.
      * @param args Argumenty podawane przy uruchomieniu aplikacji (niestosowane)
      */
     public static void main(String[] args) {
@@ -652,6 +668,7 @@ public class Main {
 
         //Dodaj logikę do przycisku otwierania plików
         open.addActionListener(e -> {
+            if(!checkSaved()) return;
             JFileChooser fc = new JFileChooser();
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
             int i = fc.showOpenDialog(main_frame);
@@ -660,6 +677,7 @@ public class Main {
                 NoteList fetched_notes = fh.parseDocToNotes();
                 if (fetched_notes != null) {
                     if(noteList != null) noteList.setNoteList(fh.parseDocToNotes().getNoteList()); else noteList = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
+                    readNoteList.setNoteList(noteList.getNoteList());
                     Main.reloadApp(true);
                     JOptionPane.showMessageDialog(main_frame, "Pomyślnie wczytano notatki z pliku", "Wczytywanie pliku", JOptionPane.INFORMATION_MESSAGE);
                     int save_path_to_default = JOptionPane.showConfirmDialog(
@@ -763,7 +781,7 @@ public class Main {
         //Stwórz menu opcji notatek
         JMenu notes = new JMenu("Notatki");
 
-        //Stwó©z menu sortowania notatek
+        //Stwórz menu sortowania notatek
         JMenu sort_menu = new JMenu("Sortuj");
 
         //Stwórz pozycje w menu odpowiedzialne za różne rodzaje sortowania
@@ -773,7 +791,7 @@ public class Main {
         JMenuItem sort_by_type = new JMenuItem("wg typu");
         JMenuItem sort_by_completion = new JMenuItem("wg stopnia ukończenia");
 
-        //Stwórz pozycję w menu będącą check-boxem deinifującym kolejność sortowania
+        //Stwórz pozycję w menu będącą check-boxem definiującym kolejność sortowania
         JCheckBoxMenuItem sort_descending = new JCheckBoxMenuItem("Sortuj rosnąco", true);
 
         //Dodaj logikę do pozycji sortowania. Przypisz do każdej pozycji metodę sortującą listę notatek z innym wywoływanym trybem.
@@ -958,7 +976,7 @@ public class Main {
         //Ustaw domyślną operację wyjścia z aplikacji na brak reakcji (aplikacja sama to kontroluje)
         main_frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        //Dodaj logikę do ramki - reakcja na wywołanie sygnału zamknięcia aplikacji
+        //Dodaj logikę do ramki — reakcja na wywołanie sygnału zamknięcia aplikacji
         main_frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
