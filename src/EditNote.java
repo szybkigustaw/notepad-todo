@@ -28,10 +28,20 @@ public class EditNote extends JPanel {
      * Wartość określająca, czy notatka przechowywana w tym obiekcie posiada listę zadań
      */
     private boolean todo_note;
+    private final int note_index;
     /**
      * Ciąg znaków określający poprzednie wyświetlane okno
      */
     private final String prev_window;
+
+    public void forceSave(){
+        if(this.note_index != -1){
+            Main.noteList.setNote(this.note, this.note_index);
+        }
+        else {
+            Main.noteList.addNote(this.note);
+        }
+    }
 
     /**
      * Tworzy graficzną reprezentację pojedynczego zadania na liście w postaci panelu z treścią zadania i checkbox-em definiującym stan odhaczenia zadania.
@@ -208,6 +218,8 @@ public class EditNote extends JPanel {
 
         //Ustaw stan obecnego okna na okno dodania notatki.
         Main.current_window = "EditNote";
+
+        this.note_index = -1;
 
         //Stwórz nową notatkę, przypisz jej typ NOTE oraz przypisz tablicom określającym stan zadań zerową długość
         note = new ToDoNote();
@@ -536,6 +548,8 @@ public class EditNote extends JPanel {
 
         //Ustaw stan obecnego okna na okno dodania notatki.
         Main.current_window = "EditNote";
+
+        this.note_index = note_index;
 
         //Stwórz nową notatkę, przypisz jej typ NOTE oraz przypisz tablicom określającym stan zadań zerową długość
         this.note = new ToDoNote();
@@ -871,6 +885,8 @@ public class EditNote extends JPanel {
 
         //Ustaw stan obecnego okna na okno dodania notatki.
         Main.current_window = "EditNote";
+
+        this.note_index = note_index;
 
         //Stwórz nową notatkę, przypisz jej typ TODO_NOTE
         this.note = loaded_note;

@@ -493,7 +493,7 @@ public class FileHandler {
                         todo.appendChild(todo_checked);
                     }
                 }
-
+            }
                 //Uzyskaj nową instancję zestawu API przekształcającego powstałe drzewo DOM na dokument (wykorzystaj ustawienia domyślne)
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
 
@@ -537,7 +537,6 @@ public class FileHandler {
                     //Dokonaj przekształcenia drzewa DOM ze źródła na dokument XML umieszczony w pliku docelowym
                     transformer.transform(source, result);
                 }
-            }
         }
 
         //Jeśli wyłapano wyjątek bezpieczeństwa

@@ -33,6 +33,10 @@ public class Main {
      */
     public static File settings_file;
     /**
+     * Definiuje, czy notatki edytowane/ tworzone powinny być automatycznie zamykane przy opuszczaniu okna edycji.
+     */
+    public static boolean auto_save_note = true;
+    /**
      * Globalna lista notatek dla całej aplikacji.
      */
     public static NoteList noteList;
@@ -669,6 +673,7 @@ public class Main {
         //Dodaj logikę do przycisku otwierania plików
         open.addActionListener(e -> {
             if(!checkSaved()) return;
+            if(auto_save_note && en != null) en.forceSave();
             JFileChooser fc = new JFileChooser();
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
             int i = fc.showOpenDialog(main_frame);
@@ -711,6 +716,7 @@ public class Main {
                 JOptionPane.showMessageDialog(main_frame, "Nie ma nic do zapisania", "Zapisywanie pliku", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            if(auto_save_note && en != null) en.forceSave();
             JFileChooser fc = new JFileChooser();
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
             int i = fc.showSaveDialog(main_frame);

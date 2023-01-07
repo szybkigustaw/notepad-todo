@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Naprawa błędów, dodanie funkcji.&#10;Naprawiono błąd związany z kasowaniem się tekstu wprowadzonego przez użytkownika w polach tekstowych po kliknięciu myszką w jego obszarze.&#10;Dodano okno weryfikujące wolę odrzucenia zmian w notatkach przy operacji, która mogłaby te dane wymazać.&#10;Naprawiono błąd powodujący wyświetlenie komunikatu o błędzie odmowy dostępu w momencie prawidłowego utworzenia pliku.">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Naprawiono edycję notatek typu NOTE">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EditNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EditNote.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomeMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NoteListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteListGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -352,7 +352,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673120268493</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Naprawiono edycję notatek typu NOTE">
+      <created>1673122186800</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1673122186800</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -379,7 +386,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Dodano opcję podglądu metadanych notatki." />
     <MESSAGE value="Dodano globalny stan obecnie podglądanego okna." />
     <MESSAGE value="Dodanie szyfrowanie SHA-256 dla hasła, zapis hasła do pliku." />
     <MESSAGE value="Dodano opcję zmiany hasła." />
@@ -404,7 +410,8 @@
     <MESSAGE value="+dokumentacja w javadoc, wersja druga" />
     <MESSAGE value="Naprawa błędu związanego z odczytem pliku domyślnego.&#10;Gdy domyślny plik nie był możliwy do odczytu, program nie inicjalizował list notatek pustymi wartościami, ergo nie można było wyświetlić okna listy notatek." />
     <MESSAGE value="Naprawa błędów, dodanie funkcji.&#10;Naprawiono błąd związany z kasowaniem się tekstu wprowadzonego przez użytkownika w polach tekstowych po kliknięciu myszką w jego obszarze.&#10;Dodano okno weryfikujące wolę odrzucenia zmian w notatkach przy operacji, która mogłaby te dane wymazać.&#10;Naprawiono błąd powodujący wyświetlenie komunikatu o błędzie odmowy dostępu w momencie prawidłowego utworzenia pliku." />
-    <option name="LAST_COMMIT_MESSAGE" value="Naprawa błędów, dodanie funkcji.&#10;Naprawiono błąd związany z kasowaniem się tekstu wprowadzonego przez użytkownika w polach tekstowych po kliknięciu myszką w jego obszarze.&#10;Dodano okno weryfikujące wolę odrzucenia zmian w notatkach przy operacji, która mogłaby te dane wymazać.&#10;Naprawiono błąd powodujący wyświetlenie komunikatu o błędzie odmowy dostępu w momencie prawidłowego utworzenia pliku." />
+    <MESSAGE value="Naprawiono edycję notatek typu NOTE" />
+    <option name="LAST_COMMIT_MESSAGE" value="Naprawiono edycję notatek typu NOTE" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
