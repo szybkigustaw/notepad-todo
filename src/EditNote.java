@@ -64,6 +64,17 @@ public class EditNote extends JPanel {
     }
 
     /**
+     * Kasuje okno edycji notatki mimo niezakończonego procesu edycji notatki.
+     */
+    public void forceDelete(){
+
+        //Wyświetl poprzednie okno, przeładuj aplikację i skasuj okno edycji notatki
+        Main.current_window = prev_window;
+        Main.reloadApp(true);
+        Main.en = null;
+    }
+
+    /**
      * Tworzy graficzną reprezentację pojedynczego zadania na liście w postaci panelu z treścią zadania i checkbox-em definiującym stan odhaczenia zadania.
      * <p>W panelu tym możliwa jest edycja treści zadania. Jeśli nic nie zostało wprowadzone, stosowana zostaje wartość {@link #DEFAULT_TODO}</p>
      * <p>Powstałe wartości stanu odhaczenia oraz treści zadania są wartościami domyślnymi.</p>

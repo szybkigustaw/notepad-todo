@@ -35,7 +35,7 @@ public class Main {
     /**
      * Definiuje, czy notatki edytowane/ tworzone powinny być automatycznie zamykane przy opuszczaniu okna edycji.
      */
-    public static boolean auto_save_note = true;
+    public static boolean auto_save_note = false;
     /**
      * Globalna lista notatek dla całej aplikacji.
      */
@@ -677,7 +677,41 @@ public class Main {
         //Dodaj logikę do przycisku otwierania plików
         open.addActionListener(e -> {
             if(!checkSaved()) return; //Jeśli nie zgadza się użytkownik na utratę danych, przerwij proces
-            if(auto_save_note && en != null) en.forceSave(); //Jeśli auto zapisywanie jest włączone i okno edycji istnieje, zapisz notatkę edytowaną
+
+            //Jeśli okno edycji notatek istnieje
+            if(en != null){
+
+                //Jeśli auto zapis nie jest aktywny
+               if(!auto_save_note){
+
+                   //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
+                   int i = JOptionPane.showConfirmDialog(
+                           main_frame,
+                           "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
+                           "Edytowana notatka niezapisana",
+                           JOptionPane.YES_NO_CANCEL_OPTION,
+                           JOptionPane.QUESTION_MESSAGE
+                   );
+
+                   //Jeśli wola została potwierdzona, zapisz notatkę
+                   if(i == JOptionPane.YES_OPTION){
+                       en.forceSave();
+                   }
+
+                   //Jeśli nie wyrażono takiej woli, skasuj notatkę
+                   else if(i == JOptionPane.NO_OPTION){
+                       en.forceDelete();
+                   }
+
+                   //Jeśli anulowano, przerwij działanie funkcji
+                   else {
+                       return;
+                   }
+               }
+
+               //Jeśli auto zapis jest aktywny, zapisz notatkę
+               else en.forceSave();
+            }
 
             //Stwórz nową instancję klasy reprezentującej okno wyboru pliku
             JFileChooser fc = new JFileChooser();
@@ -760,7 +794,42 @@ public class Main {
                 JOptionPane.showMessageDialog(main_frame, "Nie ma nic do zapisania", "Zapisywanie pliku", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if(auto_save_note && en != null) en.forceSave(); //Jeśli auto zapisywanie jest włączone i okno edycji istnieje, zapisz notatkę edytowaną
+
+
+            //Jeśli okno edycji notatek istnieje
+            if(en != null){
+
+                //Jeśli auto zapis nie jest aktywny
+               if(!auto_save_note){
+
+                   //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
+                   int i = JOptionPane.showConfirmDialog(
+                           main_frame,
+                           "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
+                           "Edytowana notatka niezapisana",
+                           JOptionPane.YES_NO_CANCEL_OPTION,
+                           JOptionPane.QUESTION_MESSAGE
+                   );
+
+                   //Jeśli wola została potwierdzona, zapisz notatkę
+                   if(i == JOptionPane.YES_OPTION){
+                       en.forceSave();
+                   }
+
+                   //Jeśli nie wyrażono takiej woli, skasuj notatkę
+                   else if(i == JOptionPane.NO_OPTION){
+                       en.forceDelete();
+                   }
+
+                   //Jeśli anulowano, przerwij działanie funkcji
+                   else {
+                       return;
+                   }
+               }
+
+               //Jeśli auto zapis jest aktywny, zapisz notatkę
+               else en.forceSave();
+            }
 
             //Stwórz obiekt reprezentujący okno wyboru pliku
             JFileChooser fc = new JFileChooser();
