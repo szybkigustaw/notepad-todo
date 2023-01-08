@@ -119,6 +119,7 @@ public class Main {
      */
     static public void reloadApp(boolean reloadList){
 
+
         //Przechowanie informacji o obecnie otwartym oknie
         String temp_current_window = current_window;
 
@@ -1089,11 +1090,19 @@ public class Main {
             en = new EditNote();
 
             //Odśwież aplikację
-            reloadApp(true);
+            reloadApp(false);
+        });
+
+        JCheckBoxMenuItem auto_save = new JCheckBoxMenuItem("Auto zapis notatek edytowanych");
+        auto_save.setState(Objects.equals(settings.get("auto_save"), "true"));
+
+        auto_save.addActionListener(e -> {
+            if(auto_save.getState()) settings.replace("auto_save", "true");
+            else settings.replace("auto_save", "false");
         });
 
         //Dodaj pozycję dodania nowej notatki oraz menu sortowania do menu notatek
-        notes.add(add_note); notes.add(sort_menu);
+        notes.add(add_note); notes.add(sort_menu); notes.add(auto_save);
 
         //Stwórz menu zabezpieczeń
         JMenu security = new JMenu("Zabezpieczenia");

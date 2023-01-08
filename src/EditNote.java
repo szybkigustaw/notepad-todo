@@ -3,6 +3,7 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Date;
 import java.util.Objects;
 import static java.awt.GridBagConstraints.RELATIVE;
 
@@ -427,8 +428,8 @@ public class EditNote extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                //Jeśli zadań w notatce jest więcej lub równo jedna, dodaj do panelu etykietę-przycisk kasowania zadań
-                if(note.getTodo().length >= 1) todos.add(remove_todos);
+                //Jeśli zadań w notatce jest mniej niż jedna, dodaj do panelu etykietę-przycisk kasowania zadań
+                if(note.getTodo().length < 1) todos.add(remove_todos);
 
                 //Usuń etykieto-przycisk dodawania notatek
                 todos.remove(alt_todo);
@@ -522,6 +523,8 @@ public class EditNote extends JPanel {
                         return;
                     }
                 }
+
+                this.note.setMod_date(new Date());
 
                 //Dodaj notatkę do listy notatek
                 Main.noteList.addNote(note);
@@ -761,8 +764,8 @@ public class EditNote extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                //Jeśli zadań w notatce jest więcej lub równo jedna, dodaj do panelu etykietę-przycisk kasowania zadań
-                if(note.getTodo().length >= 1) todos.add(remove_todos);
+                //Jeśli zadań w notatce jest mniej niż jedna, dodaj do panelu etykietę-przycisk kasowania zadań
+                if(note.getTodo().length < 1) todos.add(remove_todos);
 
                 //Usuń etykieto-przycisk dodawania notatek
                 todos.remove(alt_todo);
@@ -859,6 +862,8 @@ public class EditNote extends JPanel {
                         return;
                     }
                 }
+
+                this.note.setMod_date(new Date());
 
                 //Dodaj notatkę do listy notatek
                 Main.noteList.setNote(this.note, note_index);
@@ -1197,6 +1202,8 @@ public class EditNote extends JPanel {
                         return;
                     }
                 }
+
+                this.note.setMod_date(new Date());
 
                 //Dodaj notatkę do listy notatek
                 Main.noteList.setNote(this.note, note_index);
