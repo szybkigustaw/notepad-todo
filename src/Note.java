@@ -1,4 +1,5 @@
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Reprezentuje pojedynczą notatkę.
@@ -118,6 +119,20 @@ public class Note {
         System.out.printf("Modification date: %s\n\n", this.getMod_date().toString());
         System.out.printf("Value: %s\n", this.getText());
         System.out.print("--------------------");
+    }
+
+    /**
+     * Dokonuje porównania zawartości i metadanych notatek.
+     * @param first Pierwsza notatka
+     * @param second Druga notatka
+     * @return Wartość <i>true</i> jeśli notatki są równe. <i>false</i> jeśli nie są równe.
+     */
+    public static boolean areNotesEqual(Note first, Note second){
+        if(!Objects.equals(first.getLabel(), second.getLabel())) return false;
+        if(!Objects.equals(first.getText(), second.getText())) return false;
+        if(!Objects.equals(first.getMod_date(), second.getMod_date())) return false;
+        if(!Objects.equals(first.getCreate_date(), second.getCreate_date())) return false;
+        return first.getHidden() == second.getHidden();
     }
 
     /**

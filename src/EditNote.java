@@ -22,6 +22,10 @@ public class EditNote extends JPanel {
      */
     private final ToDoNote note;
     /**
+     * Notatka przechowywana w tym obiekcie. Stanowi punkt odniesienia przy sprawdzaniu dokonanych zmian w notatce.
+     */
+    private final ToDoNote read_note;
+    /**
      * Wartość domyślna treści zadania
      */
     private final String DEFAULT_TODO = "Zjedz psa (Wprowadź coś lepszego)";
@@ -73,6 +77,15 @@ public class EditNote extends JPanel {
         Main.current_window = prev_window;
         Main.reloadApp(true);
         Main.en = null;
+    }
+
+    /**
+     * Sprawdza, czy notatka została edytowana.
+     * @return Wartość <i>true</i>, jeśli została edytowana.
+     */
+    public boolean hasNoteChanged(){
+        System.out.println(ToDoNote.areNotesEqual(this.read_note, this.note));
+        return !ToDoNote.areNotesEqual(this.read_note, this.note);
     }
 
     /**
@@ -259,6 +272,10 @@ public class EditNote extends JPanel {
         this.note.setTodo(new String[0]);
         this.note.setChecked(new boolean[0]);
 
+        this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
+        this.read_note.setMod_date(this.note.getMod_date());
+        this.read_note.setCreate_date(this.note.getCreate_date());
+        this.read_note.setCompleted(this.note.getCompleted());
 
         //Zdefiniuj wartości domyślne pól tekstowych
         String DEFAULT_LABEL = "Wprowadź etykietę notatki.";
@@ -542,10 +559,15 @@ public class EditNote extends JPanel {
         //Dodaj logikę do przycisku
         cancel.addActionListener(e -> {
 
-            //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
-            if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
-            " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
-            JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
+            if(hasNoteChanged()) {
+                //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
+                if (JOptionPane.showConfirmDialog(Main.rp, "Na pewno chcesz odrzucić notatkę?" +
+                                " Stracisz wszystkie zapisane w niej dane.", "Anulowanie tworzenia notatki",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                    Main.current_window = prev_window;
+                    Main.reloadApp(false);
+                }
+            } else {
                 Main.current_window = prev_window;
                 Main.reloadApp(false);
             }
@@ -591,6 +613,10 @@ public class EditNote extends JPanel {
         this.note.setTodo(new String[0]);
         this.note.setChecked(new boolean[0]);
 
+        this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
+        this.read_note.setMod_date(this.note.getMod_date());
+        this.read_note.setCreate_date(this.note.getCreate_date());
+        this.read_note.setCompleted(this.note.getCompleted());
 
         //Zdefiniuj wartości domyślne pól tekstowych
         String DEFAULT_LABEL = "Wprowadź etykietę notatki.";
@@ -875,10 +901,15 @@ public class EditNote extends JPanel {
         //Dodaj logikę do przycisku
         cancel.addActionListener(e -> {
 
-            //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
-            if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
-            " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
-            JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
+            if(hasNoteChanged()) {
+                //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
+                if (JOptionPane.showConfirmDialog(Main.rp, "Na pewno chcesz odrzucić notatkę?" +
+                                " Stracisz wszystkie zapisane w niej dane.", "Anulowanie tworzenia notatki",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                    Main.current_window = prev_window;
+                    Main.reloadApp(false);
+                }
+            } else {
                 Main.current_window = prev_window;
                 Main.reloadApp(false);
             }
@@ -916,6 +947,11 @@ public class EditNote extends JPanel {
         //Stwórz nową notatkę, przypisz jej typ TODO_NOTE
         this.note = loaded_note;
         this.note.setType(Note.TODO_NOTE);
+
+         this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
+         this.read_note.setMod_date(this.note.getMod_date());
+         this.read_note.setCreate_date(this.note.getCreate_date());
+         this.read_note.setCompleted(this.note.getCompleted());
 
         //Zdefiniuj wartości domyślne pól tekstowych
         String DEFAULT_LABEL = "Wprowadź etykietę notatki.";
@@ -1210,10 +1246,15 @@ public class EditNote extends JPanel {
         //Dodaj logikę do przycisku
         cancel.addActionListener(e -> {
 
-            //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
-            if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
-            " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
-            JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
+            if(hasNoteChanged()){
+                //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
+                if (JOptionPane.showConfirmDialog(Main.rp, "Na pewno chcesz odrzucić notatkę?" +
+                                " Stracisz wszystkie zapisane w niej dane.", "Anulowanie tworzenia notatki",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                    Main.current_window = prev_window;
+                    Main.reloadApp(false);
+                }
+            } else {
                 Main.current_window = prev_window;
                 Main.reloadApp(false);
             }

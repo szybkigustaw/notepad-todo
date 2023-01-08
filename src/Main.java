@@ -538,6 +538,47 @@ public class Main {
      */
     public static void handleClose(){
 
+        //Jeśli okno edycji notatek istnieje
+            if(en != null){
+
+                //Jeśli auto zapis nie jest aktywny
+               if(Objects.equals(settings.get("auto_save"),"false")){
+                   if(en.hasNoteChanged()) {
+                       //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
+                       int i = JOptionPane.showConfirmDialog(
+                               main_frame,
+                               "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
+                               "Edytowana notatka niezapisana",
+                               JOptionPane.YES_NO_CANCEL_OPTION,
+                               JOptionPane.QUESTION_MESSAGE
+                       );
+
+                       //Jeśli wola została potwierdzona, zapisz notatkę
+                       if (i == JOptionPane.YES_OPTION) {
+                           en.forceSave();
+                       }
+
+                       //Jeśli nie wyrażono takiej woli, skasuj notatkę
+                       else if (i == JOptionPane.NO_OPTION) {
+                           en.forceDelete();
+                       }
+
+                       //Jeśli anulowano, przerwij działanie funkcji
+                       else {
+                           return;
+                       }
+                   }
+               }
+
+               //Jeśli auto zapis jest aktywny i notatka uległa zmianie,
+               // zapisz notatkę
+               else{
+                   if(en.hasNoteChanged()){
+                       en.forceSave();
+                   } else en.forceDelete();
+               }
+            }
+
         //Jeśli lista notatek i lista notatek odczytanych z ostatniego pliku nie są równe, ergo doszło do zmian
         if(!NoteList.areNoteListsEqual(noteList, readNoteList)){
 
@@ -852,34 +893,40 @@ public class Main {
 
                 //Jeśli auto zapis nie jest aktywny
                if(Objects.equals(settings.get("auto_save"),"false")){
+                   if(en.hasNoteChanged()) {
+                       //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
+                       int i = JOptionPane.showConfirmDialog(
+                               main_frame,
+                               "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
+                               "Edytowana notatka niezapisana",
+                               JOptionPane.YES_NO_CANCEL_OPTION,
+                               JOptionPane.QUESTION_MESSAGE
+                       );
 
-                   //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
-                   int i = JOptionPane.showConfirmDialog(
-                           main_frame,
-                           "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
-                           "Edytowana notatka niezapisana",
-                           JOptionPane.YES_NO_CANCEL_OPTION,
-                           JOptionPane.QUESTION_MESSAGE
-                   );
+                       //Jeśli wola została potwierdzona, zapisz notatkę
+                       if (i == JOptionPane.YES_OPTION) {
+                           en.forceSave();
+                       }
 
-                   //Jeśli wola została potwierdzona, zapisz notatkę
-                   if(i == JOptionPane.YES_OPTION){
-                       en.forceSave();
-                   }
+                       //Jeśli nie wyrażono takiej woli, skasuj notatkę
+                       else if (i == JOptionPane.NO_OPTION) {
+                           en.forceDelete();
+                       }
 
-                   //Jeśli nie wyrażono takiej woli, skasuj notatkę
-                   else if(i == JOptionPane.NO_OPTION){
-                       en.forceDelete();
-                   }
-
-                   //Jeśli anulowano, przerwij działanie funkcji
-                   else {
-                       return;
+                       //Jeśli anulowano, przerwij działanie funkcji
+                       else {
+                           return;
+                       }
                    }
                }
 
-               //Jeśli auto zapis jest aktywny, zapisz notatkę
-               else en.forceSave();
+               //Jeśli auto zapis jest aktywny i notatka uległa zmianie,
+               // zapisz notatkę
+               else{
+                   if(en.hasNoteChanged()){
+                       en.forceSave();
+                   } else en.forceDelete();
+               }
             }
 
             //Stwórz nową instancję klasy reprezentującej okno wyboru pliku
@@ -978,35 +1025,41 @@ public class Main {
             if(en != null){
 
                 //Jeśli auto zapis nie jest aktywny
-               if(Objects.equals(settings.get("auto_save"), "false")){
+               if(Objects.equals(settings.get("auto_save"),"false")){
+                   if(en.hasNoteChanged()) {
+                       //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
+                       int i = JOptionPane.showConfirmDialog(
+                               main_frame,
+                               "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
+                               "Edytowana notatka niezapisana",
+                               JOptionPane.YES_NO_CANCEL_OPTION,
+                               JOptionPane.QUESTION_MESSAGE
+                       );
 
-                   //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
-                   int i = JOptionPane.showConfirmDialog(
-                           main_frame,
-                           "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
-                           "Edytowana notatka niezapisana",
-                           JOptionPane.YES_NO_CANCEL_OPTION,
-                           JOptionPane.QUESTION_MESSAGE
-                   );
+                       //Jeśli wola została potwierdzona, zapisz notatkę
+                       if (i == JOptionPane.YES_OPTION) {
+                           en.forceSave();
+                       }
 
-                   //Jeśli wola została potwierdzona, zapisz notatkę
-                   if(i == JOptionPane.YES_OPTION){
-                       en.forceSave();
-                   }
+                       //Jeśli nie wyrażono takiej woli, skasuj notatkę
+                       else if (i == JOptionPane.NO_OPTION) {
+                           en.forceDelete();
+                       }
 
-                   //Jeśli nie wyrażono takiej woli, skasuj notatkę
-                   else if(i == JOptionPane.NO_OPTION){
-                       en.forceDelete();
-                   }
-
-                   //Jeśli anulowano, przerwij działanie funkcji
-                   else {
-                       return;
+                       //Jeśli anulowano, przerwij działanie funkcji
+                       else {
+                           return;
+                       }
                    }
                }
 
-               //Jeśli auto zapis jest aktywny, zapisz notatkę
-               else en.forceSave();
+               //Jeśli auto zapis jest aktywny i notatka uległa zmianie,
+               // zapisz notatkę
+               else{
+                   if(en.hasNoteChanged()){
+                       en.forceSave();
+                   } else en.forceDelete();
+               }
             }
 
             //Stwórz obiekt reprezentujący okno wyboru pliku

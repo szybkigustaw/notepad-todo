@@ -1,4 +1,6 @@
 import java.util.Date;
+import java.util.Objects;
+
 /**
  * Reprezentująca pojedynczą notatkę zawierającą listę zadań.
  * Notatka może być notatką ukrytą, zawiera tekst oraz daty utworzenia/ostatniej modyfikacji.
@@ -114,6 +116,30 @@ public class ToDoNote extends Note{
                 break;
             }
         }
+    }
+
+    /**
+     * Dokonuje porównania zawartości i metadanych notatek.
+     * @param first Pierwsza notatka
+     * @param second Druga notatka
+     * @return Wartość <i>true</i> jeśli notatki są równe. <i>false</i> jeśli nie są równe.
+     */
+    public static boolean areNotesEqual(ToDoNote first, ToDoNote second){
+        if(!Objects.equals(first.getLabel(), second.getLabel())) return false;
+        if(!Objects.equals(first.getText(), second.getText())) return false;
+        if(!Objects.equals(first.getMod_date(), second.getMod_date())) return false;
+        if(!Objects.equals(first.getCreate_date(), second.getCreate_date())) return false;
+        if(first.getTodo().length != second.getTodo().length);
+        if(first.getChecked().length != second.getChecked().length);
+        for(int i = 0; i < first.getTodo().length; i++){
+            if(
+                    (!Objects.equals(first.getTodo(i), second.getTodo(i))) ||
+                    first.getChecked(i) != second.getChecked(i)
+            ) {
+                return false;
+            }
+        }
+        return first.getHidden() == second.getHidden();
     }
 
     /**
