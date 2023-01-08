@@ -398,7 +398,7 @@ public class NoteListGUI extends JPanel{
                 pass = Main.hashString(pass);
 
                 //Jeśli hasze się nie zgadzają
-                if (!Objects.equals(pass, Main.password)) {
+                if (!Objects.equals(pass, Main.settings.get("access_password"))) {
 
                     //Wyświetl okno z informacją o błędnym haśle
                     JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
@@ -428,7 +428,7 @@ public class NoteListGUI extends JPanel{
         });
 
         //Jeśli hasło jest ustawione
-        if(Main.password != null) {
+        if(Main.settings.get("access_password") != null) {
 
             //Dodaj przycisk do paska.
             gbc.gridx = 4;

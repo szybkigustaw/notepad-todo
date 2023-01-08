@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano plik z ustawieniami w formie HashMapy">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Naprawa błędu związanego z powrotem do poprzedniego okna przy tworzeniu notatki z poziomu opcji na pasku menu.&#10;Implementacja ustawienia auto zapisywania z poziomu HashMapy pobieranej z pliku ustawień.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EditNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EditNote.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/NoteListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteListGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ReadNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadNote.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,13 +60,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1670573136854</updated>
-    </task>
-    <task id="LOCAL-00001" summary="Pierwsza &quot;Funkcjonalna&quot; wersja - lista notatek i kasowanie notatek.">
-      <created>1670794168333</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1670794168334</updated>
     </task>
     <task id="LOCAL-00002" summary="+ dokumentacja w javadoc">
       <created>1670794500830</created>
@@ -401,7 +397,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673138518614</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="Naprawa błędu związanego z powrotem do poprzedniego okna przy tworzeniu notatki z poziomu opcji na pasku menu.&#10;Implementacja ustawienia auto zapisywania z poziomu HashMapy pobieranej z pliku ustawień.">
+      <created>1673176466925</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1673176466926</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -428,7 +431,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Opcje ukrycia notatek, lista notatek niefunkcjonalne do momentu dodania hasła." />
     <MESSAGE value="Dodano blokadę zapisu do pliku jeśli lista notatek jest krótsza od 1" />
     <MESSAGE value="Usunięto wartości domyślne szyb aplikacji oraz listy notatek.&#10;Teraz klasy same deklarują globalnie obecny stan otwartego panelu.&#10;Usunięto predefiniowane pozycje na liście szyb. Każda szyba otrzymuje miejsce w zależności od ilości obecnych szyb." />
     <MESSAGE value="Przebudowa klasy FileHandler&#10;Klasa teraz przechowuje również informacje o dostępności pliku i wyświetla komunikaty w zależności od błędów odczytu czy zapisu pliku." />
@@ -453,7 +455,8 @@
     <MESSAGE value="Dodano okno kontrolne pozwalające zapisać zawartość obecnie edytowanej notatki, jeśli jakaś operacja spowodowałaby utratę danych w tym oknie." />
     <MESSAGE value="Dodano zapis zmiany domyślnej ścieżki pliku z notatkami przy wyjściu z aplikacji" />
     <MESSAGE value="Dodano plik z ustawieniami w formie HashMapy" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dodano plik z ustawieniami w formie HashMapy" />
+    <MESSAGE value="Naprawa błędu związanego z powrotem do poprzedniego okna przy tworzeniu notatki z poziomu opcji na pasku menu.&#10;Implementacja ustawienia auto zapisywania z poziomu HashMapy pobieranej z pliku ustawień." />
+    <option name="LAST_COMMIT_MESSAGE" value="Naprawa błędu związanego z powrotem do poprzedniego okna przy tworzeniu notatki z poziomu opcji na pasku menu.&#10;Implementacja ustawienia auto zapisywania z poziomu HashMapy pobieranej z pliku ustawień." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -34,15 +34,21 @@ public class Main {
      */
     public static File settings_file;
     /**
-     * Definiuje stan auto zapisu notatek odczytany z pliku. Wykorzystywany do kontroli zmian w pliku konfiguracyjnym.
+     * Kolekcja danych przechowująca dane o ustawieniach aplikacji
+     *
+     * <p>Składa się z par klucz-wartość o następującej wartości: </p>
+     * <ul>
+     *     <li><b>default_path -</b> ścieżka dostępu do domyślnego pliku z notatkami </li>
+     *     <li><b>auto_save -</b> zmienna definiująca, czy aktywna ma być funkcja auto zapisu (wartości: true/false) </li>
+     *     <li><b>access_password -</b> hasło dostępu do notatek</li>
+     *     <li><b>security_phrase -</b> fraza bezpieczeństwa, używana przy resetowaniu hasła</li>
+     * </ul>
      */
-    public static boolean previous_auto_save_note;
-    /**
-     * Definiuje, czy notatki edytowane/ tworzone powinny być automatycznie zamykane przy opuszczaniu okna edycji.
-     */
-    public static boolean auto_save_note = false;
-
     public static HashMap<String, String> settings;
+    /**
+     * Kolekcja danych przechowująca dane o ustawieniach aplikacji ostatnio pobrane z pliku (wykorzystywana do kontroli zmian zachodzących w ustawieniach)
+     * @see #settings
+     */
     public static HashMap<String, String> previous_settings;
     /**
      * Globalna lista notatek dla całej aplikacji.
@@ -90,18 +96,7 @@ public class Main {
      * Ciąg znaków reprezentujący obecnie wyświetlane okno
      */
     static public String current_window = null;
-    /**
-     * Ciąg znaków przechowujący hasło (w formie zahaszowanej)
-     */
-    static public String password = null;
-    /**
-     * Ciąg znaków reprezentujący ścieżkę dostępu do domyślnego pliku z notatkami pobrana podczas uruchomienia aplikacji z pliku konfiguracyjnego. Używana do kontroli zmian w pliku konfiguracyjnym.
-     */
-    static public String previous_default_path;
-    /**
-     * Ciąg znaków reprezentujący ścieżkę dostępu do domyślnego pliku z notatkami
-     */
-    public static String default_path = "";
+
 
     /**
      * Przeładowuje aplikację. Na żądanie użytkownika odświeża również listę notatek, implementując w niej tryb ukryty lub publiczny.
@@ -215,7 +210,7 @@ public class Main {
     public static void changePassword(){
 
         //Jeśli hasło istnieje
-        if(password != null) {
+        if(settings.get("access_password") != null) {
 
             //Początek kodu z prawdopodobnymi wyjątkami
             try {
@@ -227,7 +222,7 @@ public class Main {
                 old_password = hashString(old_password);
 
                 //Jeśli uzyskane hasło zgadza się z obecnie przechowywanym w aplikacji hasłem
-                if (Objects.equals(password, old_password)) {
+                if (Objects.equals(settings.get("access_password"), old_password)) {
 
                     //Wyświetl komunikat proszący użytkownika o podanie nowego hasła
                     String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
@@ -263,7 +258,7 @@ public class Main {
                         else {
 
                             //Ustaw nowe hasło
-                            password = new_password;
+                           settings.replace("access_password", new_password);
 
                             //Wyświetl komunikat o powodzeniu operacji
                             JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie zmieniono hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
@@ -314,7 +309,7 @@ public class Main {
                 } else {
 
                     //Przypisz podaną wartość hasła
-                    password = new_password;
+                    settings.put("access_password",new_password);
 
                     //Wyświetl komunikat o powodzeniu akcji
                     JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie dodano hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
@@ -352,10 +347,15 @@ public class Main {
             //Stwórz puste listy notatek
             noteList = new NoteList(new Note[0], NoteList.FULL);
             readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
-            settings = new HashMap<String, String>();
+
+            //Stwórz kolekcję ustawień i uzupełnij ją danymi generycznymi
+            settings = new HashMap<>();
             settings.put("default_path","");
             settings.put("auto_save","false");
+            settings.put("access_password","");
+            settings.put("security_phrase","");
 
+            //Przypisz wartość obecnej kolekcji ustawień do kolekcji ustawień w historii
             previous_settings = settings;
 
             //Początek kodu z ewentualnymi wyjątkami
@@ -392,7 +392,8 @@ public class Main {
             noteList = new NoteList(new Note[0], NoteList.FULL);
             readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
 
-            settings = new HashMap<String, String>();
+            //Stwórz instancję kolekcji ustawień
+            settings = new HashMap<>();
 
             //Jeśli plik jest nie do odczytu
             if (!settings_file.canRead()) {
@@ -408,8 +409,11 @@ public class Main {
                 //Początek kodu z prawdopodobnymi wyjątkami
                 try {
 
+                    //Umieść wartości generyczne w kolekcji ustawień
                     settings.put("default_path","");
                     settings.put("auto_save","false");
+                    settings.put("access_password","");
+                    settings.put("security_phrase","");
 
                     //Jeśli utworzenie pliku powiodło się
                     if(settings_file.createNewFile()){
@@ -447,8 +451,12 @@ public class Main {
 
                     //Jeśli plik nie zawiera pustych linijek
                     while (fs.hasNextLine()) {
+
+                        //Odczytaj linię danych z pliku, podziel je na klucz oraz wartość ustawień w miejscu wystąpienia dwuznaku "::"
                         String read_line = fs.nextLine();
                         String[] kv_pair = read_line.split("(::)");
+
+                        //Przypisz wartość ustawienia do klucza odczytanego z linii danych z pliku
                         settings.put(kv_pair[0], kv_pair[1]);
                     }
 
@@ -553,52 +561,63 @@ public class Main {
                         //Skonwertuj listę notatek do formy dokumentu XML i zapisz je w pliku przechowywanym w obiekcie
                         fh.parseToFile(noteList);
 
+
                         if(!Objects.equals(previous_settings, settings)){
 
-                    //Początek kodu z ewentualnymi wyjątkami
-                    try {
-                        //Stwórz instancję klasy zapisującej do pliku z ustawieniami
-                        FileWriter settings_writer = new FileWriter(settings_file);
-
-                        //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
-                        settings.forEach((key, value) -> {
+                            //Początek kodu z ewentualnymi wyjątkami
                             try {
-                                settings_writer.write(String.format("%s::%s\n", key, value));
-                            } catch (IOException ex){
-                                //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                                //Stwórz instancję klasy zapisującej do pliku z ustawieniami
+                                FileWriter settings_writer = new FileWriter(settings_file);
+
+                                //Dla każdej pary klucz-wartość w kolekcji ustawień
+                                settings.forEach((key, value) -> {
+
+                                    //Początek kodu z prawdopodobnymi wyjątkami
+                                    try {
+
+                                        //Zapisz do pliku ustawień pojedynczą parę danych, oddzieloną znakiem "::"
+                                        settings_writer.write(String.format("%s::%s\n", key, value));
+                                    }
+
+                                    //Jeśli wystąpi wyjątek związany z operacjami I/O
+                                    catch (IOException ex){
+
+                                        //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                                        JOptionPane.showMessageDialog(
+                                        main_frame,
+                                        ex.getMessage(),
+                                            "Błąd zapisu pliku domyślnego",
+                                        JOptionPane.ERROR_MESSAGE
+                                        );
+                                    }
+                                });
+
+                                //Zamknij plik
+                                settings_writer.close();
+                            }
+
+                            //Jeśli złapany zostanie wyjątek związany z operacjami I/O
+                            catch(IOException ex){
+
+                                //Wyświetl komunikat z wiadomością błędu
                                 JOptionPane.showMessageDialog(
-                                main_frame,
-                                ex.getMessage(),
-                                "Błąd zapisu pliku domyślnego",
-                                JOptionPane.ERROR_MESSAGE
+                                        main_frame,
+                                        ex.getMessage(),
+                                        "Zapisywanie pliku domyślnego",
+                                        JOptionPane.ERROR_MESSAGE
+                                );
+
+                                //Wyświetl komunikat o nieudanym zapisie ścieżki domyślnego pliku z notatkami
+                                JOptionPane.showMessageDialog(
+                                        main_frame,
+                                        "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
+                                                "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
+                                               "pliku z notatkami.",
+                                    "Zapisywanie pliku domyślnego",
+                                        JOptionPane.ERROR_MESSAGE
                                 );
                             }
-                        });
-                        settings_writer.close();
-                    }
-
-                    //Jeśli złapany zostanie wyjątek związany z operacjami I/O
-                    catch(IOException ex){
-
-                        //Wyświetl komunikat z wiadomością błędu
-                        JOptionPane.showMessageDialog(
-                                main_frame,
-                                ex.getMessage(),
-                                "Zapisywanie pliku domyślnego",
-                                JOptionPane.ERROR_MESSAGE
-                        );
-
-                        //Wyświetl komunikat o nieudanym zapisie ścieżki domyślnego pliku z notatkami
-                        JOptionPane.showMessageDialog(
-                                main_frame,
-                                "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
-                                        "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
-                                        "pliku z notatkami.",
-                                "Zapisywanie pliku domyślnego",
-                                JOptionPane.ERROR_MESSAGE
-                        );
-                    }
-                }
+                        }
                     }
 
                     //Jeśli wystąpi wyjątek nieudanego zapisu do pliku
@@ -903,7 +922,7 @@ public class Main {
                 }
 
                 //Jeśli odczytana lista nie jest pusta oraz hasło jest puste
-                if (fetched_notes != null && password == null){
+                if (fetched_notes != null && settings.get("access_password") == null){
 
                     //Wyświetl komunikat z zapytaniem o wolę ustawienia w danej chwili hasła
                     int password_doChange = JOptionPane.showConfirmDialog(main_frame, "Wygląda na to że hasło nie zostało ustawione. Czy chcesz je ustawić?", "Brak hasła", JOptionPane.YES_NO_OPTION);
@@ -1025,7 +1044,7 @@ public class Main {
             File new_default = fc.getSelectedFile();
 
             //Odczytaj ścieżkę dostępu do tego pliku i zapisz ją
-            default_path = new_default.getPath();
+            settings.replace("default_path", new_default.getPath());
 
             //Wyświetl komunikat o powodzeniu operacji
             JOptionPane.showMessageDialog(main_frame,
@@ -1126,7 +1145,7 @@ public class Main {
             try{
 
                 //Jeśli hasło jest puste
-                if(password == null){
+                if(settings.get("access_password") == null){
 
                     //Wyświetl komunikat o tym fakcie i zakończ działanie metody
                     JOptionPane.showMessageDialog(main_frame, "Hasło już nie istnieje", "Nie można usunąć hasła", JOptionPane.ERROR_MESSAGE);
@@ -1145,7 +1164,7 @@ public class Main {
                 }
 
                 //Ustaw hasło na pustą wartość oraz przełącz aplikację w tryb jawny
-                password = null;
+                settings.remove("access_password");
                 hidden_mode = false;
 
                 //Ustaw informację o obecnym oknie na przechowaną wartość

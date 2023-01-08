@@ -200,12 +200,6 @@ public class FileHandler {
         //Uzyskaj element-korzeń dokumentu
         Element root = getParsed_file().getDocumentElement();
 
-        //Uzyskaj węzeł zawierający dane o haśle
-        Element password = (Element) root.getElementsByTagName("Password").item(0);
-
-        //Wyciągnij dane tekstowe z tego elementu. Jeśli jest pusty, przypisz wartość pustą
-        String password_grabbed = password == null ? null : password.getTextContent();
-
         //Uzyskaj listę węzłów zawierającą węzły <Note> - notatki
         NodeList notes_got = root.getElementsByTagName("Note");
 
@@ -234,14 +228,6 @@ public class FileHandler {
 
                         //Pobierz z wyłuskanego węzła stan ukrycia notatki
                         boolean note_hidden = !note_props.getElementsByTagName("Hidden").item(0).getTextContent().equals("false");
-
-                        //Jeśli hasło nie jest zdefiniowane, a mimo to notatka jest ukryta
-                        if(password == null && note_hidden){
-
-                            //Prawdopodobnie doszło do manipulacji danymi, zwróć wyjątek bezpieczeństwa
-                            throw new SecurityException("Brak informacji o haśle pomimo istnienia notatek ukrytych. \n" +
-                                    "Domniemana manipulacja pliku. Odmowa odczytu.");
-                        }
 
                         //Stwórz nową notatkę na podstawie wyłuskanych danych
                         Note note = new Note(note_label, note_text, note_hidden);
@@ -312,14 +298,6 @@ public class FileHandler {
                             }
                         }
 
-                        //Jeżeli hasło jest niezdefiniowane, pomimo ukrytej notatki
-                        if(password == null && note_hidden){
-
-                            //Istnieje duża szansa manipulacji danymi. Zwróć wyjątek bezpieczeństwa
-                            throw new SecurityException("Brak informacji o haśle pomimo istnienia notatek ukrytych. \n" +
-                                    "Domniemana manipulacja pliku. Odmowa odczytu.");
-                        }
-
                         //Stwórz nową notatkę z listą zadań, wykorzystując pobrane dane
                         todo_note = new ToDoNote(note_label, note_text, todos_text, todos_checked, note_hidden);
 
@@ -339,9 +317,6 @@ public class FileHandler {
                     }
                 }
             }
-
-            //Przypisz do pola z hasłem wartość hasła
-            Main.password = password == null ? Main.password : password_grabbed.stripTrailing().stripLeading();
 
         //Zwróć nowo utworzoną listę notatek
         return notes;
@@ -369,19 +344,6 @@ public class FileHandler {
 
             //Umieść element w drzewie
             xml_doc.appendChild(root);
-
-
-            //Jeśli hasło jest zdefiniowane
-            if(Main.password != null) {
-
-                //Stwórz element przechowujący dane o haśle i przypisz je do jego wartości tekstowej
-                Element password = xml_doc.createElement("Password");
-                password.appendChild(xml_doc.createTextNode(Main.password));
-
-                //Umieść element w drzewie
-                root.appendChild(password);
-            }
-
 
             //Dla każdej notatki na liście
             for(int i = 0; i < notes.getListLength(); i++) {
@@ -442,8 +404,8 @@ public class FileHandler {
                 //Stwórz element przechowujący dane o stanie ukrycia notatki
                 Element hidden = xml_doc.createElement("Hidden");
 
-                //Jeśli hasło jest zdefiniowane oraz na liście występują ukryte notatki
-                if (notes.getNote(i).getHidden() && Main.password == null) {
+                //Jeśli hasło nie jest zdefiniowane oraz na liście występują ukryte notatki
+                if (notes.getNote(i).getHidden() && Main.settings.get("access_password") == null) {
 
                     //Zwróć wyjątek bezpieczeństwa. Nie można przechować notatek ukrytych bez zabezpieczającego je hasła
                     throw new SecurityException("Nie można zapisać pliku. Dalej istnieją notatki ukryte pomimo braku hasła. Dodaj najpierw hasło i spróbuj ponownie.");
