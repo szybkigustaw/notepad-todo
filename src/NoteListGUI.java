@@ -304,6 +304,8 @@ public class NoteListGUI extends JPanel{
         //Ustaw stan obecnego okna na okno listy notatek
         Main.current_window = "NoteList";
 
+        notes.sortNote(Main.sort_type, Main.sort_descending);
+
         //Utwórz panel z listą
         JPanel list_window = new JPanel();
         list_window.setLayout(new BoxLayout(list_window, BoxLayout.Y_AXIS));

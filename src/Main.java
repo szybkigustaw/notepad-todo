@@ -97,6 +97,8 @@ public class Main {
      */
     static public String current_window = null;
 
+    public static int sort_type = NoteList.BY_LABEL;
+    public static boolean sort_descending = true;
 
     /**
      * Przeładowuje aplikację. Na żądanie użytkownika odświeża również listę notatek, implementując w niej tryb ukryty lub publiczny.
@@ -589,6 +591,27 @@ public class Main {
                         );
                     }
 
+                    if(settings.get("access_password") == null){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
+                                        "udzielony dopiero po zdefiniowaniu hasła.",
+                                "Brak zdefiniowanego hasła dostępowego",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    }
+
+                    if(settings.get("security_phrase") == null){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
+                                "Brak zdefiniowanej frazy bezpieczeństwa",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+
+                        while(settings.get("security_phrase") == null) changeSecurityPhrase();
+                    }
+
                     //Jeśli wystąpi wyjątek związany z operacjami IO
                 } catch (IOException ex) {
 
@@ -623,7 +646,7 @@ public class Main {
                     }
 
                     //Jeśli odczytana ścieżka jest pusta
-                    if(settings.get("default_path").equals("")){
+                    if(Objects.equals(settings.get("default_path"), null)){
 
                         //Wyświetl komunikat o tym fakcie
                         JOptionPane.showMessageDialog(
@@ -632,6 +655,29 @@ public class Main {
                                 "Wczytywanie domyślnego pliku notatek",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
+
+                        //Wyświetl komunikat o niezdefiniowanym haśle5
+                        if(settings.get("access_password") == null){
+                            JOptionPane.showMessageDialog(
+                                    main_frame,
+                                  "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
+                                            "udzielony dopiero po zdefiniowaniu hasła.",
+                                    "Brak zdefiniowanego hasła dostępowego",
+                                    JOptionPane.INFORMATION_MESSAGE
+                            );
+                        }
+
+                        //Wyświetl komunikat o braku frazy bezpieczeństwa oraz rozpocznij jej proces definiowania
+                        if(settings.get("security_phrase") == null){
+                            JOptionPane.showMessageDialog(
+                                    main_frame,
+                                    "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
+                                    "Brak zdefiniowanej frazy bezpieczeństwa",
+                                    JOptionPane.INFORMATION_MESSAGE
+                            );
+
+                            while(settings.get("security_phrase") == null) changeSecurityPhrase();
+                        }
                         return;
                     }
 
@@ -646,6 +692,29 @@ public class Main {
                                 JOptionPane.ERROR_MESSAGE
                         );
 
+                        //Wyświetl komunikat z informacją o braku zdefiniowanego hasła
+                        if(settings.get("access_password") == null){
+                            JOptionPane.showMessageDialog(
+                                    main_frame,
+                                  "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
+                                            "udzielony dopiero po zdefiniowaniu hasła.",
+                                    "Brak zdefiniowanego hasła dostępowego",
+                                    JOptionPane.INFORMATION_MESSAGE
+                            );
+                        }
+
+                        //Wyświetl komunikat o braku zdefiniowane frazy bezpieczeństwa oraz rozpocznij proces jej definiowania
+                        if(settings.get("security_phrase") == null){
+                            JOptionPane.showMessageDialog(
+                                    main_frame,
+                                    "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
+                                    "Brak zdefiniowanej frazy bezpieczeństwa",
+                                    JOptionPane.INFORMATION_MESSAGE
+                            );
+
+                            while(settings.get("security_phrase") == null) changeSecurityPhrase();
+                        }
+
                         //Zakończ działanie metody
                         return;
                     }
@@ -659,27 +728,6 @@ public class Main {
                     //Jeśli buforowa lista ma długość większą niż jeden, uzupełnij obydwie listy aplikacji jej danymi
                     noteList = parsed_notes.getListLength() > 0 ? parsed_notes : new NoteList(new Note[0], NoteList.FULL);
                     readNoteList = parsed_notes.getListLength() > 0 ? new NoteList(noteList.getNoteList(), NoteList.FULL) : readNoteList;
-
-                    if(settings.get("access_password") == null){
-                        JOptionPane.showMessageDialog(
-                                main_frame,
-                                "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
-                                        "udzielony dopiero po zdefiniowaniu hasła.",
-                                "Brak zdefiniowanego hasła dostępowego",
-                                JOptionPane.INFORMATION_MESSAGE
-                        );
-                    }
-
-                    if(settings.get("security_phrase") == null){
-                        JOptionPane.showMessageDialog(
-                                main_frame,
-                                "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
-                                "Brak zdefiniowanej frazy bezpieczeństwa",
-                                JOptionPane.INFORMATION_MESSAGE
-                        );
-
-                        while(settings.get("security_phrase") == null) changeSecurityPhrase();
-                    }
                 }
 
                 //Jeśli wystąpi wyjątek związany z operacjami I/O
@@ -693,6 +741,8 @@ public class Main {
                             JOptionPane.ERROR_MESSAGE
                     );
                 }
+
+
             }
         }
     }
@@ -1325,15 +1375,16 @@ public class Main {
         JMenuItem sort_by_completion = new JMenuItem("wg stopnia ukończenia");
 
         //Stwórz pozycję w menu będącą check-boxem definiującym kolejność sortowania
-        JCheckBoxMenuItem sort_descending = new JCheckBoxMenuItem("Sortuj malejąco", true);
+        JCheckBoxMenuItem sort_desc = new JCheckBoxMenuItem("Sortuj malejąco", true);
 
         //Dodaj logikę do pozycji sortowania. Przypisz do każdej pozycji metodę sortującą listę notatek z innym wywoływanym trybem.
         //Następnie przeładuj aplikację wraz z listą notatek.
-        sort_by_createdate.addActionListener(e -> { noteList.sortNote(NoteList.BY_CREATE_DATE, sort_descending.getState()); reloadApp(true); });
-        sort_by_moddate.addActionListener(e -> { noteList.sortNote(NoteList.BY_MOD_DATE, sort_descending.getState()); reloadApp(true); });
-        sort_by_label.addActionListener(e -> { noteList.sortNote(NoteList.BY_LABEL, sort_descending.getState()); reloadApp(true); });
-        sort_by_type.addActionListener(e -> { noteList.sortNote(NoteList.BY_TYPE, sort_descending.getState()); reloadApp(true); });
-        sort_by_completion.addActionListener(e -> { noteList.sortNote(NoteList.BY_COMPLETION, sort_descending.getState()); reloadApp(true); });
+        sort_by_createdate.addActionListener(e -> { sort_type = NoteList.BY_CREATE_DATE; sort_descending = sort_desc.getState(); reloadApp(true); });
+        sort_by_moddate.addActionListener(e -> { sort_type = NoteList.BY_MOD_DATE; sort_descending = sort_desc.getState(); reloadApp(true); });
+        sort_by_label.addActionListener(e -> { sort_type = NoteList.BY_LABEL; sort_descending = sort_desc.getState(); reloadApp(true); });
+        sort_by_type.addActionListener(e -> { sort_type = NoteList.BY_TYPE; sort_descending = sort_desc.getState(); reloadApp(true); });
+        sort_by_completion.addActionListener(e -> { sort_type = NoteList.BY_COMPLETION; sort_descending = sort_desc.getState(); reloadApp(true); });
+        sort_desc.addActionListener(e -> { sort_descending = sort_desc.getState(); reloadApp(true); });
 
         //Wstaw pozycje do menu
         sort_menu.add(sort_by_createdate);
@@ -1341,7 +1392,7 @@ public class Main {
         sort_menu.add(sort_by_label);
         sort_menu.add(sort_by_type);
         sort_menu.add(sort_by_completion);
-        sort_menu.add(sort_descending);
+        sort_menu.add(sort_desc);
 
         //Dodaj pozycję w menu odpowiedzialną za dodanie nowej notatki
         JMenuItem add_note = new JMenuItem("Dodaj notatkę");
