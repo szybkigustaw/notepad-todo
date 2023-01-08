@@ -2,6 +2,7 @@ import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import javax.swing.*;
 import javax.xml.parsers.*;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -451,6 +452,13 @@ public class FileHandler {
             }
                 //Uzyskaj nową instancję zestawu API przekształcającego powstałe drzewo DOM na dokument (wykorzystaj ustawienia domyślne)
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
+
+                //Ustaw parametr wyjściowy — metoda zapisu: dokument xml
+                transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+
+                //Ustaw parametr wyjściowy — indentacja o dwie spacje
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount","2");
 
                 //Stwórz źródłową reprezentację drzewa DOM dokumentu i umieść w nim wcześniej powstałe drzewo
                 DOMSource source = new DOMSource(xml_doc);

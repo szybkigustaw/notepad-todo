@@ -209,6 +209,7 @@ public class Main {
      */
     public static void changePassword(){
 
+        //Zapisz obecny stan hasła
         String old_password = settings.get("access_password");
 
         //Jeśli hasło istnieje
@@ -217,6 +218,7 @@ public class Main {
             //Początek kodu z prawdopodobnymi wyjątkami
             try {
 
+                //Wyświetl komunikat z prośbą o podanie frazy bezpieczeństwa
                 String security_phrase = JOptionPane.showInputDialog(
                         main_frame,
                         "Podaj frazę bezpieczeństwa: ",
@@ -224,8 +226,11 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                 );
 
+                //Jeśli operację anulowano - przerwij metodę. W innym przypadku zahaszuj fb
+                if(Objects.equals(security_phrase, null)) return;
                 security_phrase = hashString(security_phrase);
 
+                //Jeśli wprowadzona przez użytkownika fb nie zgadza się z wartością w ustawieniach
                 if(!Objects.equals(settings.get("security_phrase"), security_phrase)){
 
                     //Wyświetl o tym komunikat
@@ -236,7 +241,7 @@ public class Main {
                 //Wyświetl komunikat proszący użytkownika o podanie nowego hasła
                 String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
 
-                //Zahaszuj uzyskany wynik
+                //Jeśli użytkownik anulował operację - przerwij metodę. W innym przypadku zahaszuj uzyskany wynik
                 new_password = hashString(new_password);
 
                 //Jeśli podane hasło jest równe obecnemu hasłu
@@ -253,7 +258,8 @@ public class Main {
                     //Wyświetl komunikat proszący użytkownika o ponowne wprowadzenie nowego hasła
                     String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
 
-                    //Zahaszuj uzyskany wynik
+                    //Jeśli anulowano operację - przerwij metodę.W innym przypadku zahaszuj uzyskany wynik
+                    if(Objects.equals(new_password_retype, null)) return;
                     new_password_retype = hashString(new_password_retype);
 
                     //Jeśli ponownie wprowadzone hasło nie zgadza się z poprzednio wpisanym
@@ -289,6 +295,7 @@ public class Main {
             //Początek kodu z prawdopodobnymi wyjątkami
             try{
 
+                //Wyświetl komunikat z prośbą o podanie frazy bezpieczeństwa
                 String security_phrase = JOptionPane.showInputDialog(
                         main_frame,
                         "Podaj frazę bezpieczeństwa: ",
@@ -296,11 +303,14 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                 );
 
+                //Jeśli anulowano operację - przerwij metodę. W innym przypadku zahaszuj frazę bezpieczeństwa.
+                if(Objects.equals(security_phrase, null)) return;
                 security_phrase = hashString(security_phrase);
 
+                //Jeśli wprowadzona fb nie zgadza się z wartością w ustawieniach aplikacji
                 if(!Objects.equals(settings.get("security_phrase"), security_phrase)){
 
-                    //Wyświetl o tym komunikat
+                    //Wyświetl o tym komunikat i przerwij metodę
                     JOptionPane.showMessageDialog(Main.main_frame, "Błędna fraza bezpieczeństwa", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -308,13 +318,15 @@ public class Main {
                 //Wyświetl okno, w którym użytkownik ma wpisać swoje hasło
                 String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
 
-                //Zahaszuj je
+                //Jeśli anulowano operację - przerwij metodę. W innym przypadku zahaszuj nowe hasło
+                if(Objects.equals(new_password, null)) return;
                 new_password = hashString(new_password);
 
                 //Wyświetl okno, w którym użytkownik ma ponownie wpisać swoje hasło
                 String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
 
-                //Zahaszuj i to hasło
+                //Jeśli anulowano operację - przerwij metodę. W innym przypadku zahaszuj i to hasło
+                if(Objects.equals(new_password_retype, null)) return;
                 new_password_retype = hashString(new_password_retype);
 
                 //Jeśli obydwa hasze się nie zgadzają
@@ -344,6 +356,16 @@ public class Main {
         }
     }
 
+    /**
+     * Wyświetla okno kontekstowe, w którym pozwala użytkownikowi na zmianę obecnej frazy bezpieczeństwa.
+     * <p>Sprawdza również, czy:</p>
+     * <ul>
+     * <li>Fraza bezpieczeństwa jest ustawiona (jeśli nie, pozwala ją ustawić)</li>
+     * <li>Czy użytkownik zna obecną frazę</li>
+     * <li>Czy użytkownik nie próbuje ustawić tej samej frazy bezpieczeństwa co obecnie</li>
+     * <li>Czy użytkownik na pewno wprowadził prawidłowo zamierzoną nową frazę</li>
+     * </ul>
+     */
     public static void changeSecurityPhrase(){
 
         String old_sf = settings.get("security_phrase");
@@ -364,7 +386,6 @@ public class Main {
 
                     //Wyświetl o tym komunikat
                     JOptionPane.showMessageDialog(Main.main_frame, "Błędna fraza bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
-                    return;
                 }
 
                 else {
@@ -383,7 +404,6 @@ public class Main {
 
                         //Wyświetl o tym komunikat
                         JOptionPane.showMessageDialog(Main.main_frame, "Podano tą samą frazę bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
-                        return;
                     }
 
                     else{
@@ -402,7 +422,6 @@ public class Main {
 
                             //Wyświetl o tym komunikat
                             JOptionPane.showMessageDialog(Main.main_frame, "Frazy bezpieczeństwa nie zgadzają się", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
-                            return;
                         }
 
                         else{
@@ -451,7 +470,6 @@ public class Main {
 
                     //Wyświetl o tym komunikat
                     JOptionPane.showMessageDialog(Main.main_frame, "Frazy bezpieczeństwa są różne", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
-                    return;
                 } else {
 
                     settings.put("security_phrase", new_security_phrase);
