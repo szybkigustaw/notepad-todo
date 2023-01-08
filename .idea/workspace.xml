@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Naprawa błędu związanego z powrotem do poprzedniego okna przy tworzeniu notatki z poziomu opcji na pasku menu.&#10;Implementacja ustawienia auto zapisywania z poziomu HashMapy pobieranej z pliku ustawień.">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Przeniesienie danych o haśle z pliku listy notatek do pliku konfiguracyjnego. Usunięto zapis hasła do pliku z notatkami.&#10;Ponieważ hasła nie są zapisywane do pliku z notatkami, również blokada odczytu notatek związana z brakiem hasła w nich została usunięta">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EditNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EditNote.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NoteListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteListGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ReadNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ReadNote.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,13 +57,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1670573136854</updated>
-    </task>
-    <task id="LOCAL-00002" summary="+ dokumentacja w javadoc">
-      <created>1670794500830</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1670794500830</updated>
     </task>
     <task id="LOCAL-00003" summary="Dodano panel podglądu notatki.">
       <created>1671178950346</created>
@@ -404,7 +394,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673176466926</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="Przeniesienie danych o haśle z pliku listy notatek do pliku konfiguracyjnego. Usunięto zapis hasła do pliku z notatkami.&#10;Ponieważ hasła nie są zapisywane do pliku z notatkami, również blokada odczytu notatek związana z brakiem hasła w nich została usunięta">
+      <created>1673184074063</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1673184074063</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -431,7 +428,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Dodano blokadę zapisu do pliku jeśli lista notatek jest krótsza od 1" />
     <MESSAGE value="Usunięto wartości domyślne szyb aplikacji oraz listy notatek.&#10;Teraz klasy same deklarują globalnie obecny stan otwartego panelu.&#10;Usunięto predefiniowane pozycje na liście szyb. Każda szyba otrzymuje miejsce w zależności od ilości obecnych szyb." />
     <MESSAGE value="Przebudowa klasy FileHandler&#10;Klasa teraz przechowuje również informacje o dostępności pliku i wyświetla komunikaty w zależności od błędów odczytu czy zapisu pliku." />
     <MESSAGE value="Wykorzystanie statycznego pola fh" />
@@ -456,7 +452,8 @@
     <MESSAGE value="Dodano zapis zmiany domyślnej ścieżki pliku z notatkami przy wyjściu z aplikacji" />
     <MESSAGE value="Dodano plik z ustawieniami w formie HashMapy" />
     <MESSAGE value="Naprawa błędu związanego z powrotem do poprzedniego okna przy tworzeniu notatki z poziomu opcji na pasku menu.&#10;Implementacja ustawienia auto zapisywania z poziomu HashMapy pobieranej z pliku ustawień." />
-    <option name="LAST_COMMIT_MESSAGE" value="Naprawa błędu związanego z powrotem do poprzedniego okna przy tworzeniu notatki z poziomu opcji na pasku menu.&#10;Implementacja ustawienia auto zapisywania z poziomu HashMapy pobieranej z pliku ustawień." />
+    <MESSAGE value="Przeniesienie danych o haśle z pliku listy notatek do pliku konfiguracyjnego. Usunięto zapis hasła do pliku z notatkami.&#10;Ponieważ hasła nie są zapisywane do pliku z notatkami, również blokada odczytu notatek związana z brakiem hasła w nich została usunięta" />
+    <option name="LAST_COMMIT_MESSAGE" value="Przeniesienie danych o haśle z pliku listy notatek do pliku konfiguracyjnego. Usunięto zapis hasła do pliku z notatkami.&#10;Ponieważ hasła nie są zapisywane do pliku z notatkami, również blokada odczytu notatek związana z brakiem hasła w nich została usunięta" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

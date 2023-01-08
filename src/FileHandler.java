@@ -404,13 +404,6 @@ public class FileHandler {
                 //Stwórz element przechowujący dane o stanie ukrycia notatki
                 Element hidden = xml_doc.createElement("Hidden");
 
-                //Jeśli hasło nie jest zdefiniowane oraz na liście występują ukryte notatki
-                if (notes.getNote(i).getHidden() && Main.settings.get("access_password") == null) {
-
-                    //Zwróć wyjątek bezpieczeństwa. Nie można przechować notatek ukrytych bez zabezpieczającego je hasła
-                    throw new SecurityException("Nie można zapisać pliku. Dalej istnieją notatki ukryte pomimo braku hasła. Dodaj najpierw hasło i spróbuj ponownie.");
-                }
-
                 //Przypisz do elementu wartość boolean w formie ciągu znaków
                 hidden.appendChild(xml_doc.createTextNode(notes.getNote(i).getHidden() ? "true" : "false"));
 

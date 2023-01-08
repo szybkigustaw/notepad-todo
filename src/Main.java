@@ -498,6 +498,24 @@ public class Main {
                     noteList = parsed_notes.getListLength() > 0 ? parsed_notes : new NoteList(new Note[0], NoteList.FULL);
                     readNoteList = parsed_notes.getListLength() > 0 ? new NoteList(noteList.getNoteList(), NoteList.FULL) : readNoteList;
 
+                    if(settings.get("access_password") == null){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
+                                        "udzielony dopiero po zdefiniowaniu hasła.",
+                                "Brak zdefiniowanego hasła dostępowego",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    }
+
+                    if(settings.get("security_phrase") == null){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Nie zdefiniowano frazy bezpieczeństwa. Opcja resetowania hasła zablokowana.",
+                                "Brak zdefiniowanej frazy bezpieczeństwa",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    }
                 }
 
                 //Jeśli wystąpi wyjątek związany z operacjami I/O
@@ -874,7 +892,7 @@ public class Main {
             int i = fc.showOpenDialog(main_frame);
 
             //Jeśli wybrano plik do odczytu
-            if(i==JFileChooser.APPROVE_OPTION){
+            if(i==JFileChooser.APPROVE_OPTION) {
 
                 //Stwórz nową instancję klasy obsługującej operacje na plikach i przypisz jej wybrany w oknie plik
                 fh = new FileHandler(fc.getSelectedFile());
@@ -886,10 +904,12 @@ public class Main {
                 if (fetched_notes != null) {
 
                     //Jeśli lista notatek nie jest pusta, przypisz do niej wartość listy odczytanej z pliku. Jeśli jest, stwórz nową instancję klasy listy notatek i przypisz jej tę samą wartość
-                    if(noteList != null) noteList.setNoteList(fh.parseDocToNotes().getNoteList()); else noteList = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
+                    if (noteList != null) noteList.setNoteList(fh.parseDocToNotes().getNoteList());
+                    else noteList = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
 
                     //Jeśli lista notatek w historii nie jest pusta, przypisz do niej wartość obecnej listy notatek. Jeśli jest, stwórz nową instancję klasy listy notatek i przypisz jej tę samą wartość
-                    if(readNoteList != null) readNoteList.setNoteList(noteList.getNoteList()); else readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
+                    if (readNoteList != null) readNoteList.setNoteList(noteList.getNoteList());
+                    else readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
 
                     //Przeładuj aplikację
                     Main.reloadApp(true);
@@ -899,17 +919,17 @@ public class Main {
 
                     //Wyświetl komunikat z zapytaniem o wolę zapisu ścieżki do pliku jako ścieżki domyślnej
                     int save_path_to_default = JOptionPane.showConfirmDialog(
-                        main_frame,
-                        "Czy chcesz zapisać ten plik z notatkami jako plik domyślny?",
-                        "Domyślny plik z notatkami",
-                        JOptionPane.YES_NO_OPTION
+                            main_frame,
+                            "Czy chcesz zapisać ten plik z notatkami jako plik domyślny?",
+                            "Domyślny plik z notatkami",
+                            JOptionPane.YES_NO_OPTION
                     );
 
                     //Jeśli wyrażono taką wolę
-                    if(save_path_to_default == JOptionPane.YES_OPTION){
+                    if (save_path_to_default == JOptionPane.YES_OPTION) {
 
                         //Zapisz tę ścieżkę
-                        settings.put("default_path",fh.getFile_path());
+                        settings.put("default_path", fh.getFile_path());
 
                         //Wyświetl komunikat z informacją o powodzeniu operacji
                         JOptionPane.showMessageDialog(
@@ -921,17 +941,24 @@ public class Main {
                     }
                 }
 
-                //Jeśli odczytana lista nie jest pusta oraz hasło jest puste
-                if (fetched_notes != null && settings.get("access_password") == null){
+                assert fetched_notes != null;
+                for (Note note : fetched_notes.getNoteList()) {
+                    if (note.getHidden() && settings.get("access_password") == null) {
+                        int will_change_password = JOptionPane.showConfirmDialog(
+                                main_frame,
+                                "Pobrana lista notatek zawiera notatki ukryte. Są one niedostępne ze względu na brak " +
+                                        "zdefiniowanego hasła. Czy chcesz teraz zdefiniować hasło dostępu?",
+                                "Dostęp do notatek ukrytych zablokowany",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE
+                        );
 
-                    //Wyświetl komunikat z zapytaniem o wolę ustawienia w danej chwili hasła
-                    int password_doChange = JOptionPane.showConfirmDialog(main_frame, "Wygląda na to że hasło nie zostało ustawione. Czy chcesz je ustawić?", "Brak hasła", JOptionPane.YES_NO_OPTION);
-
-                    //Jeśli użytkownik wyraża taką wolę, wywołaj metodę zmieniającą hasło
-                    if(password_doChange == JOptionPane.YES_OPTION){
-                        changePassword();
+                        if (will_change_password == JOptionPane.YES_OPTION) {
+                            changePassword();
+                        }
                     }
                 }
+
             }
         });
 
@@ -1081,7 +1108,7 @@ public class Main {
         JMenuItem sort_by_completion = new JMenuItem("wg stopnia ukończenia");
 
         //Stwórz pozycję w menu będącą check-boxem definiującym kolejność sortowania
-        JCheckBoxMenuItem sort_descending = new JCheckBoxMenuItem("Sortuj rosnąco", true);
+        JCheckBoxMenuItem sort_descending = new JCheckBoxMenuItem("Sortuj malejąco", true);
 
         //Dodaj logikę do pozycji sortowania. Przypisz do każdej pozycji metodę sortującą listę notatek z innym wywoływanym trybem.
         //Następnie przeładuj aplikację wraz z listą notatek.
@@ -1141,49 +1168,48 @@ public class Main {
             //Przechowaj informacje o obecnie otwartym oknie
             String temp_current_window = Main.current_window;
 
-            //Początek kodu z prawdopodobnymi wątkami
-            try{
+            //Jeśli hasło jest puste
+            if(settings.get("access_password") == null){
 
-                //Jeśli hasło jest puste
-                if(settings.get("access_password") == null){
-
-                    //Wyświetl komunikat o tym fakcie i zakończ działanie metody
-                    JOptionPane.showMessageDialog(main_frame, "Hasło już nie istnieje", "Nie można usunąć hasła", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-
-                //Stwórz kopię obecnej listy notatek
-                NoteList temp = new NoteList(noteList.getNoteList(), NoteList.FULL);
-
-                //Jeśli na liście występuje notatka ukryta, zwróć wyjątek bezpieczeństwa
-                for(int i = 0; i < temp.getListLength(); i++){
-                    if(temp.getNote(i).getHidden()){
-                        throw new SecurityException("Dalej istnieją ukryte notatki. Usuń je lub upublicznij przed usunięciem hasła.");
-                    }
-                }
-
-                //Ustaw hasło na pustą wartość oraz przełącz aplikację w tryb jawny
-                settings.remove("access_password");
-                hidden_mode = false;
-
-                //Ustaw informację o obecnym oknie na przechowaną wartość
-                Main.current_window = temp_current_window;
-
-                //Przeładuj aplikację
-                Main.reloadApp(true);
-
-                //Wyświetl komunikat o powodzeniu operacji
-                JOptionPane.showMessageDialog(main_frame, "Hasło zostało pomyślnie usunięte", "Kasowanie hasła", JOptionPane.INFORMATION_MESSAGE);
-
+                //Wyświetl komunikat o tym fakcie i zakończ działanie metody
+                JOptionPane.showMessageDialog(main_frame, "Hasło już nie istnieje", "Nie można usunąć hasła", JOptionPane.ERROR_MESSAGE);
+                return;
             }
 
-            //Jeśli wystąpi wyjątek bezpieczeństwa
-            catch (SecurityException ex){
 
-                //Wyświetl komunikat z wiadomością błędu
-                JOptionPane.showMessageDialog(main_frame, ex.getMessage(), "Nie można usunąć hasła", JOptionPane.ERROR_MESSAGE);
+            //Stwórz kopię obecnej listy notatek
+            NoteList temp = new NoteList(noteList.getNoteList(), NoteList.FULL);
+
+            //Jeśli na liście występuje notatka ukryta, zwróć wyjątek bezpieczeństwa
+            for(int i = 0; i < temp.getListLength(); i++){
+                if(temp.getNote(i).getHidden()){
+                   int hidden_found = JOptionPane.showConfirmDialog(
+                           main_frame,
+                           "Znaleziono ukryte notatki. Dostęp do nich zostanie utracony po skasowaniu hasła. Kontynuować?",
+                           "Znaleziono ukryte notatki.",
+                           JOptionPane.YES_NO_OPTION,
+                           JOptionPane.QUESTION_MESSAGE
+                   );
+                   if(hidden_found == JOptionPane.YES_OPTION){
+                       break;
+                   } else {
+                       return;
+                   }
+                }
             }
+
+            //Ustaw hasło na pustą wartość oraz przełącz aplikację w tryb jawny
+            settings.remove("access_password");
+            hidden_mode = false;
+
+            //Ustaw informację o obecnym oknie na przechowaną wartość
+            Main.current_window = temp_current_window;
+
+            //Przeładuj aplikację
+            Main.reloadApp(true);
+
+            //Wyświetl komunikat o powodzeniu operacji
+            JOptionPane.showMessageDialog(main_frame, "Hasło zostało pomyślnie usunięte", "Kasowanie hasła", JOptionPane.INFORMATION_MESSAGE);
         });
 
         //Dodaj pozycje zmiany i kasowania hasła do menu bezpieczeństwa
