@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -40,6 +41,9 @@ public class Main {
      * Definiuje, czy notatki edytowane/ tworzone powinny być automatycznie zamykane przy opuszczaniu okna edycji.
      */
     public static boolean auto_save_note = false;
+
+    public static HashMap<String, String> settings;
+    public static HashMap<String, String> previous_settings;
     /**
      * Globalna lista notatek dla całej aplikacji.
      */
@@ -347,6 +351,11 @@ public class Main {
             //Stwórz puste listy notatek
             noteList = new NoteList(new Note[0], NoteList.FULL);
             readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
+            settings = new HashMap<String, String>();
+            settings.put("default_path","");
+            settings.put("auto_save","false");
+
+            previous_settings = settings;
 
             //Początek kodu z ewentualnymi wyjątkami
             try{
@@ -382,6 +391,8 @@ public class Main {
             noteList = new NoteList(new Note[0], NoteList.FULL);
             readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
 
+            settings = new HashMap<String, String>();
+
             //Jeśli plik jest nie do odczytu
             if (!settings_file.canRead()) {
 
@@ -395,6 +406,9 @@ public class Main {
 
                 //Początek kodu z prawdopodobnymi wyjątkami
                 try {
+
+                    settings.put("default_path","");
+                    settings.put("auto_save","false");
 
                     //Jeśli utworzenie pliku powiodło się
                     if(settings_file.createNewFile()){
@@ -431,15 +445,14 @@ public class Main {
                     Scanner fs = new Scanner(fr);
 
                     //Jeśli plik nie zawiera pustych linijek
-                    if (fs.hasNextLine()) {
-
-                        //Zwróć odczytaną ścieżkę
-                        default_path = fs.nextLine();
-                        previous_default_path = default_path;
+                    while (fs.hasNextLine()) {
+                        String read_line = fs.nextLine();
+                        String[] kv_pair = read_line.split("(::)");
+                        settings.put(kv_pair[0], kv_pair[1]);
                     }
 
                     //Jeśli odczytana ścieżka jest pusta
-                    if(default_path.equals("")){
+                    if(settings.get("default_path").equals("")){
 
                         //Wyświetl komunikat o tym fakcie
                         JOptionPane.showMessageDialog(
@@ -452,7 +465,7 @@ public class Main {
                     }
 
                     //Jeśli pod odczytaną ścieżką nie ma żadnego pliku
-                    if(!new File(default_path).exists()){
+                    if(!new File(settings.get("default_path")).exists()){
 
                         //Wyświetl komunikat o tym fakcie
                         JOptionPane.showMessageDialog(
@@ -467,7 +480,7 @@ public class Main {
                     }
 
                     //Utwórz instancję klasy obsługującej pliki z notatkami
-                    fh = new FileHandler(new File(default_path));
+                    fh = new FileHandler(new File(settings.get("default_path")));
 
                     //Jeśli notatki na tej liście są obecne, przypisz je do buforowej zmiennej. Jeśli nie, utwórz pustą listę
                     NoteList parsed_notes = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
@@ -539,31 +552,32 @@ public class Main {
                         //Skonwertuj listę notatek do formy dokumentu XML i zapisz je w pliku przechowywanym w obiekcie
                         fh.parseToFile(noteList);
 
-                        //Stwórz nową instancję klasy zapisującej do pliku i podaj jej ścieżkę do pliku konfiguracyjnego
+                        if(!Objects.equals(previous_settings, settings)){
+
+                    //Początek kodu z ewentualnymi wyjątkami
+                    try {
+                        //Stwórz instancję klasy zapisującej do pliku z ustawieniami
                         FileWriter settings_writer = new FileWriter(settings_file);
 
-                        //Zapisz w niej ścieżkę do domyślnego pliku z notatkami
-                        settings_writer.write(default_path);
+                        //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
+                        settings.forEach((key, value) -> {
+                            try {
+                                settings_writer.write(String.format("%s::%s\n", key, value));
+                            } catch (IOException ex){
+                                //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                                JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Błąd zapisu pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        });
                         settings_writer.close();
                     }
 
-                    //Jeśli wystąpi wyjątek nieudanego zapisu do pliku
-                    catch(FailedToWriteToFileException ex){
-
-                        //Wyświetl komunikat z wiadomością błędu
-                        JOptionPane.showMessageDialog(
-                                main_frame,
-                                ex.getMessage(),
-                                "Zapisywanie pliku",
-                                JOptionPane.ERROR_MESSAGE
-                        );
-
-                        //Zakończ działanie metody
-                        return;
-                    }
-
-                    //Jeśli wystąpi wyjątek związany z operacjami I/O
-                    catch(IOException ex) {
+                    //Jeśli złapany zostanie wyjątek związany z operacjami I/O
+                    catch(IOException ex){
 
                         //Wyświetl komunikat z wiadomością błędu
                         JOptionPane.showMessageDialog(
@@ -583,13 +597,30 @@ public class Main {
                                 JOptionPane.ERROR_MESSAGE
                         );
                     }
+                }
+                    }
+
+                    //Jeśli wystąpi wyjątek nieudanego zapisu do pliku
+                    catch(FailedToWriteToFileException ex){
+
+                        //Wyświetl komunikat z wiadomością błędu
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Zapisywanie pliku",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+
+                        //Zakończ działanie metody
+                        return;
+                    }
 
                     //Wyświetl komunikat o udanym zapisie notatek do pliku
                     JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
                 }
 
                 //Jeśli zmianie uległa domyślna ścieżka pliku z notatkami
-                if(!Objects.equals(previous_default_path, default_path)){
+                if(!Objects.equals(previous_settings, settings)){
 
                     //Początek kodu z ewentualnymi wyjątkami
                     try {
@@ -597,7 +628,19 @@ public class Main {
                         FileWriter settings_writer = new FileWriter(settings_file);
 
                         //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
-                        settings_writer.write(default_path);
+                        settings.forEach((key, value) -> {
+                            try {
+                                settings_writer.write(String.format("%s::%s\n", key, value));
+                            } catch (IOException ex){
+                                //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                                JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Błąd zapisu pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        });
                         settings_writer.close();
                     }
 
@@ -621,7 +664,7 @@ public class Main {
             } else if(to_save == JOptionPane.NO_OPTION){
 
                 //Jeśli zmianie uległa domyślna ścieżka pliku z notatkami
-                if(!Objects.equals(previous_default_path, default_path)){
+                if(!Objects.equals(previous_settings, settings)){
 
                     //Początek kodu z ewentualnymi wyjątkami
                     try {
@@ -629,7 +672,19 @@ public class Main {
                         FileWriter settings_writer = new FileWriter(settings_file);
 
                         //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
-                        settings_writer.write(default_path);
+                        settings.forEach((key, value) -> {
+                            try {
+                                settings_writer.write(String.format("%s::%s\n", key, value));
+                            } catch (IOException ex){
+                                //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                                JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Błąd zapisu pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        });
                         settings_writer.close();
                     }
 
@@ -655,37 +710,52 @@ public class Main {
         else {
 
             //Początek kodu z prawdopodobnymi wyjątkami
-            try{
+            if(!Objects.equals(previous_settings, settings)){
 
-                //Stwórz instancję klasy zapisującej do pliku i podaj jej ścieżkę do pliku konfiguracyjnego
-                FileWriter settings_writer = new FileWriter(settings_file);
+                    //Początek kodu z ewentualnymi wyjątkami
+                    try {
+                        //Stwórz instancję klasy zapisującej do pliku z ustawieniami
+                        FileWriter settings_writer = new FileWriter(settings_file);
 
-                //Zapisz ścieżkę do domyślnego pliku z notatkami w pliku konfiguracyjnym
-                settings_writer.write(default_path);
-                settings_writer.close();
-            }
+                        //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
+                        settings.forEach((key, value) -> {
+                            try {
+                                settings_writer.write(String.format("%s::%s\n", key, value));
+                            } catch (IOException ex){
+                                //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                                JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Błąd zapisu pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        });
+                        settings_writer.close();
+                    }
 
-            //Jeśli wystąpi wyjątek związany z operacjami I/O
-            catch(IOException ex) {
+                    //Jeśli złapany zostanie wyjątek związany z operacjami I/O
+                    catch(IOException ex){
 
-                //Wyświetl komunikat z wiadomością błędu
-                JOptionPane.showMessageDialog(
-                        main_frame,
-                        ex.getMessage(),
-                        "Zapisywanie pliku domyślnego",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                        //Wyświetl komunikat z wiadomością błędu
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Zapisywanie pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                        );
 
-                //Wyświetl komunikat o nieudanym zapisie domyślnej ścieżki do pliku konfiguracyjnego
-                JOptionPane.showMessageDialog(
-                        main_frame,
-                        "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
-                                "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
-                                "pliku z notatkami.",
-                        "Zapisywanie pliku domyślnego",
-                        JOptionPane.ERROR_MESSAGE
-                );
-            }
+                        //Wyświetl komunikat o nieudanym zapisie ścieżki domyślnego pliku z notatkami
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
+                                        "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
+                                        "pliku z notatkami.",
+                                "Zapisywanie pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                }
 
             //Zakończ działanie aplikacji
             System.exit(0);
@@ -743,7 +813,7 @@ public class Main {
             if(en != null){
 
                 //Jeśli auto zapis nie jest aktywny
-               if(!auto_save_note){
+               if(Objects.equals(settings.get("auto_save"),"false")){
 
                    //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
                    int i = JOptionPane.showConfirmDialog(
@@ -819,7 +889,7 @@ public class Main {
                     if(save_path_to_default == JOptionPane.YES_OPTION){
 
                         //Zapisz tę ścieżkę
-                        default_path = fh.getFile_path();
+                        settings.put("default_path",fh.getFile_path());
 
                         //Wyświetl komunikat z informacją o powodzeniu operacji
                         JOptionPane.showMessageDialog(
@@ -861,7 +931,7 @@ public class Main {
             if(en != null){
 
                 //Jeśli auto zapis nie jest aktywny
-               if(!auto_save_note){
+               if(Objects.equals(settings.get("auto_save"), "false")){
 
                    //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
                    int i = JOptionPane.showConfirmDialog(
@@ -917,12 +987,6 @@ public class Main {
                     // Jeśli jest, stwórz nową instancję klasy listy notatek i przypisz jej wartość obecnej listy notatek
                     if(readNoteList != null) readNoteList.setNoteList(noteList.getNoteList()); else readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
 
-                    //Stwórz instancję klasy zapisującej do pliku z ustawieniami
-                    FileWriter settings_writer = new FileWriter(settings_file);
-
-                    //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
-                    settings_writer.write(default_path);
-                    settings_writer.close();
                 }
 
                 //Jeśli wystąpi wyjątek nieudanego zapisu do pliku
@@ -938,25 +1002,6 @@ public class Main {
                     return;
                 }
 
-                //Jeśli wystąpi wyjątek związany z operacjami I/O
-                catch(IOException ex) {
-
-                    //Wyświetl komunikat z wiadomością błędu oraz informacją o braku możliwości odczytu domyślnego pliku przy ponownym uruchomieniu aplikacji
-                    JOptionPane.showMessageDialog(
-                            main_frame,
-                            ex.getMessage(),
-                            "Zapisywanie pliku domyślnego",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    JOptionPane.showMessageDialog(
-                            main_frame,
-                            "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
-                                    "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
-                                    "pliku z notatkami.",
-                            "Zapisywanie pliku domyślnego",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                }
 
                 //Wyświetl komunikat o prawidłowym wykonaniu operacji
                 JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
