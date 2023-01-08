@@ -202,12 +202,14 @@ public class Main {
      * <p>Wyświetla okno kontekstowe, w którym prosi użytkownika o podanie nowego hasła. Dokonuje przy tym kilku sprawdzeń.</p>
      * <ul>
      *     <li>Czy hasło w ogóle jest ustawione (jeśli nie, tworzy zupełnie nowe hasło)</li>
-     *     <li>Czy użytkownik zna wcześniejsze hasło</li>
+     *     <li>Czy użytkownik zna frazę bezpieczeństwa</li>
      *     <li>Czy hasło już nie było wcześniej ustawione</li>
      *     <li>Czy nie doszło do pomyłki przy weryfikacji wpisanego nowego hasła</li>
      * </ul>
      */
     public static void changePassword(){
+
+        String old_password = settings.get("access_password");
 
         //Jeśli hasło istnieje
         if(settings.get("access_password") != null) {
@@ -215,65 +217,65 @@ public class Main {
             //Początek kodu z prawdopodobnymi wyjątkami
             try {
 
-                //Wyświetl komunikat proszący użytkownika o podanie starego hasła
-                String old_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj stare hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+                String security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj frazę bezpieczeństwa: ",
+                        "Zmiana hasła",
+                        JOptionPane.QUESTION_MESSAGE
+                );
 
-                //Zahaszuj uzyskane hasło
-                old_password = hashString(old_password);
+                security_phrase = hashString(security_phrase);
 
-                //Jeśli uzyskane hasło zgadza się z obecnie przechowywanym w aplikacji hasłem
-                if (Objects.equals(settings.get("access_password"), old_password)) {
-
-                    //Wyświetl komunikat proszący użytkownika o podanie nowego hasła
-                    String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
-
-                    //Zahaszuj uzyskany wynik
-                    new_password = hashString(new_password);
-
-                    //Jeśli podane hasło jest równe obecnemu hasłu
-                    if (new_password.equals(old_password)) {
-
-                        //Wyświetl komunikat o tym fakcie
-                        JOptionPane.showMessageDialog(Main.main_frame, "Hasło nie może być takie same jak poprzednie", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
-
-                    }
-
-                    //Jeśli nie jest równe
-                    else {
-
-                        //Wyświetl komunikat proszący użytkownika o ponowne wprowadzenie nowego hasła
-                        String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
-
-                        //Zahaszuj uzyskany wynik
-                        new_password_retype = hashString(new_password_retype);
-
-                        //Jeśli ponownie wprowadzone hasło nie zgadza się z poprzednio wpisanym
-                        if (!Objects.equals(new_password, new_password_retype)) {
-
-                            //Wyświetl komunikat o tym fakcie
-                            JOptionPane.showMessageDialog(Main.main_frame, "Hasła są różne", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
-                        }
-
-                        //Jeśli są równe
-                        else {
-
-                            //Ustaw nowe hasło
-                           settings.replace("access_password", new_password);
-
-                            //Wyświetl komunikat o powodzeniu operacji
-                            JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie zmieniono hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
-
-                            //Przeładuj aplikację
-                            Main.reloadApp(true);
-                        }
-                    }
-                    //Jeśli wprowadzono błędne obecne hasło
-                } else {
+                if(!Objects.equals(settings.get("security_phrase"), security_phrase)){
 
                     //Wyświetl o tym komunikat
-                    JOptionPane.showMessageDialog(Main.main_frame, "Błędne hasło", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.main_frame, "Błędna fraza bezpieczeństwa", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
 
+                //Wyświetl komunikat proszący użytkownika o podanie nowego hasła
+                String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+
+                //Zahaszuj uzyskany wynik
+                new_password = hashString(new_password);
+
+                //Jeśli podane hasło jest równe obecnemu hasłu
+                if (new_password.equals(old_password)) {
+
+                    //Wyświetl komunikat o tym fakcie
+                    JOptionPane.showMessageDialog(Main.main_frame, "Hasło nie może być takie same jak poprzednie", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+
+                }
+
+                //Jeśli nie jest równe
+                else {
+
+                    //Wyświetl komunikat proszący użytkownika o ponowne wprowadzenie nowego hasła
+                    String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+
+                    //Zahaszuj uzyskany wynik
+                    new_password_retype = hashString(new_password_retype);
+
+                    //Jeśli ponownie wprowadzone hasło nie zgadza się z poprzednio wpisanym
+                    if (!Objects.equals(new_password, new_password_retype)) {
+
+                        //Wyświetl komunikat o tym fakcie
+                        JOptionPane.showMessageDialog(Main.main_frame, "Hasła są różne", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    //Jeśli są równe
+                    else {
+
+                        //Ustaw nowe hasło
+                       settings.replace("access_password", new_password);
+
+                        //Wyświetl komunikat o powodzeniu operacji
+                        JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie zmieniono hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
+
+                        //Przeładuj aplikację
+                        Main.reloadApp(true);
+                    }
+                }
                 //Jeśli wystąpi wyjątek o błędnym algorytmie
             } catch (NoSuchAlgorithmException ex) {
 
@@ -286,6 +288,22 @@ public class Main {
 
             //Początek kodu z prawdopodobnymi wyjątkami
             try{
+
+                String security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj frazę bezpieczeństwa: ",
+                        "Zmiana hasła",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                security_phrase = hashString(security_phrase);
+
+                if(!Objects.equals(settings.get("security_phrase"), security_phrase)){
+
+                    //Wyświetl o tym komunikat
+                    JOptionPane.showMessageDialog(Main.main_frame, "Błędna fraza bezpieczeństwa", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
                 //Wyświetl okno, w którym użytkownik ma wpisać swoje hasło
                 String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
@@ -322,6 +340,132 @@ public class Main {
 
                     //Przekaż wiadomość z błędu do konsoli
                     System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+    public static void changeSecurityPhrase(){
+
+        String old_sf = settings.get("security_phrase");
+
+        if(old_sf != null){
+            try{
+                String security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj frazę bezpieczeństwa: ",
+                        "Zmiana frazy bezpieczeństwa",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if(Objects.equals(security_phrase, null)) return;
+                security_phrase = hashString(security_phrase);
+
+                if(!Objects.equals(old_sf, security_phrase)){
+
+                    //Wyświetl o tym komunikat
+                    JOptionPane.showMessageDialog(Main.main_frame, "Błędna fraza bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                else {
+
+                    String new_security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj nową frazę bezpieczeństwa: ",
+                        "Zmiana frazy bezpieczeństwa",
+                        JOptionPane.QUESTION_MESSAGE
+                    );
+
+                    if(Objects.equals(new_security_phrase, null)) return;
+                    new_security_phrase = hashString(new_security_phrase);
+
+                    if(Objects.equals(new_security_phrase, old_sf)){
+
+                        //Wyświetl o tym komunikat
+                        JOptionPane.showMessageDialog(Main.main_frame, "Podano tą samą frazę bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    else{
+
+                        String retype_security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj jeszcze raz nową frazę bezpieczeństwa: ",
+                        "Zmiana frazy bezpieczeństwa",
+                        JOptionPane.QUESTION_MESSAGE
+                    );
+
+                        if(Objects.equals(retype_security_phrase, null)) return;
+                        retype_security_phrase = hashString(retype_security_phrase);
+
+                        if(!Objects.equals(new_security_phrase, retype_security_phrase)){
+
+                            //Wyświetl o tym komunikat
+                            JOptionPane.showMessageDialog(Main.main_frame, "Frazy bezpieczeństwa nie zgadzają się", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        else{
+
+                            settings.replace("security_phrase", new_security_phrase);
+
+                            //Wyświetl komunikat o powodzeniu operacji
+                            JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie zmieniono frazę bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(Main.main_frame, "Lepiej zapisać ją gdzieś albo mocno zapamiętać. Bez niej nie ma możliwości zmiany hasła ;3");
+                        }
+                    }
+                }
+            }
+
+            catch (NoSuchAlgorithmException ex){
+
+                //Przekaż wiadomość z błędu do konsoli
+                System.out.println(ex.getMessage());
+            }
+        }
+
+        else {
+
+            try {
+                String new_security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj nową frazę bezpieczeństwa: ",
+                        "Zmiana frazy bezpieczeństwa",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if(Objects.equals(new_security_phrase, null)) return;
+                new_security_phrase = hashString(new_security_phrase);
+
+                String retype_security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj jeszcze raz nową frazę bezpieczeństwa: ",
+                        "Zmiana frazy bezpieczeństwa",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if(Objects.equals(retype_security_phrase, null)) return;
+                retype_security_phrase = hashString(retype_security_phrase);
+
+                if (!Objects.equals(new_security_phrase, retype_security_phrase)) {
+
+                    //Wyświetl o tym komunikat
+                    JOptionPane.showMessageDialog(Main.main_frame, "Frazy bezpieczeństwa są różne", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
+                    return;
+                } else {
+
+                    settings.put("security_phrase", new_security_phrase);
+
+                    //Wyświetl komunikat o powodzeniu operacji
+                    JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie dodano frazę bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.main_frame, "Lepiej zapisać ją gdzieś albo mocno zapamiętać. Bez niej nie ma możliwości zmiany hasła ;3");
+                }
+            }
+
+            catch (NoSuchAlgorithmException ex){
+
+                //Przekaż wiadomość z błędu do konsoli
+                System.out.println(ex.getMessage());
             }
         }
     }
@@ -511,10 +655,12 @@ public class Main {
                     if(settings.get("security_phrase") == null){
                         JOptionPane.showMessageDialog(
                                 main_frame,
-                                "Nie zdefiniowano frazy bezpieczeństwa. Opcja resetowania hasła zablokowana.",
+                                "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
                                 "Brak zdefiniowanej frazy bezpieczeństwa",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
+
+                        while(settings.get("security_phrase") == null) changeSecurityPhrase();
                     }
                 }
 
@@ -1265,8 +1411,11 @@ public class Main {
             JOptionPane.showMessageDialog(main_frame, "Hasło zostało pomyślnie usunięte", "Kasowanie hasła", JOptionPane.INFORMATION_MESSAGE);
         });
 
+        JMenuItem sf_change = new JMenuItem("Zmień frazę bezpieczeństwa");
+        sf_change.addActionListener(e -> changeSecurityPhrase());
+
         //Dodaj pozycje zmiany i kasowania hasła do menu bezpieczeństwa
-        security.add(password_change); security.add(password_remove);
+        security.add(password_change); security.add(password_remove); security.add(new JSeparator(JSeparator.HORIZONTAL)); security.add(sf_change);
 
 
         //Stwórz menu informacji
