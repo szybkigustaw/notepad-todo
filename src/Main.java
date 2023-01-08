@@ -42,6 +42,7 @@ public class Main {
      *     <li><b>auto_save -</b> zmienna definiująca, czy aktywna ma być funkcja auto zapisu (wartości: true/false) </li>
      *     <li><b>access_password -</b> hasło dostępu do notatek</li>
      *     <li><b>security_phrase -</b> fraza bezpieczeństwa, używana przy resetowaniu hasła</li>
+     *     <li><b>show_system_uname -</b> zmienna definiująca, czy menu główne powinno zwracać się do użytkownika przy użyciu nazwy systemowego konta (wartości: true/false)</li>
      * </ul>
      */
     public static HashMap<String, String> settings;
@@ -516,11 +517,12 @@ public class Main {
             settings = new HashMap<>();
             settings.put("default_path","");
             settings.put("auto_save","false");
-            settings.put("access_password","");
-            settings.put("security_phrase","");
+            settings.put("access_password", null);
+            settings.put("security_phrase", null);
+            settings.put("show_system_uname","false");
 
             //Przypisz wartość obecnej kolekcji ustawień do kolekcji ustawień w historii
-            previous_settings = settings;
+            previous_settings = new HashMap<>(settings);
 
             //Początek kodu z ewentualnymi wyjątkami
             try{
@@ -535,6 +537,27 @@ public class Main {
                             "Pierwsze uruchomienie",
                             JOptionPane.INFORMATION_MESSAGE
                     );
+
+                    if(settings.get("access_password") == null){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
+                                        "udzielony dopiero po zdefiniowaniu hasła.",
+                                "Brak zdefiniowanego hasła dostępowego",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    }
+
+                    if(settings.get("security_phrase") == null){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
+                                "Brak zdefiniowanej frazy bezpieczeństwa",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+
+                        while(settings.get("security_phrase") == null) changeSecurityPhrase();
+                    }
                 }
 
                 //Jeśli wystąpi wyjątek związany z operacjami I/O
@@ -576,8 +599,11 @@ public class Main {
                     //Umieść wartości generyczne w kolekcji ustawień
                     settings.put("default_path","");
                     settings.put("auto_save","false");
-                    settings.put("access_password","");
-                    settings.put("security_phrase","");
+                    settings.put("access_password", null);
+                    settings.put("security_phrase", null);
+                    settings.put("show_system_uname","false");
+
+                    previous_settings = new HashMap<>(settings);
 
                     //Jeśli utworzenie pliku powiodło się
                     if(settings_file.createNewFile()){
@@ -642,8 +668,10 @@ public class Main {
                         String[] kv_pair = read_line.split("(::)");
 
                         //Przypisz wartość ustawienia do klucza odczytanego z linii danych z pliku
-                        settings.put(kv_pair[0], kv_pair[1]);
+                        settings.put(kv_pair[0], kv_pair.length == 2 ? kv_pair[1] : null);
                     }
+
+                    previous_settings = new HashMap<>(settings);
 
                     //Jeśli odczytana ścieżka jest pusta
                     if(Objects.equals(settings.get("default_path"), null)){
@@ -956,7 +984,7 @@ public class Main {
                 //Jeśli zamknięto okno zapisu danych do pliku
             } else if(to_save == JOptionPane.NO_OPTION){
 
-                //Jeśli zmianie uległa domyślna ścieżka pliku z notatkami
+                //Jeśli zmianie uległa domyślna ścieżka pliku z notatkamiz
                 if(!Objects.equals(previous_settings, settings)){
 
                     //Początek kodu z ewentualnymi wyjątkami
@@ -1002,7 +1030,6 @@ public class Main {
         //Jeśli listy notatek są równe
         else {
 
-            //Początek kodu z prawdopodobnymi wyjątkami
             if(!Objects.equals(previous_settings, settings)){
 
                     //Początek kodu z ewentualnymi wyjątkami
@@ -1347,6 +1374,16 @@ public class Main {
                     JOptionPane.INFORMATION_MESSAGE);
         });
 
+        JCheckBoxMenuItem show_uname = new JCheckBoxMenuItem("Pokazuj systemową nazwę użytkownika", Objects.equals(settings.get("show_system_uname"), "true"));
+        show_uname.addActionListener(e -> {
+            settings.replace("show_system_uname", show_uname.isSelected() ? "true" : "false");
+            String temp = current_window;
+            System.out.println(current_window);
+            hm = new HomeMenu();
+            current_window = temp;
+            reloadApp(false);
+        });
+
         //Stwórz pozycję w menu służącą do wywołania metody odpowiedzialnej za wyjście z aplikacji
         JMenuItem exit = new JMenuItem("Wyjdź");
 
@@ -1359,7 +1396,7 @@ public class Main {
 
         //Dodaj wszystkie pozycje do menu
         file.add(open); file.add(save); file.add(new JSeparator(JSeparator.HORIZONTAL)); file.add(select_default);
-        file.add(new JSeparator(JSeparator.HORIZONTAL)); file.add(exit);
+        file.add(new JSeparator(JSeparator.HORIZONTAL)); file.add(show_uname); file.add(new JSeparator(JSeparator.HORIZONTAL)); file.add(exit);
 
         //Stwórz menu opcji notatek
         JMenu notes = new JMenu("Notatki");

@@ -370,7 +370,7 @@ public class NoteListGUI extends JPanel{
         go_back.setSize(256, 48);
 
         //Dodaj funkcjonalność do przycisku.
-        go_back.addActionListener(e -> Main.lt.show(Main.rp, "HomeMenu"));
+        go_back.addActionListener(e -> { Main.hm = new HomeMenu(); Main.reloadApp(false); });
 
         //Dodanie przycisku do paska.
         gbc.gridx = 1;

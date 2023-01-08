@@ -543,6 +543,7 @@ public class EditNote extends JPanel {
 
                 //Wróć do poprzedniego okna
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(true);
         });
 
@@ -565,10 +566,12 @@ public class EditNote extends JPanel {
                                 " Stracisz wszystkie zapisane w niej dane.", "Anulowanie tworzenia notatki",
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
                     Main.current_window = prev_window;
+                    Main.en = null;
                     Main.reloadApp(false);
                 }
             } else {
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(false);
             }
         });
@@ -885,6 +888,7 @@ public class EditNote extends JPanel {
 
                 //Wróć do poprzedniego okna
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(true);
         });
 
@@ -907,10 +911,12 @@ public class EditNote extends JPanel {
                                 " Stracisz wszystkie zapisane w niej dane.", "Anulowanie tworzenia notatki",
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
                     Main.current_window = prev_window;
+                    Main.en = null;
                     Main.reloadApp(false);
                 }
             } else {
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(false);
             }
         });
@@ -1230,6 +1236,7 @@ public class EditNote extends JPanel {
 
                 //Wróć do poprzedniego okna
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(true);
         });
 
@@ -1252,10 +1259,12 @@ public class EditNote extends JPanel {
                                 " Stracisz wszystkie zapisane w niej dane.", "Anulowanie tworzenia notatki",
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
                     Main.current_window = prev_window;
+                    Main.en = null;
                     Main.reloadApp(false);
                 }
             } else {
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(false);
             }
         });
