@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Dodano automatyczne sortowanie notatek przy przełączaniu na okno listy notatek.">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Implementacja ustawienia przełączającego widok w HomeMenu systemowej nazwy użytkownika.&#10;Naprawa zapisu i odczytu ustawień, jeśli mają wartość null.&#10;Naprawa przycisku powrotu do menu głównego z listy notatek, nie zmieniającego informacji o aktualnie wyświetlanym oknie.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EditNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EditNote.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomeMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NoteListGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NoteListGUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,13 +56,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1670573136854</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Dodano splash-screen w przypadku skończenia się notatek.&#10;Teraz NoteListGUI jest świadoma tego, czy przechowuje notatki ukryte, czy publiczne.&#10;Teraz NoteList może wskazać pozycję notatki na liście.">
-      <created>1671329362589</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1671329362589</updated>
     </task>
     <task id="LOCAL-00009" summary="Teraz panel ReadNote jest świadomy trybu ukrytego (tzn. trybu, w którym po operacji na notatce ma wrócić do listy notatek ukrytych).&#10;Teraz z poziomu panelu ReadNote można ukrywać i upubliczniać notatki.&#10;Naprawiono błąd związany z nieprawidłowym otwieraniem się i usuwaniem notatek.">
       <created>1671332090017</created>
@@ -403,7 +393,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673213977897</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="Implementacja ustawienia przełączającego widok w HomeMenu systemowej nazwy użytkownika.&#10;Naprawa zapisu i odczytu ustawień, jeśli mają wartość null.&#10;Naprawa przycisku powrotu do menu głównego z listy notatek, nie zmieniającego informacji o aktualnie wyświetlanym oknie.">
+      <created>1673216907247</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1673216907247</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -430,7 +427,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Usunięcie testowego komunikatu w Main. JLabel l1 wyświetla teraz wartość nazwy użytkownika systemowego." />
     <MESSAGE value="Zapis lokalizacji domyślnego pliku z notatkami do pliku dotfile" />
     <MESSAGE value="Edycja jednej wiadomości błędu w FileHandler" />
     <MESSAGE value="Dodano menu kontekstowe przy wychodzeniu z aplikacji z niezapisanymi danymi. Dodano metodę porównującą listy notatek do NoteList" />
@@ -455,7 +451,8 @@
     <MESSAGE value="Implementacja funkcjonalności frazy bezpieczeństwa.&#10;Zmiana hasła teraz wymaga podania prawidłowej frazy bezpieczeństwa.&#10;Dodano metodę obsługującą żądanie zmiany frazy bezpieczeństwa oraz jej nadania.&#10;Teraz program po wystartowaniu bez frazy bezpieczeństwa nie pozwoli przejść dalej bez jej ustawienia." />
     <MESSAGE value="Dodano notację XML-owską do pliku wyjściowego listy notatek.&#10;Usunięto zbędne wezwania return w metodzie zmiany fb.&#10;Dodano komentarze do metody zmiany fb." />
     <MESSAGE value="Dodano automatyczne sortowanie notatek przy przełączaniu na okno listy notatek." />
-    <option name="LAST_COMMIT_MESSAGE" value="Dodano automatyczne sortowanie notatek przy przełączaniu na okno listy notatek." />
+    <MESSAGE value="Implementacja ustawienia przełączającego widok w HomeMenu systemowej nazwy użytkownika.&#10;Naprawa zapisu i odczytu ustawień, jeśli mają wartość null.&#10;Naprawa przycisku powrotu do menu głównego z listy notatek, nie zmieniającego informacji o aktualnie wyświetlanym oknie." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implementacja ustawienia przełączającego widok w HomeMenu systemowej nazwy użytkownika.&#10;Naprawa zapisu i odczytu ustawień, jeśli mają wartość null.&#10;Naprawa przycisku powrotu do menu głównego z listy notatek, nie zmieniającego informacji o aktualnie wyświetlanym oknie." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

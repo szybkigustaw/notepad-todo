@@ -1361,18 +1361,26 @@ public class Main {
             //Załóż filtr rozszerzeń na tę instancję. Filtr ma pokazywać tylko pliki XML
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
 
-            //Stwórz nową instancję klasy reprezentującej otwarty plik w oknie
-            File new_default = fc.getSelectedFile();
+           //Wyświetl okno wyboru pliku
+            int i = fc.showOpenDialog(main_frame);
 
-            //Odczytaj ścieżkę dostępu do tego pliku i zapisz ją
-            settings.replace("default_path", new_default.getPath());
+            //Jeśli wybrano plik
+            if(i == JFileChooser.APPROVE_OPTION) {
 
-            //Wyświetl komunikat o powodzeniu operacji
-            JOptionPane.showMessageDialog(main_frame,
-                    "Zapisano nowy domyślny plik",
-                    "Zapisywanie domyślnego pliku",
-                    JOptionPane.INFORMATION_MESSAGE);
+                //Stwórz nową instancję klasy reprezentującej otwarty plik w oknie
+                File new_default = fc.getSelectedFile();
+
+                //Odczytaj ścieżkę dostępu do tego pliku i zapisz ją
+                settings.replace("default_path", new_default.getPath());
+
+                //Wyświetl komunikat o powodzeniu operacji
+                JOptionPane.showMessageDialog(main_frame,
+                        "Zapisano nowy domyślny plik",
+                        "Zapisywanie domyślnego pliku",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
         });
+
 
         JCheckBoxMenuItem show_uname = new JCheckBoxMenuItem("Pokazuj systemową nazwę użytkownika", Objects.equals(settings.get("show_system_uname"), "true"));
         show_uname.addActionListener(e -> {
