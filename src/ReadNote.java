@@ -267,7 +267,7 @@ public class ReadNote extends JPanel {
                     pass = Main.hashString(pass);
 
                     //Jeśli hasze haseł pasują
-                    if (Objects.equals(Main.password, pass)) {
+                    if (Objects.equals(Main.settings.get("access_password"), pass)) {
 
                         //Przestaw stan ukrycia notatki
                         note.setHidden(!(note.getHidden()));
@@ -309,7 +309,7 @@ public class ReadNote extends JPanel {
         });
 
         //Jeśli hasło jest ustawione
-        if(Main.password != null) {
+        if(Main.settings.get("access_password") != null) {
 
             //Wstaw przycisk do paska.
             ob_gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -481,7 +481,7 @@ public class ReadNote extends JPanel {
                     pass = Main.hashString(pass);
 
                     //Jeśli hasze haseł się zgadzają
-                    if (Objects.equals(Main.password, pass)) {
+                    if (Objects.equals(Main.settings.get("access_password"), pass)) {
 
                         //Przestaw stan ukrycia notatki
                         note.setHidden(!(note.getHidden()));
@@ -522,7 +522,7 @@ public class ReadNote extends JPanel {
         });
 
         //Jeśli hasło jest ustawione
-        if(Main.password != null) {
+        if(Main.settings.get("access_password") != null) {
 
             //Wstaw przycisk do paska.
             ob_gbc.fill = GridBagConstraints.HORIZONTAL;

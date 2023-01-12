@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
+import java.util.Objects;
 
 import static java.awt.GridBagConstraints.RELATIVE;
 
@@ -26,7 +27,9 @@ public class HomeMenu extends JPanel{
 
         //Stwórz etykietę — nagłówek pierwszy
         String username = System.getProperty("user.name");
-        JLabel l1 = new JLabel(String.format("Witaj, %s!", username));
+        JLabel l1 = new JLabel(String.format("Witaj, %s!",
+                Objects.equals(Main.settings.get("show_system_uname"), "true") ? username : "Użytkowniku"
+        ));
         l1.setFont(new Font("Arial", Font.PLAIN, 48));
 
         /*

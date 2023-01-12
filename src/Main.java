@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -33,13 +34,23 @@ public class Main {
      */
     public static File settings_file;
     /**
-     * Definiuje stan auto zapisu notatek odczytany z pliku. Wykorzystywany do kontroli zmian w pliku konfiguracyjnym.
+     * Kolekcja danych przechowująca dane o ustawieniach aplikacji
+     *
+     * <p>Składa się z par klucz-wartość o następującej wartości: </p>
+     * <ul>
+     *     <li><b>default_path -</b> ścieżka dostępu do domyślnego pliku z notatkami </li>
+     *     <li><b>auto_save -</b> zmienna definiująca, czy aktywna ma być funkcja auto zapisu (wartości: true/false) </li>
+     *     <li><b>access_password -</b> hasło dostępu do notatek</li>
+     *     <li><b>security_phrase -</b> fraza bezpieczeństwa, używana przy resetowaniu hasła</li>
+     *     <li><b>show_system_uname -</b> zmienna definiująca, czy menu główne powinno zwracać się do użytkownika przy użyciu nazwy systemowego konta (wartości: true/false)</li>
+     * </ul>
      */
-    public static boolean previous_auto_save_note;
+    public static HashMap<String, String> settings;
     /**
-     * Definiuje, czy notatki edytowane/ tworzone powinny być automatycznie zamykane przy opuszczaniu okna edycji.
+     * Kolekcja danych przechowująca dane o ustawieniach aplikacji ostatnio pobrane z pliku (wykorzystywana do kontroli zmian zachodzących w ustawieniach)
+     * @see #settings
      */
-    public static boolean auto_save_note = false;
+    public static HashMap<String, String> previous_settings;
     /**
      * Globalna lista notatek dla całej aplikacji.
      */
@@ -86,18 +97,9 @@ public class Main {
      * Ciąg znaków reprezentujący obecnie wyświetlane okno
      */
     static public String current_window = null;
-    /**
-     * Ciąg znaków przechowujący hasło (w formie zahaszowanej)
-     */
-    static public String password = null;
-    /**
-     * Ciąg znaków reprezentujący ścieżkę dostępu do domyślnego pliku z notatkami pobrana podczas uruchomienia aplikacji z pliku konfiguracyjnego. Używana do kontroli zmian w pliku konfiguracyjnym.
-     */
-    static public String previous_default_path;
-    /**
-     * Ciąg znaków reprezentujący ścieżkę dostępu do domyślnego pliku z notatkami
-     */
-    public static String default_path = "";
+
+    public static int sort_type = NoteList.BY_LABEL;
+    public static boolean sort_descending = true;
 
     /**
      * Przeładowuje aplikację. Na żądanie użytkownika odświeża również listę notatek, implementując w niej tryb ukryty lub publiczny.
@@ -114,6 +116,7 @@ public class Main {
      * @param reloadList zmienna definiująca, czy lista notatek również ma zostać przeładowana przed przeładowaniem interfejsu (<i>true</i> jeśli tak)
      */
     static public void reloadApp(boolean reloadList){
+
 
         //Przechowanie informacji o obecnie otwartym oknie
         String temp_current_window = current_window;
@@ -202,78 +205,86 @@ public class Main {
      * <p>Wyświetla okno kontekstowe, w którym prosi użytkownika o podanie nowego hasła. Dokonuje przy tym kilku sprawdzeń.</p>
      * <ul>
      *     <li>Czy hasło w ogóle jest ustawione (jeśli nie, tworzy zupełnie nowe hasło)</li>
-     *     <li>Czy użytkownik zna wcześniejsze hasło</li>
+     *     <li>Czy użytkownik zna frazę bezpieczeństwa</li>
      *     <li>Czy hasło już nie było wcześniej ustawione</li>
      *     <li>Czy nie doszło do pomyłki przy weryfikacji wpisanego nowego hasła</li>
      * </ul>
      */
     public static void changePassword(){
 
+        //Zapisz obecny stan hasła
+        String old_password = settings.get("access_password");
+
         //Jeśli hasło istnieje
-        if(password != null) {
+        if(settings.get("access_password") != null) {
 
             //Początek kodu z prawdopodobnymi wyjątkami
             try {
 
-                //Wyświetl komunikat proszący użytkownika o podanie starego hasła
-                String old_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj stare hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+                //Wyświetl komunikat z prośbą o podanie frazy bezpieczeństwa
+                String security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj frazę bezpieczeństwa: ",
+                        "Zmiana hasła",
+                        JOptionPane.QUESTION_MESSAGE
+                );
 
-                //Zahaszuj uzyskane hasło
-                old_password = hashString(old_password);
+                //Jeśli operację anulowano - przerwij metodę. W innym przypadku zahaszuj fb
+                if(Objects.equals(security_phrase, null)) return;
+                security_phrase = hashString(security_phrase);
 
-                //Jeśli uzyskane hasło zgadza się z obecnie przechowywanym w aplikacji hasłem
-                if (Objects.equals(password, old_password)) {
-
-                    //Wyświetl komunikat proszący użytkownika o podanie nowego hasła
-                    String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
-
-                    //Zahaszuj uzyskany wynik
-                    new_password = hashString(new_password);
-
-                    //Jeśli podane hasło jest równe obecnemu hasłu
-                    if (new_password.equals(old_password)) {
-
-                        //Wyświetl komunikat o tym fakcie
-                        JOptionPane.showMessageDialog(Main.main_frame, "Hasło nie może być takie same jak poprzednie", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
-
-                    }
-
-                    //Jeśli nie jest równe
-                    else {
-
-                        //Wyświetl komunikat proszący użytkownika o ponowne wprowadzenie nowego hasła
-                        String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
-
-                        //Zahaszuj uzyskany wynik
-                        new_password_retype = hashString(new_password_retype);
-
-                        //Jeśli ponownie wprowadzone hasło nie zgadza się z poprzednio wpisanym
-                        if (!Objects.equals(new_password, new_password_retype)) {
-
-                            //Wyświetl komunikat o tym fakcie
-                            JOptionPane.showMessageDialog(Main.main_frame, "Hasła są różne", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
-                        }
-
-                        //Jeśli są równe
-                        else {
-
-                            //Ustaw nowe hasło
-                            password = new_password;
-
-                            //Wyświetl komunikat o powodzeniu operacji
-                            JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie zmieniono hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
-
-                            //Przeładuj aplikację
-                            Main.reloadApp(true);
-                        }
-                    }
-                    //Jeśli wprowadzono błędne obecne hasło
-                } else {
+                //Jeśli wprowadzona przez użytkownika fb nie zgadza się z wartością w ustawieniach
+                if(!Objects.equals(settings.get("security_phrase"), security_phrase)){
 
                     //Wyświetl o tym komunikat
-                    JOptionPane.showMessageDialog(Main.main_frame, "Błędne hasło", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.main_frame, "Błędna fraza bezpieczeństwa", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
 
+                //Wyświetl komunikat proszący użytkownika o podanie nowego hasła
+                String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+
+                //Jeśli użytkownik anulował operację - przerwij metodę. W innym przypadku zahaszuj uzyskany wynik
+                new_password = hashString(new_password);
+
+                //Jeśli podane hasło jest równe obecnemu hasłu
+                if (new_password.equals(old_password)) {
+
+                    //Wyświetl komunikat o tym fakcie
+                    JOptionPane.showMessageDialog(Main.main_frame, "Hasło nie może być takie same jak poprzednie", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+
+                }
+
+                //Jeśli nie jest równe
+                else {
+
+                    //Wyświetl komunikat proszący użytkownika o ponowne wprowadzenie nowego hasła
+                    String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
+
+                    //Jeśli anulowano operację - przerwij metodę.W innym przypadku zahaszuj uzyskany wynik
+                    if(Objects.equals(new_password_retype, null)) return;
+                    new_password_retype = hashString(new_password_retype);
+
+                    //Jeśli ponownie wprowadzone hasło nie zgadza się z poprzednio wpisanym
+                    if (!Objects.equals(new_password, new_password_retype)) {
+
+                        //Wyświetl komunikat o tym fakcie
+                        JOptionPane.showMessageDialog(Main.main_frame, "Hasła są różne", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    //Jeśli są równe
+                    else {
+
+                        //Ustaw nowe hasło
+                       settings.replace("access_password", new_password);
+
+                        //Wyświetl komunikat o powodzeniu operacji
+                        JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie zmieniono hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
+
+                        //Przeładuj aplikację
+                        Main.reloadApp(true);
+                    }
+                }
                 //Jeśli wystąpi wyjątek o błędnym algorytmie
             } catch (NoSuchAlgorithmException ex) {
 
@@ -287,16 +298,38 @@ public class Main {
             //Początek kodu z prawdopodobnymi wyjątkami
             try{
 
+                //Wyświetl komunikat z prośbą o podanie frazy bezpieczeństwa
+                String security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj frazę bezpieczeństwa: ",
+                        "Zmiana hasła",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                //Jeśli anulowano operację - przerwij metodę. W innym przypadku zahaszuj frazę bezpieczeństwa.
+                if(Objects.equals(security_phrase, null)) return;
+                security_phrase = hashString(security_phrase);
+
+                //Jeśli wprowadzona fb nie zgadza się z wartością w ustawieniach aplikacji
+                if(!Objects.equals(settings.get("security_phrase"), security_phrase)){
+
+                    //Wyświetl o tym komunikat i przerwij metodę
+                    JOptionPane.showMessageDialog(Main.main_frame, "Błędna fraza bezpieczeństwa", "Zmiana hasła", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 //Wyświetl okno, w którym użytkownik ma wpisać swoje hasło
                 String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
 
-                //Zahaszuj je
+                //Jeśli anulowano operację - przerwij metodę. W innym przypadku zahaszuj nowe hasło
+                if(Objects.equals(new_password, null)) return;
                 new_password = hashString(new_password);
 
                 //Wyświetl okno, w którym użytkownik ma ponownie wpisać swoje hasło
                 String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
 
-                //Zahaszuj i to hasło
+                //Jeśli anulowano operację - przerwij metodę. W innym przypadku zahaszuj i to hasło
+                if(Objects.equals(new_password_retype, null)) return;
                 new_password_retype = hashString(new_password_retype);
 
                 //Jeśli obydwa hasze się nie zgadzają
@@ -309,7 +342,7 @@ public class Main {
                 } else {
 
                     //Przypisz podaną wartość hasła
-                    password = new_password;
+                    settings.put("access_password",new_password);
 
                     //Wyświetl komunikat o powodzeniu akcji
                     JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie dodano hasło", "Zmiana hasła", JOptionPane.INFORMATION_MESSAGE);
@@ -322,6 +355,138 @@ public class Main {
 
                     //Przekaż wiadomość z błędu do konsoli
                     System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Wyświetla okno kontekstowe, w którym pozwala użytkownikowi na zmianę obecnej frazy bezpieczeństwa.
+     * <p>Sprawdza również, czy:</p>
+     * <ul>
+     * <li>Fraza bezpieczeństwa jest ustawiona (jeśli nie, pozwala ją ustawić)</li>
+     * <li>Czy użytkownik zna obecną frazę</li>
+     * <li>Czy użytkownik nie próbuje ustawić tej samej frazy bezpieczeństwa co obecnie</li>
+     * <li>Czy użytkownik na pewno wprowadził prawidłowo zamierzoną nową frazę</li>
+     * </ul>
+     */
+    public static void changeSecurityPhrase(){
+
+        String old_sf = settings.get("security_phrase");
+
+        if(old_sf != null){
+            try{
+                String security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj frazę bezpieczeństwa: ",
+                        "Zmiana frazy bezpieczeństwa",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if(Objects.equals(security_phrase, null)) return;
+                security_phrase = hashString(security_phrase);
+
+                if(!Objects.equals(old_sf, security_phrase)){
+
+                    //Wyświetl o tym komunikat
+                    JOptionPane.showMessageDialog(Main.main_frame, "Błędna fraza bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
+                }
+
+                else {
+
+                    String new_security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj nową frazę bezpieczeństwa: ",
+                        "Zmiana frazy bezpieczeństwa",
+                        JOptionPane.QUESTION_MESSAGE
+                    );
+
+                    if(Objects.equals(new_security_phrase, null)) return;
+                    new_security_phrase = hashString(new_security_phrase);
+
+                    if(Objects.equals(new_security_phrase, old_sf)){
+
+                        //Wyświetl o tym komunikat
+                        JOptionPane.showMessageDialog(Main.main_frame, "Podano tą samą frazę bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    else{
+
+                        String retype_security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj jeszcze raz nową frazę bezpieczeństwa: ",
+                        "Zmiana frazy bezpieczeństwa",
+                        JOptionPane.QUESTION_MESSAGE
+                    );
+
+                        if(Objects.equals(retype_security_phrase, null)) return;
+                        retype_security_phrase = hashString(retype_security_phrase);
+
+                        if(!Objects.equals(new_security_phrase, retype_security_phrase)){
+
+                            //Wyświetl o tym komunikat
+                            JOptionPane.showMessageDialog(Main.main_frame, "Frazy bezpieczeństwa nie zgadzają się", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
+                        }
+
+                        else{
+
+                            settings.replace("security_phrase", new_security_phrase);
+
+                            //Wyświetl komunikat o powodzeniu operacji
+                            JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie zmieniono frazę bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(Main.main_frame, "Lepiej zapisać ją gdzieś albo mocno zapamiętać. Bez niej nie ma możliwości zmiany hasła ;3");
+                        }
+                    }
+                }
+            }
+
+            catch (NoSuchAlgorithmException ex){
+
+                //Przekaż wiadomość z błędu do konsoli
+                System.out.println(ex.getMessage());
+            }
+        }
+
+        else {
+
+            try {
+                String new_security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj nową frazę bezpieczeństwa: ",
+                        "Zmiana frazy bezpieczeństwa",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if(Objects.equals(new_security_phrase, null)) return;
+                new_security_phrase = hashString(new_security_phrase);
+
+                String retype_security_phrase = JOptionPane.showInputDialog(
+                        main_frame,
+                        "Podaj jeszcze raz nową frazę bezpieczeństwa: ",
+                        "Zmiana frazy bezpieczeństwa",
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if(Objects.equals(retype_security_phrase, null)) return;
+                retype_security_phrase = hashString(retype_security_phrase);
+
+                if (!Objects.equals(new_security_phrase, retype_security_phrase)) {
+
+                    //Wyświetl o tym komunikat
+                    JOptionPane.showMessageDialog(Main.main_frame, "Frazy bezpieczeństwa są różne", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
+                } else {
+
+                    settings.put("security_phrase", new_security_phrase);
+
+                    //Wyświetl komunikat o powodzeniu operacji
+                    JOptionPane.showMessageDialog(Main.main_frame, "Pomyślnie dodano frazę bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(Main.main_frame, "Lepiej zapisać ją gdzieś albo mocno zapamiętać. Bez niej nie ma możliwości zmiany hasła ;3");
+                }
+            }
+
+            catch (NoSuchAlgorithmException ex){
+
+                //Przekaż wiadomość z błędu do konsoli
+                System.out.println(ex.getMessage());
             }
         }
     }
@@ -348,6 +513,17 @@ public class Main {
             noteList = new NoteList(new Note[0], NoteList.FULL);
             readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
 
+            //Stwórz kolekcję ustawień i uzupełnij ją danymi generycznymi
+            settings = new HashMap<>();
+            settings.put("default_path","");
+            settings.put("auto_save","false");
+            settings.put("access_password", null);
+            settings.put("security_phrase", null);
+            settings.put("show_system_uname","false");
+
+            //Przypisz wartość obecnej kolekcji ustawień do kolekcji ustawień w historii
+            previous_settings = new HashMap<>(settings);
+
             //Początek kodu z ewentualnymi wyjątkami
             try{
 
@@ -361,6 +537,27 @@ public class Main {
                             "Pierwsze uruchomienie",
                             JOptionPane.INFORMATION_MESSAGE
                     );
+
+                    if(settings.get("access_password") == null){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
+                                        "udzielony dopiero po zdefiniowaniu hasła.",
+                                "Brak zdefiniowanego hasła dostępowego",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    }
+
+                    if(settings.get("security_phrase") == null){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
+                                "Brak zdefiniowanej frazy bezpieczeństwa",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+
+                        while(settings.get("security_phrase") == null) changeSecurityPhrase();
+                    }
                 }
 
                 //Jeśli wystąpi wyjątek związany z operacjami I/O
@@ -382,6 +579,9 @@ public class Main {
             noteList = new NoteList(new Note[0], NoteList.FULL);
             readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
 
+            //Stwórz instancję kolekcji ustawień
+            settings = new HashMap<>();
+
             //Jeśli plik jest nie do odczytu
             if (!settings_file.canRead()) {
 
@@ -396,6 +596,15 @@ public class Main {
                 //Początek kodu z prawdopodobnymi wyjątkami
                 try {
 
+                    //Umieść wartości generyczne w kolekcji ustawień
+                    settings.put("default_path","");
+                    settings.put("auto_save","false");
+                    settings.put("access_password", null);
+                    settings.put("security_phrase", null);
+                    settings.put("show_system_uname","false");
+
+                    previous_settings = new HashMap<>(settings);
+
                     //Jeśli utworzenie pliku powiodło się
                     if(settings_file.createNewFile()){
 
@@ -406,6 +615,27 @@ public class Main {
                                 "Odczyt ustawień",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
+                    }
+
+                    if(settings.get("access_password") == null){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
+                                        "udzielony dopiero po zdefiniowaniu hasła.",
+                                "Brak zdefiniowanego hasła dostępowego",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    }
+
+                    if(settings.get("security_phrase") == null){
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
+                                "Brak zdefiniowanej frazy bezpieczeństwa",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+
+                        while(settings.get("security_phrase") == null) changeSecurityPhrase();
                     }
 
                     //Jeśli wystąpi wyjątek związany z operacjami IO
@@ -431,15 +661,20 @@ public class Main {
                     Scanner fs = new Scanner(fr);
 
                     //Jeśli plik nie zawiera pustych linijek
-                    if (fs.hasNextLine()) {
+                    while (fs.hasNextLine()) {
 
-                        //Zwróć odczytaną ścieżkę
-                        default_path = fs.nextLine();
-                        previous_default_path = default_path;
+                        //Odczytaj linię danych z pliku, podziel je na klucz oraz wartość ustawień w miejscu wystąpienia dwuznaku "::"
+                        String read_line = fs.nextLine();
+                        String[] kv_pair = read_line.split("(::)");
+
+                        //Przypisz wartość ustawienia do klucza odczytanego z linii danych z pliku
+                        settings.put(kv_pair[0], kv_pair.length == 2 ? kv_pair[1] : null);
                     }
 
+                    previous_settings = new HashMap<>(settings);
+
                     //Jeśli odczytana ścieżka jest pusta
-                    if(default_path.equals("")){
+                    if(Objects.equals(settings.get("default_path"), null)){
 
                         //Wyświetl komunikat o tym fakcie
                         JOptionPane.showMessageDialog(
@@ -448,11 +683,34 @@ public class Main {
                                 "Wczytywanie domyślnego pliku notatek",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
+
+                        //Wyświetl komunikat o niezdefiniowanym haśle5
+                        if(settings.get("access_password") == null){
+                            JOptionPane.showMessageDialog(
+                                    main_frame,
+                                  "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
+                                            "udzielony dopiero po zdefiniowaniu hasła.",
+                                    "Brak zdefiniowanego hasła dostępowego",
+                                    JOptionPane.INFORMATION_MESSAGE
+                            );
+                        }
+
+                        //Wyświetl komunikat o braku frazy bezpieczeństwa oraz rozpocznij jej proces definiowania
+                        if(settings.get("security_phrase") == null){
+                            JOptionPane.showMessageDialog(
+                                    main_frame,
+                                    "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
+                                    "Brak zdefiniowanej frazy bezpieczeństwa",
+                                    JOptionPane.INFORMATION_MESSAGE
+                            );
+
+                            while(settings.get("security_phrase") == null) changeSecurityPhrase();
+                        }
                         return;
                     }
 
                     //Jeśli pod odczytaną ścieżką nie ma żadnego pliku
-                    if(!new File(default_path).exists()){
+                    if(!new File(settings.get("default_path")).exists()){
 
                         //Wyświetl komunikat o tym fakcie
                         JOptionPane.showMessageDialog(
@@ -462,12 +720,35 @@ public class Main {
                                 JOptionPane.ERROR_MESSAGE
                         );
 
+                        //Wyświetl komunikat z informacją o braku zdefiniowanego hasła
+                        if(settings.get("access_password") == null){
+                            JOptionPane.showMessageDialog(
+                                    main_frame,
+                                  "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
+                                            "udzielony dopiero po zdefiniowaniu hasła.",
+                                    "Brak zdefiniowanego hasła dostępowego",
+                                    JOptionPane.INFORMATION_MESSAGE
+                            );
+                        }
+
+                        //Wyświetl komunikat o braku zdefiniowane frazy bezpieczeństwa oraz rozpocznij proces jej definiowania
+                        if(settings.get("security_phrase") == null){
+                            JOptionPane.showMessageDialog(
+                                    main_frame,
+                                    "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
+                                    "Brak zdefiniowanej frazy bezpieczeństwa",
+                                    JOptionPane.INFORMATION_MESSAGE
+                            );
+
+                            while(settings.get("security_phrase") == null) changeSecurityPhrase();
+                        }
+
                         //Zakończ działanie metody
                         return;
                     }
 
                     //Utwórz instancję klasy obsługującej pliki z notatkami
-                    fh = new FileHandler(new File(default_path));
+                    fh = new FileHandler(new File(settings.get("default_path")));
 
                     //Jeśli notatki na tej liście są obecne, przypisz je do buforowej zmiennej. Jeśli nie, utwórz pustą listę
                     NoteList parsed_notes = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
@@ -475,7 +756,6 @@ public class Main {
                     //Jeśli buforowa lista ma długość większą niż jeden, uzupełnij obydwie listy aplikacji jej danymi
                     noteList = parsed_notes.getListLength() > 0 ? parsed_notes : new NoteList(new Note[0], NoteList.FULL);
                     readNoteList = parsed_notes.getListLength() > 0 ? new NoteList(noteList.getNoteList(), NoteList.FULL) : readNoteList;
-
                 }
 
                 //Jeśli wystąpi wyjątek związany z operacjami I/O
@@ -489,6 +769,8 @@ public class Main {
                             JOptionPane.ERROR_MESSAGE
                     );
                 }
+
+
             }
         }
     }
@@ -497,6 +779,47 @@ public class Main {
      * Sprawdza przed zamknięciem lekcji, czy są jakieś niezapisane dane. Jeśli są, pyta użytkownika, czy nie chce ich zapisać. Następnie zamyka aplikację.
      */
     public static void handleClose(){
+
+        //Jeśli okno edycji notatek istnieje
+            if(en != null){
+
+                //Jeśli auto zapis nie jest aktywny
+               if(Objects.equals(settings.get("auto_save"),"false")){
+                   if(en.hasNoteChanged()) {
+                       //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
+                       int i = JOptionPane.showConfirmDialog(
+                               main_frame,
+                               "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
+                               "Edytowana notatka niezapisana",
+                               JOptionPane.YES_NO_CANCEL_OPTION,
+                               JOptionPane.QUESTION_MESSAGE
+                       );
+
+                       //Jeśli wola została potwierdzona, zapisz notatkę
+                       if (i == JOptionPane.YES_OPTION) {
+                           en.forceSave();
+                       }
+
+                       //Jeśli nie wyrażono takiej woli, skasuj notatkę
+                       else if (i == JOptionPane.NO_OPTION) {
+                           en.forceDelete();
+                       }
+
+                       //Jeśli anulowano, przerwij działanie funkcji
+                       else {
+                           return;
+                       }
+                   }
+               }
+
+               //Jeśli auto zapis jest aktywny i notatka uległa zmianie,
+               // zapisz notatkę
+               else{
+                   if(en.hasNoteChanged()){
+                       en.forceSave();
+                   } else en.forceDelete();
+               }
+            }
 
         //Jeśli lista notatek i lista notatek odczytanych z ostatniego pliku nie są równe, ergo doszło do zmian
         if(!NoteList.areNoteListsEqual(noteList, readNoteList)){
@@ -539,12 +862,63 @@ public class Main {
                         //Skonwertuj listę notatek do formy dokumentu XML i zapisz je w pliku przechowywanym w obiekcie
                         fh.parseToFile(noteList);
 
-                        //Stwórz nową instancję klasy zapisującej do pliku i podaj jej ścieżkę do pliku konfiguracyjnego
-                        FileWriter settings_writer = new FileWriter(settings_file);
 
-                        //Zapisz w niej ścieżkę do domyślnego pliku z notatkami
-                        settings_writer.write(default_path);
-                        settings_writer.close();
+                        if(!Objects.equals(previous_settings, settings)){
+
+                            //Początek kodu z ewentualnymi wyjątkami
+                            try {
+                                //Stwórz instancję klasy zapisującej do pliku z ustawieniami
+                                FileWriter settings_writer = new FileWriter(settings_file);
+
+                                //Dla każdej pary klucz-wartość w kolekcji ustawień
+                                settings.forEach((key, value) -> {
+
+                                    //Początek kodu z prawdopodobnymi wyjątkami
+                                    try {
+
+                                        //Zapisz do pliku ustawień pojedynczą parę danych, oddzieloną znakiem "::"
+                                        settings_writer.write(String.format("%s::%s\n", key, value));
+                                    }
+
+                                    //Jeśli wystąpi wyjątek związany z operacjami I/O
+                                    catch (IOException ex){
+
+                                        //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                                        JOptionPane.showMessageDialog(
+                                        main_frame,
+                                        ex.getMessage(),
+                                            "Błąd zapisu pliku domyślnego",
+                                        JOptionPane.ERROR_MESSAGE
+                                        );
+                                    }
+                                });
+
+                                //Zamknij plik
+                                settings_writer.close();
+                            }
+
+                            //Jeśli złapany zostanie wyjątek związany z operacjami I/O
+                            catch(IOException ex){
+
+                                //Wyświetl komunikat z wiadomością błędu
+                                JOptionPane.showMessageDialog(
+                                        main_frame,
+                                        ex.getMessage(),
+                                        "Zapisywanie pliku domyślnego",
+                                        JOptionPane.ERROR_MESSAGE
+                                );
+
+                                //Wyświetl komunikat o nieudanym zapisie ścieżki domyślnego pliku z notatkami
+                                JOptionPane.showMessageDialog(
+                                        main_frame,
+                                        "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
+                                                "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
+                                               "pliku z notatkami.",
+                                    "Zapisywanie pliku domyślnego",
+                                        JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        }
                     }
 
                     //Jeśli wystąpi wyjątek nieudanego zapisu do pliku
@@ -562,34 +936,12 @@ public class Main {
                         return;
                     }
 
-                    //Jeśli wystąpi wyjątek związany z operacjami I/O
-                    catch(IOException ex) {
-
-                        //Wyświetl komunikat z wiadomością błędu
-                        JOptionPane.showMessageDialog(
-                                main_frame,
-                                ex.getMessage(),
-                                "Zapisywanie pliku domyślnego",
-                                JOptionPane.ERROR_MESSAGE
-                        );
-
-                        //Wyświetl komunikat o nieudanym zapisie ścieżki domyślnego pliku z notatkami
-                        JOptionPane.showMessageDialog(
-                                main_frame,
-                                "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
-                                        "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
-                                        "pliku z notatkami.",
-                                "Zapisywanie pliku domyślnego",
-                                JOptionPane.ERROR_MESSAGE
-                        );
-                    }
-
                     //Wyświetl komunikat o udanym zapisie notatek do pliku
                     JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
                 }
 
                 //Jeśli zmianie uległa domyślna ścieżka pliku z notatkami
-                if(!Objects.equals(previous_default_path, default_path)){
+                if(!Objects.equals(previous_settings, settings)){
 
                     //Początek kodu z ewentualnymi wyjątkami
                     try {
@@ -597,7 +949,19 @@ public class Main {
                         FileWriter settings_writer = new FileWriter(settings_file);
 
                         //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
-                        settings_writer.write(default_path);
+                        settings.forEach((key, value) -> {
+                            try {
+                                settings_writer.write(String.format("%s::%s\n", key, value));
+                            } catch (IOException ex){
+                                //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                                JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Błąd zapisu pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        });
                         settings_writer.close();
                     }
 
@@ -620,8 +984,8 @@ public class Main {
                 //Jeśli zamknięto okno zapisu danych do pliku
             } else if(to_save == JOptionPane.NO_OPTION){
 
-                //Jeśli zmianie uległa domyślna ścieżka pliku z notatkami
-                if(!Objects.equals(previous_default_path, default_path)){
+                //Jeśli zmianie uległa domyślna ścieżka pliku z notatkamiz
+                if(!Objects.equals(previous_settings, settings)){
 
                     //Początek kodu z ewentualnymi wyjątkami
                     try {
@@ -629,7 +993,19 @@ public class Main {
                         FileWriter settings_writer = new FileWriter(settings_file);
 
                         //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
-                        settings_writer.write(default_path);
+                        settings.forEach((key, value) -> {
+                            try {
+                                settings_writer.write(String.format("%s::%s\n", key, value));
+                            } catch (IOException ex){
+                                //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                                JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Błąd zapisu pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        });
                         settings_writer.close();
                     }
 
@@ -654,38 +1030,52 @@ public class Main {
         //Jeśli listy notatek są równe
         else {
 
-            //Początek kodu z prawdopodobnymi wyjątkami
-            try{
+            if(!Objects.equals(previous_settings, settings)){
 
-                //Stwórz instancję klasy zapisującej do pliku i podaj jej ścieżkę do pliku konfiguracyjnego
-                FileWriter settings_writer = new FileWriter(settings_file);
+                    //Początek kodu z ewentualnymi wyjątkami
+                    try {
+                        //Stwórz instancję klasy zapisującej do pliku z ustawieniami
+                        FileWriter settings_writer = new FileWriter(settings_file);
 
-                //Zapisz ścieżkę do domyślnego pliku z notatkami w pliku konfiguracyjnym
-                settings_writer.write(default_path);
-                settings_writer.close();
-            }
+                        //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
+                        settings.forEach((key, value) -> {
+                            try {
+                                settings_writer.write(String.format("%s::%s\n", key, value));
+                            } catch (IOException ex){
+                                //Wyświetl komunikat o błędzie wraz z jego wiadomością
+                                JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Błąd zapisu pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        });
+                        settings_writer.close();
+                    }
 
-            //Jeśli wystąpi wyjątek związany z operacjami I/O
-            catch(IOException ex) {
+                    //Jeśli złapany zostanie wyjątek związany z operacjami I/O
+                    catch(IOException ex){
 
-                //Wyświetl komunikat z wiadomością błędu
-                JOptionPane.showMessageDialog(
-                        main_frame,
-                        ex.getMessage(),
-                        "Zapisywanie pliku domyślnego",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                        //Wyświetl komunikat z wiadomością błędu
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                ex.getMessage(),
+                                "Zapisywanie pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                        );
 
-                //Wyświetl komunikat o nieudanym zapisie domyślnej ścieżki do pliku konfiguracyjnego
-                JOptionPane.showMessageDialog(
-                        main_frame,
-                        "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
-                                "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
-                                "pliku z notatkami.",
-                        "Zapisywanie pliku domyślnego",
-                        JOptionPane.ERROR_MESSAGE
-                );
-            }
+                        //Wyświetl komunikat o nieudanym zapisie ścieżki domyślnego pliku z notatkami
+                        JOptionPane.showMessageDialog(
+                                main_frame,
+                                "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
+                                        "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
+                                        "pliku z notatkami.",
+                                "Zapisywanie pliku domyślnego",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                }
 
             //Zakończ działanie aplikacji
             System.exit(0);
@@ -743,35 +1133,41 @@ public class Main {
             if(en != null){
 
                 //Jeśli auto zapis nie jest aktywny
-               if(!auto_save_note){
+               if(Objects.equals(settings.get("auto_save"),"false")){
+                   if(en.hasNoteChanged()) {
+                       //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
+                       int i = JOptionPane.showConfirmDialog(
+                               main_frame,
+                               "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
+                               "Edytowana notatka niezapisana",
+                               JOptionPane.YES_NO_CANCEL_OPTION,
+                               JOptionPane.QUESTION_MESSAGE
+                       );
 
-                   //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
-                   int i = JOptionPane.showConfirmDialog(
-                           main_frame,
-                           "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
-                           "Edytowana notatka niezapisana",
-                           JOptionPane.YES_NO_CANCEL_OPTION,
-                           JOptionPane.QUESTION_MESSAGE
-                   );
+                       //Jeśli wola została potwierdzona, zapisz notatkę
+                       if (i == JOptionPane.YES_OPTION) {
+                           en.forceSave();
+                       }
 
-                   //Jeśli wola została potwierdzona, zapisz notatkę
-                   if(i == JOptionPane.YES_OPTION){
-                       en.forceSave();
-                   }
+                       //Jeśli nie wyrażono takiej woli, skasuj notatkę
+                       else if (i == JOptionPane.NO_OPTION) {
+                           en.forceDelete();
+                       }
 
-                   //Jeśli nie wyrażono takiej woli, skasuj notatkę
-                   else if(i == JOptionPane.NO_OPTION){
-                       en.forceDelete();
-                   }
-
-                   //Jeśli anulowano, przerwij działanie funkcji
-                   else {
-                       return;
+                       //Jeśli anulowano, przerwij działanie funkcji
+                       else {
+                           return;
+                       }
                    }
                }
 
-               //Jeśli auto zapis jest aktywny, zapisz notatkę
-               else en.forceSave();
+               //Jeśli auto zapis jest aktywny i notatka uległa zmianie,
+               // zapisz notatkę
+               else{
+                   if(en.hasNoteChanged()){
+                       en.forceSave();
+                   } else en.forceDelete();
+               }
             }
 
             //Stwórz nową instancję klasy reprezentującej okno wyboru pliku
@@ -784,7 +1180,7 @@ public class Main {
             int i = fc.showOpenDialog(main_frame);
 
             //Jeśli wybrano plik do odczytu
-            if(i==JFileChooser.APPROVE_OPTION){
+            if(i==JFileChooser.APPROVE_OPTION) {
 
                 //Stwórz nową instancję klasy obsługującej operacje na plikach i przypisz jej wybrany w oknie plik
                 fh = new FileHandler(fc.getSelectedFile());
@@ -796,10 +1192,12 @@ public class Main {
                 if (fetched_notes != null) {
 
                     //Jeśli lista notatek nie jest pusta, przypisz do niej wartość listy odczytanej z pliku. Jeśli jest, stwórz nową instancję klasy listy notatek i przypisz jej tę samą wartość
-                    if(noteList != null) noteList.setNoteList(fh.parseDocToNotes().getNoteList()); else noteList = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
+                    if (noteList != null) noteList.setNoteList(fh.parseDocToNotes().getNoteList());
+                    else noteList = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
 
                     //Jeśli lista notatek w historii nie jest pusta, przypisz do niej wartość obecnej listy notatek. Jeśli jest, stwórz nową instancję klasy listy notatek i przypisz jej tę samą wartość
-                    if(readNoteList != null) readNoteList.setNoteList(noteList.getNoteList()); else readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
+                    if (readNoteList != null) readNoteList.setNoteList(noteList.getNoteList());
+                    else readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
 
                     //Przeładuj aplikację
                     Main.reloadApp(true);
@@ -809,17 +1207,17 @@ public class Main {
 
                     //Wyświetl komunikat z zapytaniem o wolę zapisu ścieżki do pliku jako ścieżki domyślnej
                     int save_path_to_default = JOptionPane.showConfirmDialog(
-                        main_frame,
-                        "Czy chcesz zapisać ten plik z notatkami jako plik domyślny?",
-                        "Domyślny plik z notatkami",
-                        JOptionPane.YES_NO_OPTION
+                            main_frame,
+                            "Czy chcesz zapisać ten plik z notatkami jako plik domyślny?",
+                            "Domyślny plik z notatkami",
+                            JOptionPane.YES_NO_OPTION
                     );
 
                     //Jeśli wyrażono taką wolę
-                    if(save_path_to_default == JOptionPane.YES_OPTION){
+                    if (save_path_to_default == JOptionPane.YES_OPTION) {
 
                         //Zapisz tę ścieżkę
-                        default_path = fh.getFile_path();
+                        settings.put("default_path", fh.getFile_path());
 
                         //Wyświetl komunikat z informacją o powodzeniu operacji
                         JOptionPane.showMessageDialog(
@@ -831,17 +1229,24 @@ public class Main {
                     }
                 }
 
-                //Jeśli odczytana lista nie jest pusta oraz hasło jest puste
-                if (fetched_notes != null && password == null){
+                assert fetched_notes != null;
+                for (Note note : fetched_notes.getNoteList()) {
+                    if (note.getHidden() && settings.get("access_password") == null) {
+                        int will_change_password = JOptionPane.showConfirmDialog(
+                                main_frame,
+                                "Pobrana lista notatek zawiera notatki ukryte. Są one niedostępne ze względu na brak " +
+                                        "zdefiniowanego hasła. Czy chcesz teraz zdefiniować hasło dostępu?",
+                                "Dostęp do notatek ukrytych zablokowany",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE
+                        );
 
-                    //Wyświetl komunikat z zapytaniem o wolę ustawienia w danej chwili hasła
-                    int password_doChange = JOptionPane.showConfirmDialog(main_frame, "Wygląda na to że hasło nie zostało ustawione. Czy chcesz je ustawić?", "Brak hasła", JOptionPane.YES_NO_OPTION);
-
-                    //Jeśli użytkownik wyraża taką wolę, wywołaj metodę zmieniającą hasło
-                    if(password_doChange == JOptionPane.YES_OPTION){
-                        changePassword();
+                        if (will_change_password == JOptionPane.YES_OPTION) {
+                            changePassword();
+                        }
                     }
                 }
+
             }
         });
 
@@ -861,35 +1266,41 @@ public class Main {
             if(en != null){
 
                 //Jeśli auto zapis nie jest aktywny
-               if(!auto_save_note){
+               if(Objects.equals(settings.get("auto_save"),"false")){
+                   if(en.hasNoteChanged()) {
+                       //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
+                       int i = JOptionPane.showConfirmDialog(
+                               main_frame,
+                               "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
+                               "Edytowana notatka niezapisana",
+                               JOptionPane.YES_NO_CANCEL_OPTION,
+                               JOptionPane.QUESTION_MESSAGE
+                       );
 
-                   //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
-                   int i = JOptionPane.showConfirmDialog(
-                           main_frame,
-                           "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
-                           "Edytowana notatka niezapisana",
-                           JOptionPane.YES_NO_CANCEL_OPTION,
-                           JOptionPane.QUESTION_MESSAGE
-                   );
+                       //Jeśli wola została potwierdzona, zapisz notatkę
+                       if (i == JOptionPane.YES_OPTION) {
+                           en.forceSave();
+                       }
 
-                   //Jeśli wola została potwierdzona, zapisz notatkę
-                   if(i == JOptionPane.YES_OPTION){
-                       en.forceSave();
-                   }
+                       //Jeśli nie wyrażono takiej woli, skasuj notatkę
+                       else if (i == JOptionPane.NO_OPTION) {
+                           en.forceDelete();
+                       }
 
-                   //Jeśli nie wyrażono takiej woli, skasuj notatkę
-                   else if(i == JOptionPane.NO_OPTION){
-                       en.forceDelete();
-                   }
-
-                   //Jeśli anulowano, przerwij działanie funkcji
-                   else {
-                       return;
+                       //Jeśli anulowano, przerwij działanie funkcji
+                       else {
+                           return;
+                       }
                    }
                }
 
-               //Jeśli auto zapis jest aktywny, zapisz notatkę
-               else en.forceSave();
+               //Jeśli auto zapis jest aktywny i notatka uległa zmianie,
+               // zapisz notatkę
+               else{
+                   if(en.hasNoteChanged()){
+                       en.forceSave();
+                   } else en.forceDelete();
+               }
             }
 
             //Stwórz obiekt reprezentujący okno wyboru pliku
@@ -917,12 +1328,6 @@ public class Main {
                     // Jeśli jest, stwórz nową instancję klasy listy notatek i przypisz jej wartość obecnej listy notatek
                     if(readNoteList != null) readNoteList.setNoteList(noteList.getNoteList()); else readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
 
-                    //Stwórz instancję klasy zapisującej do pliku z ustawieniami
-                    FileWriter settings_writer = new FileWriter(settings_file);
-
-                    //Zapisz informacje o domyślnej ścieżce pliku i zamknij plik
-                    settings_writer.write(default_path);
-                    settings_writer.close();
                 }
 
                 //Jeśli wystąpi wyjątek nieudanego zapisu do pliku
@@ -938,25 +1343,6 @@ public class Main {
                     return;
                 }
 
-                //Jeśli wystąpi wyjątek związany z operacjami I/O
-                catch(IOException ex) {
-
-                    //Wyświetl komunikat z wiadomością błędu oraz informacją o braku możliwości odczytu domyślnego pliku przy ponownym uruchomieniu aplikacji
-                    JOptionPane.showMessageDialog(
-                            main_frame,
-                            ex.getMessage(),
-                            "Zapisywanie pliku domyślnego",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    JOptionPane.showMessageDialog(
-                            main_frame,
-                            "Doszło do błędu w trakcie zapisu domyślnego pliku notatek. " +
-                                    "Przy następnym uruchomieniu konieczne będzie ręczne załadowanie" +
-                                    "pliku z notatkami.",
-                            "Zapisywanie pliku domyślnego",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                }
 
                 //Wyświetl komunikat o prawidłowym wykonaniu operacji
                 JOptionPane.showMessageDialog(main_frame, "Pomyślnie zapisano notatki do pliku", "Zapisywanie pliku", JOptionPane.INFORMATION_MESSAGE);
@@ -975,17 +1361,35 @@ public class Main {
             //Załóż filtr rozszerzeń na tę instancję. Filtr ma pokazywać tylko pliki XML
             fc.setFileFilter(new FileNameExtensionFilter("Pliki XML","xml"));
 
-            //Stwórz nową instancję klasy reprezentującej otwarty plik w oknie
-            File new_default = fc.getSelectedFile();
+           //Wyświetl okno wyboru pliku
+            int i = fc.showOpenDialog(main_frame);
 
-            //Odczytaj ścieżkę dostępu do tego pliku i zapisz ją
-            default_path = new_default.getPath();
+            //Jeśli wybrano plik
+            if(i == JFileChooser.APPROVE_OPTION) {
 
-            //Wyświetl komunikat o powodzeniu operacji
-            JOptionPane.showMessageDialog(main_frame,
-                    "Zapisano nowy domyślny plik",
-                    "Zapisywanie domyślnego pliku",
-                    JOptionPane.INFORMATION_MESSAGE);
+                //Stwórz nową instancję klasy reprezentującej otwarty plik w oknie
+                File new_default = fc.getSelectedFile();
+
+                //Odczytaj ścieżkę dostępu do tego pliku i zapisz ją
+                settings.replace("default_path", new_default.getPath());
+
+                //Wyświetl komunikat o powodzeniu operacji
+                JOptionPane.showMessageDialog(main_frame,
+                        "Zapisano nowy domyślny plik",
+                        "Zapisywanie domyślnego pliku",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+
+        JCheckBoxMenuItem show_uname = new JCheckBoxMenuItem("Pokazuj systemową nazwę użytkownika", Objects.equals(settings.get("show_system_uname"), "true"));
+        show_uname.addActionListener(e -> {
+            settings.replace("show_system_uname", show_uname.isSelected() ? "true" : "false");
+            String temp = current_window;
+            System.out.println(current_window);
+            hm = new HomeMenu();
+            current_window = temp;
+            reloadApp(false);
         });
 
         //Stwórz pozycję w menu służącą do wywołania metody odpowiedzialnej za wyjście z aplikacji
@@ -1000,7 +1404,7 @@ public class Main {
 
         //Dodaj wszystkie pozycje do menu
         file.add(open); file.add(save); file.add(new JSeparator(JSeparator.HORIZONTAL)); file.add(select_default);
-        file.add(new JSeparator(JSeparator.HORIZONTAL)); file.add(exit);
+        file.add(new JSeparator(JSeparator.HORIZONTAL)); file.add(show_uname); file.add(new JSeparator(JSeparator.HORIZONTAL)); file.add(exit);
 
         //Stwórz menu opcji notatek
         JMenu notes = new JMenu("Notatki");
@@ -1016,15 +1420,16 @@ public class Main {
         JMenuItem sort_by_completion = new JMenuItem("wg stopnia ukończenia");
 
         //Stwórz pozycję w menu będącą check-boxem definiującym kolejność sortowania
-        JCheckBoxMenuItem sort_descending = new JCheckBoxMenuItem("Sortuj rosnąco", true);
+        JCheckBoxMenuItem sort_desc = new JCheckBoxMenuItem("Sortuj malejąco", true);
 
         //Dodaj logikę do pozycji sortowania. Przypisz do każdej pozycji metodę sortującą listę notatek z innym wywoływanym trybem.
         //Następnie przeładuj aplikację wraz z listą notatek.
-        sort_by_createdate.addActionListener(e -> { noteList.sortNote(NoteList.BY_CREATE_DATE, sort_descending.getState()); reloadApp(true); });
-        sort_by_moddate.addActionListener(e -> { noteList.sortNote(NoteList.BY_MOD_DATE, sort_descending.getState()); reloadApp(true); });
-        sort_by_label.addActionListener(e -> { noteList.sortNote(NoteList.BY_LABEL, sort_descending.getState()); reloadApp(true); });
-        sort_by_type.addActionListener(e -> { noteList.sortNote(NoteList.BY_TYPE, sort_descending.getState()); reloadApp(true); });
-        sort_by_completion.addActionListener(e -> { noteList.sortNote(NoteList.BY_COMPLETION, sort_descending.getState()); reloadApp(true); });
+        sort_by_createdate.addActionListener(e -> { sort_type = NoteList.BY_CREATE_DATE; sort_descending = sort_desc.getState(); reloadApp(true); });
+        sort_by_moddate.addActionListener(e -> { sort_type = NoteList.BY_MOD_DATE; sort_descending = sort_desc.getState(); reloadApp(true); });
+        sort_by_label.addActionListener(e -> { sort_type = NoteList.BY_LABEL; sort_descending = sort_desc.getState(); reloadApp(true); });
+        sort_by_type.addActionListener(e -> { sort_type = NoteList.BY_TYPE; sort_descending = sort_desc.getState(); reloadApp(true); });
+        sort_by_completion.addActionListener(e -> { sort_type = NoteList.BY_COMPLETION; sort_descending = sort_desc.getState(); reloadApp(true); });
+        sort_desc.addActionListener(e -> { sort_descending = sort_desc.getState(); reloadApp(true); });
 
         //Wstaw pozycje do menu
         sort_menu.add(sort_by_createdate);
@@ -1032,7 +1437,7 @@ public class Main {
         sort_menu.add(sort_by_label);
         sort_menu.add(sort_by_type);
         sort_menu.add(sort_by_completion);
-        sort_menu.add(sort_descending);
+        sort_menu.add(sort_desc);
 
         //Dodaj pozycję w menu odpowiedzialną za dodanie nowej notatki
         JMenuItem add_note = new JMenuItem("Dodaj notatkę");
@@ -1044,11 +1449,19 @@ public class Main {
             en = new EditNote();
 
             //Odśwież aplikację
-            reloadApp(true);
+            reloadApp(false);
+        });
+
+        JCheckBoxMenuItem auto_save = new JCheckBoxMenuItem("Auto zapis notatek edytowanych");
+        auto_save.setState(Objects.equals(settings.get("auto_save"), "true"));
+
+        auto_save.addActionListener(e -> {
+            if(auto_save.getState()) settings.replace("auto_save", "true");
+            else settings.replace("auto_save", "false");
         });
 
         //Dodaj pozycję dodania nowej notatki oraz menu sortowania do menu notatek
-        notes.add(add_note); notes.add(sort_menu);
+        notes.add(add_note); notes.add(sort_menu); notes.add(auto_save);
 
         //Stwórz menu zabezpieczeń
         JMenu security = new JMenu("Zabezpieczenia");
@@ -1068,53 +1481,55 @@ public class Main {
             //Przechowaj informacje o obecnie otwartym oknie
             String temp_current_window = Main.current_window;
 
-            //Początek kodu z prawdopodobnymi wątkami
-            try{
+            //Jeśli hasło jest puste
+            if(settings.get("access_password") == null){
 
-                //Jeśli hasło jest puste
-                if(password == null){
-
-                    //Wyświetl komunikat o tym fakcie i zakończ działanie metody
-                    JOptionPane.showMessageDialog(main_frame, "Hasło już nie istnieje", "Nie można usunąć hasła", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-
-                //Stwórz kopię obecnej listy notatek
-                NoteList temp = new NoteList(noteList.getNoteList(), NoteList.FULL);
-
-                //Jeśli na liście występuje notatka ukryta, zwróć wyjątek bezpieczeństwa
-                for(int i = 0; i < temp.getListLength(); i++){
-                    if(temp.getNote(i).getHidden()){
-                        throw new SecurityException("Dalej istnieją ukryte notatki. Usuń je lub upublicznij przed usunięciem hasła.");
-                    }
-                }
-
-                //Ustaw hasło na pustą wartość oraz przełącz aplikację w tryb jawny
-                password = null;
-                hidden_mode = false;
-
-                //Ustaw informację o obecnym oknie na przechowaną wartość
-                Main.current_window = temp_current_window;
-
-                //Przeładuj aplikację
-                Main.reloadApp(true);
-
-                //Wyświetl komunikat o powodzeniu operacji
-                JOptionPane.showMessageDialog(main_frame, "Hasło zostało pomyślnie usunięte", "Kasowanie hasła", JOptionPane.INFORMATION_MESSAGE);
-
+                //Wyświetl komunikat o tym fakcie i zakończ działanie metody
+                JOptionPane.showMessageDialog(main_frame, "Hasło już nie istnieje", "Nie można usunąć hasła", JOptionPane.ERROR_MESSAGE);
+                return;
             }
 
-            //Jeśli wystąpi wyjątek bezpieczeństwa
-            catch (SecurityException ex){
 
-                //Wyświetl komunikat z wiadomością błędu
-                JOptionPane.showMessageDialog(main_frame, ex.getMessage(), "Nie można usunąć hasła", JOptionPane.ERROR_MESSAGE);
+            //Stwórz kopię obecnej listy notatek
+            NoteList temp = new NoteList(noteList.getNoteList(), NoteList.FULL);
+
+            //Jeśli na liście występuje notatka ukryta, zwróć wyjątek bezpieczeństwa
+            for(int i = 0; i < temp.getListLength(); i++){
+                if(temp.getNote(i).getHidden()){
+                   int hidden_found = JOptionPane.showConfirmDialog(
+                           main_frame,
+                           "Znaleziono ukryte notatki. Dostęp do nich zostanie utracony po skasowaniu hasła. Kontynuować?",
+                           "Znaleziono ukryte notatki.",
+                           JOptionPane.YES_NO_OPTION,
+                           JOptionPane.QUESTION_MESSAGE
+                   );
+                   if(hidden_found == JOptionPane.YES_OPTION){
+                       break;
+                   } else {
+                       return;
+                   }
+                }
             }
+
+            //Ustaw hasło na pustą wartość oraz przełącz aplikację w tryb jawny
+            settings.remove("access_password");
+            hidden_mode = false;
+
+            //Ustaw informację o obecnym oknie na przechowaną wartość
+            Main.current_window = temp_current_window;
+
+            //Przeładuj aplikację
+            Main.reloadApp(true);
+
+            //Wyświetl komunikat o powodzeniu operacji
+            JOptionPane.showMessageDialog(main_frame, "Hasło zostało pomyślnie usunięte", "Kasowanie hasła", JOptionPane.INFORMATION_MESSAGE);
         });
 
+        JMenuItem sf_change = new JMenuItem("Zmień frazę bezpieczeństwa");
+        sf_change.addActionListener(e -> changeSecurityPhrase());
+
         //Dodaj pozycje zmiany i kasowania hasła do menu bezpieczeństwa
-        security.add(password_change); security.add(password_remove);
+        security.add(password_change); security.add(password_remove); security.add(new JSeparator(JSeparator.HORIZONTAL)); security.add(sf_change);
 
 
         //Stwórz menu informacji

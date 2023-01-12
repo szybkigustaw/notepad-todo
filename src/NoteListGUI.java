@@ -304,6 +304,8 @@ public class NoteListGUI extends JPanel{
         //Ustaw stan obecnego okna na okno listy notatek
         Main.current_window = "NoteList";
 
+        notes.sortNote(Main.sort_type, Main.sort_descending);
+
         //Utwórz panel z listą
         JPanel list_window = new JPanel();
         list_window.setLayout(new BoxLayout(list_window, BoxLayout.Y_AXIS));
@@ -368,7 +370,7 @@ public class NoteListGUI extends JPanel{
         go_back.setSize(256, 48);
 
         //Dodaj funkcjonalność do przycisku.
-        go_back.addActionListener(e -> Main.lt.show(Main.rp, "HomeMenu"));
+        go_back.addActionListener(e -> { Main.hm = new HomeMenu(); Main.reloadApp(false); });
 
         //Dodanie przycisku do paska.
         gbc.gridx = 1;
@@ -398,7 +400,7 @@ public class NoteListGUI extends JPanel{
                 pass = Main.hashString(pass);
 
                 //Jeśli hasze się nie zgadzają
-                if (!Objects.equals(pass, Main.password)) {
+                if (!Objects.equals(pass, Main.settings.get("access_password"))) {
 
                     //Wyświetl okno z informacją o błędnym haśle
                     JOptionPane.showMessageDialog(Main.rp, "Błędne hasło!");
@@ -428,7 +430,7 @@ public class NoteListGUI extends JPanel{
         });
 
         //Jeśli hasło jest ustawione
-        if(Main.password != null) {
+        if(Main.settings.get("access_password") != null) {
 
             //Dodaj przycisk do paska.
             gbc.gridx = 4;

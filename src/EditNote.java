@@ -3,6 +3,7 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Date;
 import java.util.Objects;
 import static java.awt.GridBagConstraints.RELATIVE;
 
@@ -20,6 +21,10 @@ public class EditNote extends JPanel {
      * Notatka przechowywana w tym obiekcie
      */
     private final ToDoNote note;
+    /**
+     * Notatka przechowywana w tym obiekcie. Stanowi punkt odniesienia przy sprawdzaniu dokonanych zmian w notatce.
+     */
+    private final ToDoNote read_note;
     /**
      * Wartość domyślna treści zadania
      */
@@ -72,6 +77,15 @@ public class EditNote extends JPanel {
         Main.current_window = prev_window;
         Main.reloadApp(true);
         Main.en = null;
+    }
+
+    /**
+     * Sprawdza, czy notatka została edytowana.
+     * @return Wartość <i>true</i>, jeśli została edytowana.
+     */
+    public boolean hasNoteChanged(){
+        System.out.println(ToDoNote.areNotesEqual(this.read_note, this.note));
+        return !ToDoNote.areNotesEqual(this.read_note, this.note);
     }
 
     /**
@@ -258,6 +272,10 @@ public class EditNote extends JPanel {
         this.note.setTodo(new String[0]);
         this.note.setChecked(new boolean[0]);
 
+        this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
+        this.read_note.setMod_date(this.note.getMod_date());
+        this.read_note.setCreate_date(this.note.getCreate_date());
+        this.read_note.setCompleted(this.note.getCompleted());
 
         //Zdefiniuj wartości domyślne pól tekstowych
         String DEFAULT_LABEL = "Wprowadź etykietę notatki.";
@@ -427,8 +445,8 @@ public class EditNote extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                //Jeśli zadań w notatce jest więcej lub równo jedna, dodaj do panelu etykietę-przycisk kasowania zadań
-                if(note.getTodo().length >= 1) todos.add(remove_todos);
+                //Jeśli zadań w notatce jest mniej niż jedna, dodaj do panelu etykietę-przycisk kasowania zadań
+                if(note.getTodo().length < 1) todos.add(remove_todos);
 
                 //Usuń etykieto-przycisk dodawania notatek
                 todos.remove(alt_todo);
@@ -504,7 +522,7 @@ public class EditNote extends JPanel {
         save.addActionListener(e -> {
 
             //Jeśli notatka ma stan ukryty oraz hasło jest nieustawione
-            if(note.getHidden() && Main.password == null){
+            if(note.getHidden() && Main.settings.get("access_password") == null){
 
                 //Wyświetl o tym informację i zapytaj użytkownika, czy chce ustawić hasło
                 int add_password_now = JOptionPane.showConfirmDialog(Main.main_frame, "Właśnie próbujesz przypisać notatce stan ukryty. " +
@@ -516,18 +534,16 @@ public class EditNote extends JPanel {
                         Main.changePassword();
                     }
 
-                    //Jeśli nie, zablokuj operację zapisu notatki. Notatki ukryte bez hasła dostępowego nie mogą istnieć
-                    if(add_password_now != JOptionPane.YES_OPTION || Main.password == null) {
-                        JOptionPane.showMessageDialog(Main.main_frame, "Zmień stan ukrycia na brak ukrycia i spróbuj ponownie.", "Nie można zapisać notatki.", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
                 }
+
+                this.note.setMod_date(new Date());
 
                 //Dodaj notatkę do listy notatek
                 Main.noteList.addNote(note);
 
                 //Wróć do poprzedniego okna
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(true);
         });
 
@@ -544,11 +560,18 @@ public class EditNote extends JPanel {
         //Dodaj logikę do przycisku
         cancel.addActionListener(e -> {
 
-            //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
-            if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
-            " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
-            JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
+            if(hasNoteChanged()) {
+                //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
+                if (JOptionPane.showConfirmDialog(Main.rp, "Na pewno chcesz odrzucić notatkę?" +
+                                " Stracisz wszystkie zapisane w niej dane.", "Anulowanie tworzenia notatki",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                    Main.current_window = prev_window;
+                    Main.en = null;
+                    Main.reloadApp(false);
+                }
+            } else {
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(false);
             }
         });
@@ -593,6 +616,10 @@ public class EditNote extends JPanel {
         this.note.setTodo(new String[0]);
         this.note.setChecked(new boolean[0]);
 
+        this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
+        this.read_note.setMod_date(this.note.getMod_date());
+        this.read_note.setCreate_date(this.note.getCreate_date());
+        this.read_note.setCompleted(this.note.getCompleted());
 
         //Zdefiniuj wartości domyślne pól tekstowych
         String DEFAULT_LABEL = "Wprowadź etykietę notatki.";
@@ -761,8 +788,8 @@ public class EditNote extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                //Jeśli zadań w notatce jest więcej lub równo jedna, dodaj do panelu etykietę-przycisk kasowania zadań
-                if(note.getTodo().length >= 1) todos.add(remove_todos);
+                //Jeśli zadań w notatce jest mniej niż jedna, dodaj do panelu etykietę-przycisk kasowania zadań
+                if(note.getTodo().length < 1) todos.add(remove_todos);
 
                 //Usuń etykieto-przycisk dodawania notatek
                 todos.remove(alt_todo);
@@ -841,7 +868,7 @@ public class EditNote extends JPanel {
             if(this.note.getType() == Note.TODO_NOTE) this.note.verifyToDoCompletion();
 
             //Jeśli notatka ma stan ukryty oraz hasło jest nieustawione
-            if(note.getHidden() && Main.password == null){
+            if(note.getHidden() && Main.settings.get("access_password") == null){
 
                 //Wyświetl o tym informację i zapytaj użytkownika, czy chce ustawić hasło
                 int add_password_now = JOptionPane.showConfirmDialog(Main.main_frame, "Właśnie próbujesz przypisać notatce stan ukryty. " +
@@ -852,19 +879,16 @@ public class EditNote extends JPanel {
                     if(add_password_now == JOptionPane.YES_OPTION){
                         Main.changePassword();
                     }
-
-                    //Jeśli nie, zablokuj operację zapisu notatki. Notatki ukryte bez hasła dostępowego nie mogą istnieć
-                    if(add_password_now != JOptionPane.YES_OPTION || Main.password == null) {
-                        JOptionPane.showMessageDialog(Main.main_frame, "Zmień stan ukrycia na brak ukrycia i spróbuj ponownie.", "Nie można zapisać notatki.", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
                 }
+
+                this.note.setMod_date(new Date());
 
                 //Dodaj notatkę do listy notatek
                 Main.noteList.setNote(this.note, note_index);
 
                 //Wróć do poprzedniego okna
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(true);
         });
 
@@ -881,11 +905,18 @@ public class EditNote extends JPanel {
         //Dodaj logikę do przycisku
         cancel.addActionListener(e -> {
 
-            //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
-            if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
-            " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
-            JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
+            if(hasNoteChanged()) {
+                //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
+                if (JOptionPane.showConfirmDialog(Main.rp, "Na pewno chcesz odrzucić notatkę?" +
+                                " Stracisz wszystkie zapisane w niej dane.", "Anulowanie tworzenia notatki",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                    Main.current_window = prev_window;
+                    Main.en = null;
+                    Main.reloadApp(false);
+                }
+            } else {
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(false);
             }
         });
@@ -922,6 +953,11 @@ public class EditNote extends JPanel {
         //Stwórz nową notatkę, przypisz jej typ TODO_NOTE
         this.note = loaded_note;
         this.note.setType(Note.TODO_NOTE);
+
+         this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
+         this.read_note.setMod_date(this.note.getMod_date());
+         this.read_note.setCreate_date(this.note.getCreate_date());
+         this.read_note.setCompleted(this.note.getCompleted());
 
         //Zdefiniuj wartości domyślne pól tekstowych
         String DEFAULT_LABEL = "Wprowadź etykietę notatki.";
@@ -1179,7 +1215,7 @@ public class EditNote extends JPanel {
             if(this.note.getType() == Note.TODO_NOTE) this.note.verifyToDoCompletion();
 
             //Jeśli notatka ma stan ukryty oraz hasło jest nieustawione
-            if(note.getHidden() && Main.password == null){
+            if(note.getHidden() && Main.settings.get("access_password") == null){
 
                 //Wyświetl o tym informację i zapytaj użytkownika, czy chce ustawić hasło
                 int add_password_now = JOptionPane.showConfirmDialog(Main.main_frame, "Właśnie próbujesz przypisać notatce stan ukryty. " +
@@ -1191,18 +1227,16 @@ public class EditNote extends JPanel {
                         Main.changePassword();
                     }
 
-                    //Jeśli nie, zablokuj operację zapisu notatki. Notatki ukryte bez hasła dostępowego nie mogą istnieć
-                    if(add_password_now != JOptionPane.YES_OPTION || Main.password == null) {
-                        JOptionPane.showMessageDialog(Main.main_frame, "Zmień stan ukrycia na brak ukrycia i spróbuj ponownie.", "Nie można zapisać notatki.", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
                 }
+
+                this.note.setMod_date(new Date());
 
                 //Dodaj notatkę do listy notatek
                 Main.noteList.setNote(this.note, note_index);
 
                 //Wróć do poprzedniego okna
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(true);
         });
 
@@ -1219,11 +1253,18 @@ public class EditNote extends JPanel {
         //Dodaj logikę do przycisku
         cancel.addActionListener(e -> {
 
-            //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
-            if(JOptionPane.showConfirmDialog(Main.rp,"Na pewno chcesz odrzucić notatkę?" +
-            " Stracisz wszystkie zapisane w niej dane.","Anulowanie tworzenia notatki",
-            JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
+            if(hasNoteChanged()){
+                //Wyświetl informację o możliwej utracie danych, jeśli użytkownik ją zaakceptuje, wróć do poprzedniego okna
+                if (JOptionPane.showConfirmDialog(Main.rp, "Na pewno chcesz odrzucić notatkę?" +
+                                " Stracisz wszystkie zapisane w niej dane.", "Anulowanie tworzenia notatki",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                    Main.current_window = prev_window;
+                    Main.en = null;
+                    Main.reloadApp(false);
+                }
+            } else {
                 Main.current_window = prev_window;
+                Main.en = null;
                 Main.reloadApp(false);
             }
         });
