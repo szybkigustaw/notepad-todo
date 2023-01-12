@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Implementacja ustawienia przełączającego widok w HomeMenu systemowej nazwy użytkownika.&#10;Naprawa zapisu i odczytu ustawień, jeśli mają wartość null.&#10;Naprawa przycisku powrotu do menu głównego z listy notatek, nie zmieniającego informacji o aktualnie wyświetlanym oknie.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-    </list>
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Uzupełnienie dokumentacji" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -48,6 +45,15 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.maddyhome.idea.vim.ui.VimEmulationConfigurable&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="Notatnik-ToDo" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -56,20 +62,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1670573136854</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Teraz panel ReadNote jest świadomy trybu ukrytego (tzn. trybu, w którym po operacji na notatce ma wrócić do listy notatek ukrytych).&#10;Teraz z poziomu panelu ReadNote można ukrywać i upubliczniać notatki.&#10;Naprawiono błąd związany z nieprawidłowym otwieraniem się i usuwaniem notatek.">
-      <created>1671332090017</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1671332090017</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Teraz panel ReadNote jest świadomy trybu ukrytego (tzn. trybu, w którym po operacji na notatce ma wrócić do listy notatek ukrytych).&#10;Teraz z poziomu panelu ReadNote można ukrywać i upubliczniać notatki.&#10;Naprawiono błąd związany z nieprawidłowym otwieraniem się i usuwaniem notatek.">
-      <created>1671332103320</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1671332103320</updated>
     </task>
     <task id="LOCAL-00011" summary="Teraz można dodawać nowe notatki (zarówno zwykłe, jak i listy zadań).&#10;Upublicznienie notatki wymaga podania hasła.&#10;Listy zadań zostały umieszczone w &quot;szybach&quot; ze suwakiem z boku (do przewijania).">
       <created>1671377710847</created>
@@ -400,7 +392,21 @@
       <option name="project" value="LOCAL" />
       <updated>1673216907247</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Poprawka dotycząca okna wyboru domyślnego pliku">
+      <created>1673506993014</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1673506993015</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Uzupełnienie dokumentacji">
+      <created>1673563558580</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1673563558581</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -427,8 +433,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Zapis lokalizacji domyślnego pliku z notatkami do pliku dotfile" />
-    <MESSAGE value="Edycja jednej wiadomości błędu w FileHandler" />
     <MESSAGE value="Dodano menu kontekstowe przy wychodzeniu z aplikacji z niezapisanymi danymi. Dodano metodę porównującą listy notatek do NoteList" />
     <MESSAGE value="Rearanżacja przycisków na pasku menu. Wyprowadzenie zamykania aplikacji do osobnej metody." />
     <MESSAGE value="Re aranżacja przycisków na pasku menu. Wyprowadzenie zamykania aplikacji do osobnej metody." />
@@ -452,7 +456,9 @@
     <MESSAGE value="Dodano notację XML-owską do pliku wyjściowego listy notatek.&#10;Usunięto zbędne wezwania return w metodzie zmiany fb.&#10;Dodano komentarze do metody zmiany fb." />
     <MESSAGE value="Dodano automatyczne sortowanie notatek przy przełączaniu na okno listy notatek." />
     <MESSAGE value="Implementacja ustawienia przełączającego widok w HomeMenu systemowej nazwy użytkownika.&#10;Naprawa zapisu i odczytu ustawień, jeśli mają wartość null.&#10;Naprawa przycisku powrotu do menu głównego z listy notatek, nie zmieniającego informacji o aktualnie wyświetlanym oknie." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementacja ustawienia przełączającego widok w HomeMenu systemowej nazwy użytkownika.&#10;Naprawa zapisu i odczytu ustawień, jeśli mają wartość null.&#10;Naprawa przycisku powrotu do menu głównego z listy notatek, nie zmieniającego informacji o aktualnie wyświetlanym oknie." />
+    <MESSAGE value="Poprawka dotycząca okna wyboru domyślnego pliku" />
+    <MESSAGE value="Uzupełnienie dokumentacji" />
+    <option name="LAST_COMMIT_MESSAGE" value="Uzupełnienie dokumentacji" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

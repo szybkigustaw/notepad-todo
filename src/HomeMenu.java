@@ -9,7 +9,7 @@ import static java.awt.GridBagConstraints.RELATIVE;
  * Reprezentuje panel z menu domowym aplikacji.
  *
  * @author Michał Mikuła
- * @version 1.0
+ * @version 1.1.0
  */
 public class HomeMenu extends JPanel{
 
@@ -27,6 +27,8 @@ public class HomeMenu extends JPanel{
 
         //Stwórz etykietę — nagłówek pierwszy
         String username = System.getProperty("user.name");
+
+        //Wyświetl w zależności od ustawione opcji nazwę systemową użytkownika albo generyczną frazę
         JLabel l1 = new JLabel(String.format("Witaj, %s!",
                 Objects.equals(Main.settings.get("show_system_uname"), "true") ? username : "Użytkowniku"
         ));

@@ -21,7 +21,7 @@ import java.util.Scanner;
  * <p>Wykorzystuje układ kartowy, który umożliwia wyświetlanie każdego okna aplikacji na całej powierzchni ramki.</p>
  * <p>Przechowuje również plik z ustawieniami domyślnymi, z których odczytuje ścieżkę do domyślnego pliku z notatkami.</p>
  *
- * @version 1.0
+ * @version 1.1.0
  * @author Michał Mikuła
  */
 public class Main {
@@ -98,7 +98,14 @@ public class Main {
      */
     static public String current_window = null;
 
+    /**
+     * Reprezentuje obecnie wybrany tryb sortowania notatek na liście.
+     */
     public static int sort_type = NoteList.BY_LABEL;
+
+    /**
+     * Reprezentuje obecnie wybraną kolejność sortowania (wartość <i>true</i> dla kolejności malejącej)
+     */
     public static boolean sort_descending = true;
 
     /**
@@ -371,10 +378,16 @@ public class Main {
      */
     public static void changeSecurityPhrase(){
 
+        //Przechowaj obecną wartość frazy bezpieczeństwa
         String old_sf = settings.get("security_phrase");
 
+        //Jeśli fraza bezpieczeństwa nie jest ustawiona
         if(old_sf != null){
+
+            //Początek kodu z prawdopodobnymi wyjątkami
             try{
+
+                //Wyświetl komunikat z prośbą o podanie frazy bezpieczeństwa
                 String security_phrase = JOptionPane.showInputDialog(
                         main_frame,
                         "Podaj frazę bezpieczeństwa: ",
@@ -382,17 +395,23 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                 );
 
+                //Jeśli użytkownik nie podał fb - przerwij metodę
                 if(Objects.equals(security_phrase, null)) return;
+
+                //Zahaszuj uzyskaną fb
                 security_phrase = hashString(security_phrase);
 
+                //Jeśli aktualna fb nie jest taka sama co podana przez użytkownika
                 if(!Objects.equals(old_sf, security_phrase)){
 
                     //Wyświetl o tym komunikat
                     JOptionPane.showMessageDialog(Main.main_frame, "Błędna fraza bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
                 }
 
+                //W innym przypadku
                 else {
 
+                 //Wyświetl komunikat z prośbą o podanie nowej frazy bezpieczeństwa
                     String new_security_phrase = JOptionPane.showInputDialog(
                         main_frame,
                         "Podaj nową frazę bezpieczeństwa: ",
@@ -400,17 +419,23 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                     );
 
+                    //Jeśli użytkownik nie podał żadnej wartości - przerwij metodę
                     if(Objects.equals(new_security_phrase, null)) return;
+
+                    //Zahaszuj nową fb
                     new_security_phrase = hashString(new_security_phrase);
 
+                    //Jeśli aktualna i nowa fb są równe
                     if(Objects.equals(new_security_phrase, old_sf)){
 
                         //Wyświetl o tym komunikat
                         JOptionPane.showMessageDialog(Main.main_frame, "Podano tą samą frazę bezpieczeństwa", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
                     }
 
+                    //W innym wypadku
                     else{
 
+                        //Wyświetl komunikat z prośbą o podanie ponownie nowe frazy bezpieczeństwa
                         String retype_security_phrase = JOptionPane.showInputDialog(
                         main_frame,
                         "Podaj jeszcze raz nową frazę bezpieczeństwa: ",
@@ -418,17 +443,23 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                     );
 
+                        //jeśli użytkownik nie podał żadnej wartości - przerwij metodę
                         if(Objects.equals(retype_security_phrase, null)) return;
+
+                        //Zahaszuj ponownie wprowadzoną nową fb
                         retype_security_phrase = hashString(retype_security_phrase);
 
+                        //Jeśli obydwie nowe fb nie są sobie równe
                         if(!Objects.equals(new_security_phrase, retype_security_phrase)){
 
                             //Wyświetl o tym komunikat
                             JOptionPane.showMessageDialog(Main.main_frame, "Frazy bezpieczeństwa nie zgadzają się", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
                         }
 
+                        //W innym przypadku
                         else{
 
+                            //Zastąp obecnie zapisaną w ustawieniach wartość fb na nowo wprowadzoną
                             settings.replace("security_phrase", new_security_phrase);
 
                             //Wyświetl komunikat o powodzeniu operacji
@@ -439,6 +470,7 @@ public class Main {
                 }
             }
 
+            //Jeśli wystąpi wyjątek o nieprawidłowym algorytmie
             catch (NoSuchAlgorithmException ex){
 
                 //Przekaż wiadomość z błędu do konsoli
@@ -446,9 +478,13 @@ public class Main {
             }
         }
 
+        //W innym przypadku
         else {
 
+            //Początek kodu z ewentualnymi wyjątkami
             try {
+
+                //Wyświetl komunikat z prośbą o podanie nowej fb
                 String new_security_phrase = JOptionPane.showInputDialog(
                         main_frame,
                         "Podaj nową frazę bezpieczeństwa: ",
@@ -456,9 +492,13 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                 );
 
+                //Jeśli użytkownik nie podał żadnej wartości - przerwij metodę
                 if(Objects.equals(new_security_phrase, null)) return;
+
+                //Zahaszuj nową fb
                 new_security_phrase = hashString(new_security_phrase);
 
+                //Wyświetl komunikat z prośbą o podanie ponownie nowej fb
                 String retype_security_phrase = JOptionPane.showInputDialog(
                         main_frame,
                         "Podaj jeszcze raz nową frazę bezpieczeństwa: ",
@@ -466,15 +506,23 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                 );
 
+                //Jeśli użytkownik nie podał żadnej wartości - przerwij metodę
                 if(Objects.equals(retype_security_phrase, null)) return;
+
+                //Zahaszuj ponownie uzyskaną nową fb
                 retype_security_phrase = hashString(retype_security_phrase);
 
+                //Jeśli nowe fb nie są sobie równe
                 if (!Objects.equals(new_security_phrase, retype_security_phrase)) {
 
                     //Wyświetl o tym komunikat
                     JOptionPane.showMessageDialog(Main.main_frame, "Frazy bezpieczeństwa są różne", "Zmiana frazy bezpieczeństwa", JOptionPane.ERROR_MESSAGE);
-                } else {
+                }
 
+                //W innym przypadku
+                else {
+
+                    //Umieść nową frazę bezpieczeństwa w ustawieniach
                     settings.put("security_phrase", new_security_phrase);
 
                     //Wyświetl komunikat o powodzeniu operacji
@@ -483,6 +531,7 @@ public class Main {
                 }
             }
 
+            //Jeśli wystąpi wyjątek o nieprawidłowym algorytmie
             catch (NoSuchAlgorithmException ex){
 
                 //Przekaż wiadomość z błędu do konsoli
@@ -538,7 +587,10 @@ public class Main {
                             JOptionPane.INFORMATION_MESSAGE
                     );
 
+                    //Jeśli hasło dostępowe jest niezdefiniowane
                     if(settings.get("access_password") == null){
+
+                        //Wyświetl o tym komunikat
                         JOptionPane.showMessageDialog(
                                 main_frame,
                                 "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
@@ -548,7 +600,10 @@ public class Main {
                         );
                     }
 
+                    //Jeśli fraza bezpieczeństwa nie jest zdefiniowana
                     if(settings.get("security_phrase") == null){
+
+                        //Wyświetl o tym komunikat
                         JOptionPane.showMessageDialog(
                                 main_frame,
                                 "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
@@ -556,6 +611,7 @@ public class Main {
                                 JOptionPane.INFORMATION_MESSAGE
                         );
 
+                        //Rozpocznij procedurę tworzenia nowej frazy bezpieczeństwa
                         while(settings.get("security_phrase") == null) changeSecurityPhrase();
                     }
                 }
@@ -617,7 +673,10 @@ public class Main {
                         );
                     }
 
+                    //Jeśli hasło dostępowe nie jest zdefiniowane
                     if(settings.get("access_password") == null){
+
+                        //Wyświetl o tym komunikat
                         JOptionPane.showMessageDialog(
                                 main_frame,
                                 "Nie zdefiniowano żadnego hasła dostępowego. Dostęp do widoku ukrytego oraz ukrywania notatek zostanie " +
@@ -627,7 +686,10 @@ public class Main {
                         );
                     }
 
+                    //Jeśli fraza bezpieczeństwa nie jest ustawiona
                     if(settings.get("security_phrase") == null){
+
+                        //Wyświetl o tym komunikat
                         JOptionPane.showMessageDialog(
                                 main_frame,
                                 "Nie zdefiniowano frazy bezpieczeństwa. Koniecznie potrzeba ustawić ją teraz.",
@@ -635,6 +697,7 @@ public class Main {
                                 JOptionPane.INFORMATION_MESSAGE
                         );
 
+                        //Rozpocznij procedurę tworzenia nowej frazy bezpieczeństwa
                         while(settings.get("security_phrase") == null) changeSecurityPhrase();
                     }
 
@@ -671,6 +734,7 @@ public class Main {
                         settings.put(kv_pair[0], kv_pair.length == 2 ? kv_pair[1] : null);
                     }
 
+                    //Przypisz do zrzutu pierwotnego stanu ustawień aktualną ich wartość
                     previous_settings = new HashMap<>(settings);
 
                     //Jeśli odczytana ścieżka jest pusta
@@ -706,6 +770,8 @@ public class Main {
 
                             while(settings.get("security_phrase") == null) changeSecurityPhrase();
                         }
+
+                        //Zakończ działanie metody
                         return;
                     }
 
@@ -984,7 +1050,7 @@ public class Main {
                 //Jeśli zamknięto okno zapisu danych do pliku
             } else if(to_save == JOptionPane.NO_OPTION){
 
-                //Jeśli zmianie uległa domyślna ścieżka pliku z notatkamiz
+                //Jeśli zmianie uległa domyślna ścieżka pliku z notatkami
                 if(!Objects.equals(previous_settings, settings)){
 
                     //Początek kodu z ewentualnymi wyjątkami
@@ -1030,6 +1096,7 @@ public class Main {
         //Jeśli listy notatek są równe
         else {
 
+            //Jeśli ustawienia uległy zmianie
             if(!Objects.equals(previous_settings, settings)){
 
                     //Początek kodu z ewentualnymi wyjątkami
@@ -1229,7 +1296,11 @@ public class Main {
                     }
                 }
 
+                //Wprowadź aksjomat - pobrane notatki nie są puste
                 assert fetched_notes != null;
+
+                //Dla każdej notatki z listy pobranych notatek sprawdź, czy nie ma wśród nich chociaż jednej ukrytej notatki
+                //Jeśli jest oraz nie zdefiniowano w ustawieniach hasła, wyświetl komunikat o braku do niej dostępu
                 for (Note note : fetched_notes.getNoteList()) {
                     if (note.getHidden() && settings.get("access_password") == null) {
                         int will_change_password = JOptionPane.showConfirmDialog(
@@ -1244,6 +1315,9 @@ public class Main {
                         if (will_change_password == JOptionPane.YES_OPTION) {
                             changePassword();
                         }
+
+                        //Wstrzymaj pętlę
+                        break;
                     }
                 }
 
@@ -1382,7 +1456,11 @@ public class Main {
         });
 
 
+        //Stwórz pozycję w menu typu check-box definiującą wolę wyświetlania systemowej nazwy użytkownika w menu głównym
         JCheckBoxMenuItem show_uname = new JCheckBoxMenuItem("Pokazuj systemową nazwę użytkownika", Objects.equals(settings.get("show_system_uname"), "true"));
+
+        //Dodaj logikę do tej pozycji - zmień stan w ustawieniach na odpowiadający stanowi check-boxa, zaktualizuj menu główne
+        //i przeładuj aplikację
         show_uname.addActionListener(e -> {
             settings.replace("show_system_uname", show_uname.isSelected() ? "true" : "false");
             String temp = current_window;
@@ -1525,7 +1603,10 @@ public class Main {
             JOptionPane.showMessageDialog(main_frame, "Hasło zostało pomyślnie usunięte", "Kasowanie hasła", JOptionPane.INFORMATION_MESSAGE);
         });
 
+        //Dodaj pozycję w menu odpowiedzialną za zmianę frazy bezpieczeństwa
         JMenuItem sf_change = new JMenuItem("Zmień frazę bezpieczeństwa");
+
+        //Dodaj logikę do tej pozycji - rozpocznij proces tworzenia frazy bezpieczeństwa
         sf_change.addActionListener(e -> changeSecurityPhrase());
 
         //Dodaj pozycje zmiany i kasowania hasła do menu bezpieczeństwa
@@ -1559,7 +1640,7 @@ public class Main {
             //Wyświetl komunikat z informacją o wersji aplikacji
             JOptionPane.showMessageDialog(
                     Main.main_frame,
-                    "Notepad-Todo \n\n Wersja 1.0.0 \n Copyright Michał Mikuła 2023",
+                    "Notepad-Todo \n\n Wersja 1.1.0 \n Copyright Michał Mikuła 2023",
                     "O aplikacji",
                     JOptionPane.INFORMATION_MESSAGE
             );

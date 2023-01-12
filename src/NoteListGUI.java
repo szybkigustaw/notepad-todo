@@ -14,7 +14,7 @@ import java.util.Objects;
  * <p>Jeśli hasło nie jest ustawione, nie ma dostępu do listy notatek ukrytych</p>
  *
  * @author Michał Mikuła
- * @version 1.0
+ * @version 1.1.0
  */
 public class NoteListGUI extends JPanel{
 
