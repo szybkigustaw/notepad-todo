@@ -4,7 +4,7 @@ import java.util.*;
 /**
  * Reprezentuje listę notatek. Przyjmuje obiekty klasy Note i jej subklas.
  *
- * @version 1.0
+ * @version 1.1.0
  * @author Michał Mikuła
  */
 public class NoteList {
@@ -180,10 +180,7 @@ public class NoteList {
         Integer[] acceptedIndexes = new Integer[this.getNoteList().length - 1];
         int cnt = 0;
         for(int i = 0; i < this.getNoteList().length; i++){
-            boolean isAccepted = true;
-            if(i == index){
-                isAccepted = false;
-            }
+            boolean isAccepted = i != index;
             if(isAccepted){
                 acceptedIndexes[cnt] = i;
                 cnt++;

@@ -5,17 +5,41 @@ import java.util.Objects;
  * Reprezentuje pojedynczą notatkę.
  * Notatka może być notatką ukrytą, zawiera tekst oraz daty utworzenia/ostatniej modyfikacji;
  *
- * @version 1.0
+ * @version 1.1.0
  * @author Michał Mikuła
  */
 public class Note {
+    /**
+     * Statyczna stała definiująca typ notatki
+     */
     static final int NOTE = 1;
+    /**
+     * Statyczna stała definiująca typ notatki
+     */
     static final int TODO_NOTE = 2;
+    /**
+     * Definiuje treść notatki
+     */
     private String text;
+    /**
+     * Definiuje etykietę notatki
+     */
     private String label;
+    /**
+     * Definiuje datę utworzenia notatki
+     */
     private Date create_date;
+    /**
+     * Definiuje datę ostatniej modyfikacji notatki
+     */
     private Date mod_date;
-    private int type = 1;
+    /**
+     * Definiuje typ notatki
+     */
+    private int type = Note.NOTE;
+    /**
+     * Definiuje stan ukrycia notatki
+     */
     boolean isHidden;
 
     /**

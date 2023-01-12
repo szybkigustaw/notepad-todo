@@ -6,7 +6,7 @@ import java.util.Objects;
  * Notatka może być notatką ukrytą, zawiera tekst oraz daty utworzenia/ostatniej modyfikacji.
  * Lista zadań zawiera treści zadań oraz ich stany odhaczenia. Klasa pochodna klasy Note.
  *
- * @version 1.0
+ * @version 1.1.0
  * @author Michał Mikuła
  * @see Note
  */
@@ -129,8 +129,8 @@ public class ToDoNote extends Note{
         if(!Objects.equals(first.getText(), second.getText())) return false;
         if(!Objects.equals(first.getMod_date(), second.getMod_date())) return false;
         if(!Objects.equals(first.getCreate_date(), second.getCreate_date())) return false;
-        if(first.getTodo().length != second.getTodo().length);
-        if(first.getChecked().length != second.getChecked().length);
+        if(first.getTodo().length != second.getTodo().length) return false;
+        if(first.getChecked().length != second.getChecked().length) return false;
         for(int i = 0; i < first.getTodo().length; i++){
             if(
                     (!Objects.equals(first.getTodo(i), second.getTodo(i))) ||

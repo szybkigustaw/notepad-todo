@@ -16,7 +16,7 @@ import java.util.Objects;
  * Wykonuje operacje wejścia/wyjścia na plikach oraz przetwarza dane w nich zawarte. Odpowiada za odczyt notatek z pliku oraz ich zapis do pliku.
  *
  * @author Michał Mikuła
- * @version 1.0
+ * @version 1.1.0
  */
 public class FileHandler {
     /**

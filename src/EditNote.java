@@ -13,7 +13,7 @@ import static java.awt.GridBagConstraints.RELATIVE;
  * <p>Umożliwia również dodanie jak i usunięcie listy zadań, a także modyfikację jej elementów.</p>
  * <p>Z poziomu tego okna można również ukryć i ujawnić notatkę. Do działania tej funkcji wymagane jest ustawione hasło dostępowe.</p>
  *
- * @version 1.0
+ * @version 1.1.0
  * @author Michał Mikuła
  */
 public class EditNote extends JPanel {
@@ -33,6 +33,9 @@ public class EditNote extends JPanel {
      * Wartość określająca, czy notatka przechowywana w tym obiekcie posiada listę zadań
      */
     private boolean todo_note;
+    /**
+     * Definiuje pozycję notatki na liście
+     */
     private final int note_index;
     /**
      * Ciąg znaków określający poprzednie wyświetlane okno
@@ -272,6 +275,7 @@ public class EditNote extends JPanel {
         this.note.setTodo(new String[0]);
         this.note.setChecked(new boolean[0]);
 
+        //Skopiuj zawartość notatki do pierwotnego jej zrzutu
         this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
         this.read_note.setMod_date(this.note.getMod_date());
         this.read_note.setCreate_date(this.note.getCreate_date());
@@ -616,6 +620,7 @@ public class EditNote extends JPanel {
         this.note.setTodo(new String[0]);
         this.note.setChecked(new boolean[0]);
 
+        //Przypisz zawartość notatki do jej zrzutu pierwotnego
         this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
         this.read_note.setMod_date(this.note.getMod_date());
         this.read_note.setCreate_date(this.note.getCreate_date());
@@ -954,6 +959,7 @@ public class EditNote extends JPanel {
         this.note = loaded_note;
         this.note.setType(Note.TODO_NOTE);
 
+        //Przypisz zawartość notatki do jej zrzutu pierwotnego
          this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
          this.read_note.setMod_date(this.note.getMod_date());
          this.read_note.setCreate_date(this.note.getCreate_date());
