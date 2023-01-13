@@ -57,6 +57,9 @@ public class EditNote extends JPanel {
         //Jeśli nie
         else {
 
+            //Ustaw nową datę modyfikacji
+            this.note.setMod_date(new Date());
+
             //Dodaj nową notatkę
             Main.noteList.addNote(this.note);
         }
@@ -83,8 +86,8 @@ public class EditNote extends JPanel {
     }
 
     /**
-     * Sprawdza, czy notatka została edytowana.
-     * @return Wartość <i>true</i>, jeśli została edytowana.
+     * Sprawdza, czy notatka została zaktualizowana.
+     * @return Wartość <i>true</i>, jeśli została zaktualizowana.
      */
     public boolean hasNoteChanged(){
         System.out.println(ToDoNote.areNotesEqual(this.read_note, this.note));

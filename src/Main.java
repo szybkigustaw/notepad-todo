@@ -817,7 +817,9 @@ public class Main {
                     fh = new FileHandler(new File(settings.get("default_path")));
 
                     //Jeśli notatki na tej liście są obecne, przypisz je do buforowej zmiennej. Jeśli nie, utwórz pustą listę
-                    NoteList parsed_notes = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
+                    NoteList parsed_notes;
+                    if(fh.parseDocToNotes() == null) parsed_notes = new NoteList();
+                    else parsed_notes = new NoteList(fh.parseDocToNotes().getNoteList(), NoteList.FULL);
 
                     //Jeśli buforowa lista ma długość większą niż jeden, uzupełnij obydwie listy aplikacji jej danymi
                     noteList = parsed_notes.getListLength() > 0 ? parsed_notes : new NoteList(new Note[0], NoteList.FULL);
@@ -1522,6 +1524,46 @@ public class Main {
 
         //Dodaj logikę do pozycji dodania nowej notatki
         add_note.addActionListener(e -> {
+
+            //Jeśli już istnieje otwarte okno edytowanej notatki
+            if(en != null){
+                 //Jeśli auto zapis nie jest aktywny
+               if(Objects.equals(settings.get("auto_save"),"false")){
+                   if(en.hasNoteChanged()) {
+                       //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
+                       int i = JOptionPane.showConfirmDialog(
+                               main_frame,
+                               "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
+                               "Edytowana notatka niezapisana",
+                               JOptionPane.YES_NO_CANCEL_OPTION,
+                               JOptionPane.QUESTION_MESSAGE
+                       );
+
+                       //Jeśli wola została potwierdzona, zapisz notatkę
+                       if (i == JOptionPane.YES_OPTION) {
+                           en.forceSave();
+                       }
+
+                       //Jeśli nie wyrażono takiej woli, skasuj notatkę
+                       else if (i == JOptionPane.NO_OPTION) {
+                           en.forceDelete();
+                       }
+
+                       //Jeśli anulowano, przerwij działanie funkcji
+                       else {
+                           return;
+                       }
+                   }
+               }
+
+               //Jeśli auto zapis jest aktywny i notatka uległa zmianie,
+               // zapisz notatkę
+               else{
+                   if(en.hasNoteChanged()){
+                       en.forceSave();
+                   } else en.forceDelete();
+               }
+            }
 
             //Stwórz nowe okno edycji notatki (konstruktor domyślny = nowa notatka)
             en = new EditNote();
