@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Notatnik-ToDo:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Notatnik_ToDo_jar</output-path>
+    <root id="archive" name="Notatnik-ToDo.jar">
+      <element id="module-output" name="Notatnik-ToDo" />
+    </root>
+  </artifact>
+</component>

@@ -21,7 +21,7 @@ import java.util.Scanner;
  * <p>Wykorzystuje układ kartowy, który umożliwia wyświetlanie każdego okna aplikacji na całej powierzchni ramki.</p>
  * <p>Przechowuje również plik z ustawieniami domyślnymi, z których odczytuje ścieżkę do domyślnego pliku z notatkami.</p>
  *
- * @version 1.1.0
+ * @version 1.1.1
  * @author Michał Mikuła
  */
 public class Main {
@@ -236,7 +236,7 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                 );
 
-                //Jeśli operację anulowano - przerwij metodę. W innym przypadku zahaszuj fb
+                //Jeśli operację anulowano — przerwij metodę. W innym przypadku zahaszuj fb
                 if(Objects.equals(security_phrase, null)) return;
                 security_phrase = hashString(security_phrase);
 
@@ -251,7 +251,7 @@ public class Main {
                 //Wyświetl komunikat proszący użytkownika o podanie nowego hasła
                 String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
 
-                //Jeśli użytkownik anulował operację - przerwij metodę. W innym przypadku zahaszuj uzyskany wynik
+                //Jeśli użytkownik anulował operację — przerwij metodę. W innym przypadku zahaszuj uzyskany wynik
                 new_password = hashString(new_password);
 
                 //Jeśli podane hasło jest równe obecnemu hasłu
@@ -268,7 +268,7 @@ public class Main {
                     //Wyświetl komunikat proszący użytkownika o ponowne wprowadzenie nowego hasła
                     String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
 
-                    //Jeśli anulowano operację - przerwij metodę.W innym przypadku zahaszuj uzyskany wynik
+                    //Jeśli anulowano operację — przerwij metodę. W innym przypadku zahaszuj uzyskany wynik
                     if(Objects.equals(new_password_retype, null)) return;
                     new_password_retype = hashString(new_password_retype);
 
@@ -313,7 +313,7 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                 );
 
-                //Jeśli anulowano operację - przerwij metodę. W innym przypadku zahaszuj frazę bezpieczeństwa.
+                //Jeśli anulowano operację — przerwij metodę. W innym przypadku zahaszuj frazę bezpieczeństwa.
                 if(Objects.equals(security_phrase, null)) return;
                 security_phrase = hashString(security_phrase);
 
@@ -328,14 +328,14 @@ public class Main {
                 //Wyświetl okno, w którym użytkownik ma wpisać swoje hasło
                 String new_password = JOptionPane.showInputDialog(Main.main_frame, "Podaj nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
 
-                //Jeśli anulowano operację - przerwij metodę. W innym przypadku zahaszuj nowe hasło
+                //Jeśli anulowano operację — przerwij metodę. W innym przypadku zahaszuj nowe hasło
                 if(Objects.equals(new_password, null)) return;
                 new_password = hashString(new_password);
 
                 //Wyświetl okno, w którym użytkownik ma ponownie wpisać swoje hasło
                 String new_password_retype = JOptionPane.showInputDialog(Main.main_frame, "Podaj jeszcze raz nowe hasło: ", "Zmiana hasła", JOptionPane.QUESTION_MESSAGE);
 
-                //Jeśli anulowano operację - przerwij metodę. W innym przypadku zahaszuj i to hasło
+                //Jeśli anulowano operację — przerwij metodę. W innym przypadku zahaszuj i to hasło
                 if(Objects.equals(new_password_retype, null)) return;
                 new_password_retype = hashString(new_password_retype);
 
@@ -395,7 +395,7 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                 );
 
-                //Jeśli użytkownik nie podał fb - przerwij metodę
+                //Jeśli użytkownik nie podał fb — przerwij metodę
                 if(Objects.equals(security_phrase, null)) return;
 
                 //Zahaszuj uzyskaną fb
@@ -419,7 +419,7 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                     );
 
-                    //Jeśli użytkownik nie podał żadnej wartości - przerwij metodę
+                    //Jeśli użytkownik nie podał żadnej wartości — przerwij metodę
                     if(Objects.equals(new_security_phrase, null)) return;
 
                     //Zahaszuj nową fb
@@ -443,7 +443,7 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                     );
 
-                        //jeśli użytkownik nie podał żadnej wartości - przerwij metodę
+                        //jeśli użytkownik nie podał żadnej wartości — przerwij metodę
                         if(Objects.equals(retype_security_phrase, null)) return;
 
                         //Zahaszuj ponownie wprowadzoną nową fb
@@ -492,7 +492,7 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                 );
 
-                //Jeśli użytkownik nie podał żadnej wartości - przerwij metodę
+                //Jeśli użytkownik nie podał żadnej wartości — przerwij metodę
                 if(Objects.equals(new_security_phrase, null)) return;
 
                 //Zahaszuj nową fb
@@ -506,7 +506,7 @@ public class Main {
                         JOptionPane.QUESTION_MESSAGE
                 );
 
-                //Jeśli użytkownik nie podał żadnej wartości - przerwij metodę
+                //Jeśli użytkownik nie podał żadnej wartości — przerwij metodę
                 if(Objects.equals(retype_security_phrase, null)) return;
 
                 //Zahaszuj ponownie uzyskaną nową fb
@@ -849,45 +849,7 @@ public class Main {
     public static void handleClose(){
 
         //Jeśli okno edycji notatek istnieje
-            if(en != null){
-
-                //Jeśli auto zapis nie jest aktywny
-               if(Objects.equals(settings.get("auto_save"),"false")){
-                   if(en.hasNoteChanged()) {
-                       //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
-                       int i = JOptionPane.showConfirmDialog(
-                               main_frame,
-                               "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
-                               "Edytowana notatka niezapisana",
-                               JOptionPane.YES_NO_CANCEL_OPTION,
-                               JOptionPane.QUESTION_MESSAGE
-                       );
-
-                       //Jeśli wola została potwierdzona, zapisz notatkę
-                       if (i == JOptionPane.YES_OPTION) {
-                           en.forceSave();
-                       }
-
-                       //Jeśli nie wyrażono takiej woli, skasuj notatkę
-                       else if (i == JOptionPane.NO_OPTION) {
-                           en.forceDelete();
-                       }
-
-                       //Jeśli anulowano, przerwij działanie funkcji
-                       else {
-                           return;
-                       }
-                   }
-               }
-
-               //Jeśli auto zapis jest aktywny i notatka uległa zmianie,
-               // zapisz notatkę
-               else{
-                   if(en.hasNoteChanged()){
-                       en.forceSave();
-                   } else en.forceDelete();
-               }
-            }
+        if(!checkCurrentNoteEdit()) return;
 
         //Jeśli lista notatek i lista notatek odczytanych z ostatniego pliku nie są równe, ergo doszło do zmian
         if(!NoteList.areNoteListsEqual(noteList, readNoteList)){
@@ -1172,33 +1134,11 @@ public class Main {
     }
 
     /**
-     * Metoda główna aplikacji. Inicjalizuje wartości domyślne ustawień oraz listy notatek, oraz buduje interfejs.
-     * @param args Argumenty podawane przy uruchomieniu aplikacji (niestosowane)
+     * Sprawdza, czy aktualnie edytowana notatka ma niezapisane zmiany. Jeśli ma, obsługuje ich zapis lub usunięcie.
+     * @return Wartość <i>true</i> jeśli można kontynuować operacje zależne od tych zmian.
      */
-    public static void main(String[] args) {
-
-        //Wywołanie metody inicjalizującej wartości domyślne ustawień i list notatek
-        loadDefault();
-
-        //Stwórz nowe okno menu głównego
-        hm = new HomeMenu();
-
-        //Stwórz nowy pasek menu
-        JMenuBar mb = new JMenuBar();
-
-
-        //Stwórz menu obsługi plików
-        JMenu file = new JMenu("Plik");
-
-        //Stwórz pozycje w menu służące do otwierania i zapisu plików
-        JMenuItem open = new JMenuItem("Otwórz plik");
-        JMenuItem save = new JMenuItem("Zapisz do pliku");
-
-        //Dodaj logikę do przycisku otwierania plików
-        open.addActionListener(e -> {
-            if(!checkSaved()) return; //Jeśli nie zgadza się użytkownik na utratę danych, przerwij proces
-
-            //Jeśli okno edycji notatek istnieje
+    public static boolean checkCurrentNoteEdit(){
+        //Jeśli okno edycji notatek istnieje
             if(en != null){
 
                 //Jeśli auto zapis nie jest aktywny
@@ -1225,7 +1165,7 @@ public class Main {
 
                        //Jeśli anulowano, przerwij działanie funkcji
                        else {
-                           return;
+                           return false;
                        }
                    }
                }
@@ -1237,7 +1177,40 @@ public class Main {
                        en.forceSave();
                    } else en.forceDelete();
                }
+               return true;
             }
+            return true;
+    }
+
+    /**
+     * Metoda główna aplikacji. Inicjalizuje wartości domyślne ustawień oraz listy notatek, oraz buduje interfejs.
+     * @param args Argumenty podawane przy uruchomieniu aplikacji (niestosowane)
+     */
+    public static void main(String[] args) {
+
+        //Wywołanie metody inicjalizującej wartości domyślne ustawień i list notatek
+        loadDefault();
+
+        //Stwórz nowe okno menu głównego
+        hm = new HomeMenu();
+
+        //Stwórz nowy pasek menu
+        JMenuBar mb = new JMenuBar();
+
+
+        //Stwórz menu obsługi plików
+        JMenu file = new JMenu("Plik");
+
+        //Stwórz pozycje w menu służące do otwierania i zapisu plików
+        JMenuItem open = new JMenuItem("Otwórz plik");
+        JMenuItem save = new JMenuItem("Zapisz do pliku");
+
+        //Dodaj logikę do przycisku otwierania plików
+        open.addActionListener(e -> {
+            if(!checkCurrentNoteEdit()) return; //Jeśli okno edycji notatek ma w sobie notatkę z niezapisanymi zmianami
+            if(!checkSaved()) return; //Jeśli nie zgadza się użytkownik na utratę danych, przerwij proces
+
+
 
             //Stwórz nową instancję klasy reprezentującej okno wyboru pliku
             JFileChooser fc = new JFileChooser();
@@ -1267,6 +1240,7 @@ public class Main {
                     //Jeśli lista notatek w historii nie jest pusta, przypisz do niej wartość obecnej listy notatek. Jeśli jest, stwórz nową instancję klasy listy notatek i przypisz jej tę samą wartość
                     if (readNoteList != null) readNoteList.setNoteList(noteList.getNoteList());
                     else readNoteList = new NoteList(noteList.getNoteList(), NoteList.FULL);
+
 
                     //Przeładuj aplikację
                     Main.reloadApp(true);
@@ -1298,10 +1272,10 @@ public class Main {
                     }
                 }
 
-                //Wprowadź aksjomat - pobrane notatki nie są puste
+                //Wprowadź aksjomat — pobrane notatki nie są puste
                 assert fetched_notes != null;
 
-                //Dla każdej notatki z listy pobranych notatek sprawdź, czy nie ma wśród nich chociaż jednej ukrytej notatki
+                //Dla każdej notatki z listy pobranych notatek sprawdź, czy nie ma wśród nich chociaż jednej ukrytej notatki,
                 //Jeśli jest oraz nie zdefiniowano w ustawieniach hasła, wyświetl komunikat o braku do niej dostępu
                 for (Note note : fetched_notes.getNoteList()) {
                     if (note.getHidden() && settings.get("access_password") == null) {
@@ -1339,45 +1313,7 @@ public class Main {
 
 
             //Jeśli okno edycji notatek istnieje
-            if(en != null){
-
-                //Jeśli auto zapis nie jest aktywny
-               if(Objects.equals(settings.get("auto_save"),"false")){
-                   if(en.hasNoteChanged()) {
-                       //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
-                       int i = JOptionPane.showConfirmDialog(
-                               main_frame,
-                               "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
-                               "Edytowana notatka niezapisana",
-                               JOptionPane.YES_NO_CANCEL_OPTION,
-                               JOptionPane.QUESTION_MESSAGE
-                       );
-
-                       //Jeśli wola została potwierdzona, zapisz notatkę
-                       if (i == JOptionPane.YES_OPTION) {
-                           en.forceSave();
-                       }
-
-                       //Jeśli nie wyrażono takiej woli, skasuj notatkę
-                       else if (i == JOptionPane.NO_OPTION) {
-                           en.forceDelete();
-                       }
-
-                       //Jeśli anulowano, przerwij działanie funkcji
-                       else {
-                           return;
-                       }
-                   }
-               }
-
-               //Jeśli auto zapis jest aktywny i notatka uległa zmianie,
-               // zapisz notatkę
-               else{
-                   if(en.hasNoteChanged()){
-                       en.forceSave();
-                   } else en.forceDelete();
-               }
-            }
+           if(!checkCurrentNoteEdit()) return;
 
             //Stwórz obiekt reprezentujący okno wyboru pliku
             JFileChooser fc = new JFileChooser();
@@ -1461,7 +1397,7 @@ public class Main {
         //Stwórz pozycję w menu typu check-box definiującą wolę wyświetlania systemowej nazwy użytkownika w menu głównym
         JCheckBoxMenuItem show_uname = new JCheckBoxMenuItem("Pokazuj systemową nazwę użytkownika", Objects.equals(settings.get("show_system_uname"), "true"));
 
-        //Dodaj logikę do tej pozycji - zmień stan w ustawieniach na odpowiadający stanowi check-boxa, zaktualizuj menu główne
+        //Dodaj logikę do tej pozycji — zmień stan w ustawieniach na odpowiadający stanowi check-boxa, zaktualizuj menu główne
         //i przeładuj aplikację
         show_uname.addActionListener(e -> {
             settings.replace("show_system_uname", show_uname.isSelected() ? "true" : "false");
@@ -1526,44 +1462,7 @@ public class Main {
         add_note.addActionListener(e -> {
 
             //Jeśli już istnieje otwarte okno edytowanej notatki
-            if(en != null){
-                 //Jeśli auto zapis nie jest aktywny
-               if(Objects.equals(settings.get("auto_save"),"false")){
-                   if(en.hasNoteChanged()) {
-                       //Wyświetl komunikat z zapytaniem o wolę zapisu aktualnie edytowanej notatki
-                       int i = JOptionPane.showConfirmDialog(
-                               main_frame,
-                               "Aktualnie edytowana notatka nie została zapisana. Zapisać ją?",
-                               "Edytowana notatka niezapisana",
-                               JOptionPane.YES_NO_CANCEL_OPTION,
-                               JOptionPane.QUESTION_MESSAGE
-                       );
-
-                       //Jeśli wola została potwierdzona, zapisz notatkę
-                       if (i == JOptionPane.YES_OPTION) {
-                           en.forceSave();
-                       }
-
-                       //Jeśli nie wyrażono takiej woli, skasuj notatkę
-                       else if (i == JOptionPane.NO_OPTION) {
-                           en.forceDelete();
-                       }
-
-                       //Jeśli anulowano, przerwij działanie funkcji
-                       else {
-                           return;
-                       }
-                   }
-               }
-
-               //Jeśli auto zapis jest aktywny i notatka uległa zmianie,
-               // zapisz notatkę
-               else{
-                   if(en.hasNoteChanged()){
-                       en.forceSave();
-                   } else en.forceDelete();
-               }
-            }
+           if(!checkCurrentNoteEdit()) return;
 
             //Stwórz nowe okno edycji notatki (konstruktor domyślny = nowa notatka)
             en = new EditNote();
@@ -1648,7 +1547,7 @@ public class Main {
         //Dodaj pozycję w menu odpowiedzialną za zmianę frazy bezpieczeństwa
         JMenuItem sf_change = new JMenuItem("Zmień frazę bezpieczeństwa");
 
-        //Dodaj logikę do tej pozycji - rozpocznij proces tworzenia frazy bezpieczeństwa
+        //Dodaj logikę do tej pozycji — rozpocznij proces tworzenia frazy bezpieczeństwa
         sf_change.addActionListener(e -> changeSecurityPhrase());
 
         //Dodaj pozycje zmiany i kasowania hasła do menu bezpieczeństwa
@@ -1682,7 +1581,7 @@ public class Main {
             //Wyświetl komunikat z informacją o wersji aplikacji
             JOptionPane.showMessageDialog(
                     Main.main_frame,
-                    "Notepad-Todo \n\n Wersja 1.1.0 \n Copyright Michał Mikuła 2023",
+                    "Notepad-Todo \n\n Wersja 1.1.1 \n Copyright Michał Mikuła 2023",
                     "O aplikacji",
                     JOptionPane.INFORMATION_MESSAGE
             );

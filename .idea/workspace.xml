@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Notatnik-ToDo:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Uzupełnienie dokumentacji">
+    <list default="true" id="58654679-956e-4870-a8e3-cb3672b432d5" name="Changes" comment="Poprawa błędów związana z nadpisywaniem niepożądanym okna edycji notatki oraz nieprawidłowym zachowaniem aplikacji w przypadku błędnego pliku domyślnego.">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Notatnik_ToDo_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/LGoodDatePicker_11_2_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/LGoodDatePicker_11_2_1_executable_demo.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/LGoodDatePicker_11_2_1_javadoc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/jdatepicker_1_3_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/jdatepicker_1_3_4___2_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/jdatepicker-1.3.4.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/DatePicker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notatnik-ToDo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Notatnik-ToDo.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EditNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/EditNote.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/FileHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ToDoNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ToDoNote.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +59,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
@@ -49,6 +67,11 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.maddyhome.idea.vim.ui.VimEmulationConfigurable&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib" />
+    </key>
+  </component>
   <component name="RunManager" selected="JAR Application.Notatnik-ToDo.jar">
     <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -79,13 +102,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1670573136854</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Dodano możliwość edycji notatek.&#10;Dodano możliwość konwersji notatki ze standardowej notatki do notatki z listą zadań i vice versa.">
-      <created>1671450344335</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1671450344335</updated>
     </task>
     <task id="LOCAL-00013" summary="Dodanie warstwy komunikacji I/O z plikami XML. Odczyt i zapis notatek z/do pliku.&#10;Nowa klasa FileHandler obsługuje operacje wejścia/wyjścia na plikach XML, z których to pobiera dane o notatkach i listach zadań, przekazując je do listy notatek wewnątrz programu. Z niej również zczytuje te dane i zapisuje do pliku XML. Koncepcja działająca, przetestowana. Brak implementacji.">
       <created>1672671298992</created>
@@ -423,7 +439,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673563871789</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="Poprawa błędów związana z nadpisywaniem niepożądanym okna edycji notatki oraz nieprawidłowym zachowaniem aplikacji w przypadku błędnego pliku domyślnego.">
+      <created>1673602878074</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1673602878079</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -450,7 +473,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Dodano menu kontekstowe przy wychodzeniu z aplikacji z niezapisanymi danymi. Dodano metodę porównującą listy notatek do NoteList" />
     <MESSAGE value="Rearanżacja przycisków na pasku menu. Wyprowadzenie zamykania aplikacji do osobnej metody." />
     <MESSAGE value="Re aranżacja przycisków na pasku menu. Wyprowadzenie zamykania aplikacji do osobnej metody." />
     <MESSAGE value="Dodano zakładkę z informacjami o aplikacji na pasku menu" />
@@ -475,7 +497,8 @@
     <MESSAGE value="Implementacja ustawienia przełączającego widok w HomeMenu systemowej nazwy użytkownika.&#10;Naprawa zapisu i odczytu ustawień, jeśli mają wartość null.&#10;Naprawa przycisku powrotu do menu głównego z listy notatek, nie zmieniającego informacji o aktualnie wyświetlanym oknie." />
     <MESSAGE value="Poprawka dotycząca okna wyboru domyślnego pliku" />
     <MESSAGE value="Uzupełnienie dokumentacji" />
-    <option name="LAST_COMMIT_MESSAGE" value="Uzupełnienie dokumentacji" />
+    <MESSAGE value="Poprawa błędów związana z nadpisywaniem niepożądanym okna edycji notatki oraz nieprawidłowym zachowaniem aplikacji w przypadku błędnego pliku domyślnego." />
+    <option name="LAST_COMMIT_MESSAGE" value="Poprawa błędów związana z nadpisywaniem niepożądanym okna edycji notatki oraz nieprawidłowym zachowaniem aplikacji w przypadku błędnego pliku domyślnego." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

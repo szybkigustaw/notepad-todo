@@ -20,6 +20,14 @@ public class ToDoNote extends Note{
      */
     private boolean[] isChecked;
     /**
+     * Tablica przechowująca terminy przypomnienia o dacie zakończenia zadania.
+     */
+    private Date[] remind_times;
+    /**
+     * Tablica przechowująca terminy zakończenia zadań.
+     */
+    private Date[] deadlines;
+    /**
      * Zmienna przechowująca stan ukończenia listy zadań (wartość <i>true</i> dla ukończonych wszystkich zadań)
      */
     private boolean isCompleted;
@@ -94,6 +102,58 @@ public class ToDoNote extends Note{
     }
 
     /**
+     * Zwraca tablicę wszystkich terminów przypomnienia o terminie zakończenia zadań.
+     * @return Tablica wszystkich terminów przypomnienia o terminie zakończenia zadań.
+     */
+    public Date[] getRemindTimes(){ return this.remind_times; }
+
+    /**
+     * Zwraca pojedynczy termin przypomnienia o terminie zakończenia zadania.
+     * @param index Pozycja zadania na liście zadań.
+     * @return Termin przypomnienia o terminie zakończenia wybranego zadania.
+     */
+    public Date getRemindTime(int index){ return this.remind_times[index]; }
+
+   /**
+     * Przypisuje termin przypomnienia o terminie zakończenia zadania do wybranego zadania na liście zadań.
+     * @param index Pozycja zadania na liście zadań.
+     * @param remind_time Nowy termin przypomnienia o terminie zakończenia zadania.
+     */
+    public void setRemindTime(Date remind_time, int index){ this.remind_times[index] = remind_time; }
+
+    /**
+     * Przypisuje tablicę terminów przypomnienia o terminie zakończenia zadań do listy zadań
+     * @param remind_times Nowa tablica terminów przypomnienia o terminie zakończenia zadań.
+     */
+    public void setRemindTimes(Date[] remind_times){ this.remind_times = remind_times; }
+
+    /**
+     * Zwraca tablicę wszystkich terminów zakończenia zadań.
+     * @return Tablica wszystkich terminów zakończenia zadań.
+     */
+    public Date[] getDeadlines(){ return this.deadlines; }
+
+    /**
+     * Zwraca pojedynczy termin zakończenia zadania.
+     * @param index Pozycja zadania na liście zadań.
+     * @return Termin zakończenia wybranego zadania.
+     */
+    public Date getDeadline(int index){ return this.deadlines[index]; }
+
+    /**
+     * Przypisuje termin zakończenia zadania do wybranego zadania na liście zadań.
+     * @param index Pozycja zadania na liście zadań.
+     * @param deadline Nowy termin zakończenia zadania.
+     */
+    public void setDeadline(Date deadline, int index){ this.deadlines[index] = deadline; }
+
+    /**
+     * Przypisuje tablicę terminów zakończenia zadań do listy zadań
+     * @param deadlines Nowa tablica terminów zakończenia zadań.
+     */
+    public void setDeadlines(Date[] deadlines){ this.deadlines = deadlines; }
+
+    /**
      * Zwraca stan ukończenia listy zadań.
      * @return Stan ukończenia listy zadań. (<i>true</i> jeśli wszystkie zadania zostały ukończone)
      */
@@ -129,12 +189,16 @@ public class ToDoNote extends Note{
         if(!Objects.equals(first.getText(), second.getText())) return false;
         if(!Objects.equals(first.getMod_date(), second.getMod_date())) return false;
         if(!Objects.equals(first.getCreate_date(), second.getCreate_date())) return false;
+        if(first.getDeadlines().length != second.getDeadlines().length) return false;
+        if(first.getRemindTimes().length != second.getRemindTimes().length) return false;
         if(first.getTodo().length != second.getTodo().length) return false;
         if(first.getChecked().length != second.getChecked().length) return false;
         for(int i = 0; i < first.getTodo().length; i++){
             if(
                     (!Objects.equals(first.getTodo(i), second.getTodo(i))) ||
-                    first.getChecked(i) != second.getChecked(i)
+                    first.getChecked(i) != second.getChecked(i) ||
+                    first.getRemindTime(i) != second.getRemindTime(i) ||
+                    first.getDeadline(i) != second.getRemindTime(i)
             ) {
                 return false;
             }
@@ -195,6 +259,27 @@ public class ToDoNote extends Note{
         return arr;
     }
 
+    private Date[] expandDateArray(Date[] arr, int slots){
+
+        //Stwórz nową tablicę o ilości miejsc (długość tablicy z parametrów metody
+        // + dodatkowa ilość miejsc podana w parametrach metody)
+
+        Date[] new_dates = new Date[arr.length + slots];
+
+        //Dla każdego elementu w nowej tablicy
+        for(int i = 0; i < new_dates.length; i++){
+
+            //Wstaw do nowej tablicy datę ze starej tablicy pod indeksem iteratora
+            if(i < arr.length) new_dates[i] = arr[i];
+            else new_dates[i] = null; /* Jeśli iterator jest większy od długości tablicy podanej w parametrze,
+                                         wstaw do nowej tablicy wartość pustą */
+        }
+
+        //Przypisz do tablicy podanej w parametrze wartość nowej tablicy i zwróć ją
+        arr = new_dates;
+        return arr;
+    }
+
     /**
      * Dodaje do listy zadań w notatce nowe zadania. Automatycznie aktualizuje datę modyfikacji notatki;
      * @param texts Tablica treści zadań
@@ -251,6 +336,22 @@ public class ToDoNote extends Note{
         this.setMod_date(new Date());
     }
 
+    public void addDeadline(int index, Date deadline){
+        if(this.deadlines.length < index){
+            this.setDeadlines(this.expandDateArray(this.getDeadlines(), (index - this.deadlines.length)));
+        }
+
+        this.setDeadline(deadline, index);
+    }
+
+    public void addReminder(int index, Date remind_time){
+        if(this.remind_times.length < index){
+            this.setRemindTimes(this.expandDateArray(this.getRemindTimes(), (index - this.remind_times.length)));
+        }
+
+        this.setRemindTime(remind_time, index);
+    }
+
     /**
      * Wyświetla w konsoli zawartość notatki, listę zadań w niej zawartą oraz jej metadane.
      */
@@ -263,6 +364,7 @@ public class ToDoNote extends Note{
         System.out.println("To-Do values:");
         for(int i = 0; i < this.getTodo().length; i++){
             System.out.printf("\tT: %s \t C: %b\n", this.getTodo(i), this.getChecked(i));
+            System.out.printf("\tRT: %s \t DL: %s\n", this.getRemindTime(i).toString(), this.getDeadline(i).toString());
         }
         System.out.print("--------------------");
     }
@@ -275,6 +377,8 @@ public class ToDoNote extends Note{
         this.setType(TODO_NOTE);
         this.setTodo(new String[]{"Sample text", "Sample text", "Sample text", "Sample text", "Sample text"});
         this.setChecked(new boolean[]{false,false,false,true,true});
+        this.setRemindTimes(new Date[]{new Date(), new Date(), new Date(), new Date(), new Date()});
+        this.setDeadlines(new Date[]{new Date(), new Date(), new Date(), new Date(), new Date()});
         this.verifyToDoCompletion();
     }
 
@@ -284,13 +388,17 @@ public class ToDoNote extends Note{
      * @param text Treść nowej notatki.
      * @param todos Tablica treści zadań
      * @param isChecked Tablica stanów odhaczenia zadań.
+     * @param remind_times Tablica terminów przypomnienia o terminie zakończenia notatek.
+     * @param deadlines Tablica terminów zakończenia notatek.
      * @param isHidden Stan ukrycia nowej notatki.
      */
-    ToDoNote(String label, String text, String[] todos, boolean[] isChecked, boolean isHidden) {
+    ToDoNote(String label, String text, String[] todos, boolean[] isChecked, Date[] remind_times, Date[] deadlines, boolean isHidden) {
         super(label, text, isHidden);
         this.setType(TODO_NOTE);
         this.setTodo(todos);
         this.setChecked(isChecked);
+        this.setRemindTimes(remind_times);
+        this.setDeadlines(deadlines);
         this.verifyToDoCompletion();
     }
 }

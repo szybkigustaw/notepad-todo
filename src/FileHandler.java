@@ -300,7 +300,7 @@ public class FileHandler {
                         }
 
                         //Stwórz nową notatkę z listą zadań, wykorzystując pobrane dane
-                        todo_note = new ToDoNote(note_label, note_text, todos_text, todos_checked, note_hidden);
+                        todo_note = new ToDoNote(note_label, note_text, todos_text, todos_checked, null, null, note_hidden);
 
                         //Przypisz do notatki dane o datach
                         todo_note.setCreate_date(note_create_date);

@@ -1,10 +1,20 @@
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
+
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DateTimePicker;
+import com.github.lgooddatepicker.optionalusertools.DateTimeChangeListener;
+import com.github.lgooddatepicker.zinternaltools.DateTimeChangeEvent;
+
 import static java.awt.GridBagConstraints.RELATIVE;
 
 /**
@@ -172,6 +182,60 @@ public class EditNote extends JPanel {
         gbc.gridy = 0;
         gbc.weightx = 1;
         item.add(text, gbc);
+        
+        JPanel spacer = new JPanel();
+        spacer.setSize(200, 1);
+
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        item.add(spacer, gbc);
+
+        GridBagConstraints dates_gbc = new GridBagConstraints();
+        GridBagLayout dates_layout = new GridBagLayout();
+        JPanel dates = new JPanel(dates_layout);
+        dates.setBorder(new CompoundBorder(
+                new LineBorder(new Color(0, 0, 0), 1, true),
+                new EmptyBorder(2, 2, 2, 2)
+        ));
+
+        JButton remind_date_btn = new JButton("");
+        remind_date_btn.setFont(new Font("Arial", Font.PLAIN, 18));
+        remind_date_btn.setHorizontalTextPosition(SwingConstants.CENTER);
+
+        remind_date_btn.addActionListener( e -> {
+            JDialog d = new JDialog(Main.main_frame, "Wybierz datę i godzinę.", true);
+            DateTimePicker dtp = new DateTimePicker();
+            dtp.addDateTimeChangeListener(new DateTimeChangeListener() {
+                @Override
+                public void dateOrTimeChanged(DateTimeChangeEvent dateTimeChangeEvent) {
+                    note.setRemindTime(new Date(dtp.getDateTimeStrict().atZone(ZoneId.systemDefault()).toEpochSecond()), index);
+                }
+            });
+
+            d.add(dtp);
+            d.pack();
+            d.setVisible(true);
+        });
+
+        dates_gbc.gridx = 0;
+        dates_gbc.gridy = 0;
+        dates.add(remind_date_btn, dates_gbc);
+
+        JButton deadline_btn = new JButton("");
+        deadline_btn.setFont(new Font("Arial", Font.PLAIN, 18));
+        deadline_btn.setHorizontalTextPosition(SwingConstants.CENTER);
+
+        deadline_btn.addActionListener(e -> {
+
+        });
+
+        dates_gbc.gridx = 1;
+        dates_gbc.gridy = 0;
+        dates.add(deadline_btn, dates_gbc);
+
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        item.add(dates, gbc);
 
         //Zwróć gotowy kontener.
         return item;
@@ -279,7 +343,7 @@ public class EditNote extends JPanel {
         this.note.setChecked(new boolean[0]);
 
         //Skopiuj zawartość notatki do pierwotnego jej zrzutu
-        this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
+        this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getRemindTimes(), this.note.getDeadlines(), this.note.getHidden());
         this.read_note.setMod_date(this.note.getMod_date());
         this.read_note.setCreate_date(this.note.getCreate_date());
         this.read_note.setCompleted(this.note.getCompleted());
@@ -624,7 +688,7 @@ public class EditNote extends JPanel {
         this.note.setChecked(new boolean[0]);
 
         //Przypisz zawartość notatki do jej zrzutu pierwotnego
-        this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
+        this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getRemindTimes(), this.note.getDeadlines(), this.note.getHidden());
         this.read_note.setMod_date(this.note.getMod_date());
         this.read_note.setCreate_date(this.note.getCreate_date());
         this.read_note.setCompleted(this.note.getCompleted());
@@ -963,7 +1027,7 @@ public class EditNote extends JPanel {
         this.note.setType(Note.TODO_NOTE);
 
         //Przypisz zawartość notatki do jej zrzutu pierwotnego
-         this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getHidden());
+         this.read_note = new ToDoNote(this.note.getLabel(), this.note.getText(), this.note.getTodo(), this.note.getChecked(), this.note.getRemindTimes(), this.note.getDeadlines(), this.note.getHidden());
          this.read_note.setMod_date(this.note.getMod_date());
          this.read_note.setCreate_date(this.note.getCreate_date());
          this.read_note.setCompleted(this.note.getCompleted());
